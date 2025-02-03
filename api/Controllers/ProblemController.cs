@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using api.Interface;
 using Microsoft.AspNetCore.Mvc;
 
-namespace api.Controller
+namespace api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -18,7 +18,7 @@ namespace api.Controller
             _problemService = problemService;
         }
 
-        [HttpGet("Problems")]
+        [HttpGet]
         public async Task<IActionResult> GetAllProblemsForUserAsync()
         {
             var userId = HttpContext.User?.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
