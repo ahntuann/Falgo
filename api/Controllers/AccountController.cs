@@ -92,28 +92,32 @@ namespace api.Controllers
 
         // Đăng ký tài khoản
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+    public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+{
+    if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var existingUser = await _userManager.FindByEmailAsync(registerDto.Email);
-            if (existingUser != null) return BadRequest("Email is already in use.");
+    var isUserExists = await _userManager.Users.AnyAsync(u => u.UserName == registerDto.Username);
+    var isEmailExists = await _userManager.Users.AnyAsync(u => u.Email == registerDto.Email);
+    if (isUserExists || isEmailExists)
+        return BadRequest("Username/Email is already in use.");
 
-            var user = new AppUser
-            {
-                UserName = registerDto.Username,
-                Email = registerDto.Email,
-                FullName = registerDto.FullName,
-                CreatedAt = DateTime.UtcNow,
-                DateOfBirth = registerDto.DateOfBirth,
-                PhoneNumber = registerDto.PhoneNumber
-            };
+    var user = new AppUser
+    {
+        UserName = registerDto.Username,
+        Email = registerDto.Email,
+        FullName = registerDto.FullName,
+        CreatedAt = DateTime.UtcNow,
+        DateOfBirth = registerDto.DateOfBirth,
+        PhoneNumber = registerDto.PhoneNumber,
+        Address = registerDto.Address
+    };
 
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
-            if (!result.Succeeded) return BadRequest(result.Errors);
+    var result = await _userManager.CreateAsync(user, registerDto.Password);
+    if (!result.Succeeded) return BadRequest(result.Errors);
 
-            return Ok(new { User = new { user.Id, user.UserName, user.Email } });
-        }
+    return Ok(new { User = new { user.Id, user.UserName, user.Email } });
+}
+
 
         // Hàm tạo JWT token
         private string GenerateJwtToken(AppUser user)

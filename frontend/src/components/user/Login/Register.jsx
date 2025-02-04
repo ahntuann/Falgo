@@ -2,11 +2,11 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
 const Register = () => {
-    const navigate = useNavigate(); // Hook để chuyển trang
+    const navigate = useNavigate();
 
     const formik = useFormik({
         initialValues: {
@@ -15,6 +15,7 @@ const Register = () => {
             password: '',
             email: '',
             phoneNumber: '',
+            address: '',
         },
         validationSchema: Yup.object({
             fullName: Yup.string().required('Full name is required'),
@@ -22,6 +23,7 @@ const Register = () => {
             password: Yup.string().min(6, 'At least 6 characters').required('Password is required'),
             email: Yup.string().email('Invalid email').required('Email is required'),
             phoneNumber: Yup.string().required('Phone number is required'),
+            address: Yup.string().required('Address is required'),
         }),
         onSubmit: async (values) => {
             try {
@@ -29,7 +31,15 @@ const Register = () => {
                 alert('Registration successful!');
                 navigate('/login'); // Chuyển hướng đến trang đăng nhập
             } catch (error) {
-                alert('Registration failed!');
+                if (error.response && error.response.data) {
+                    if (error.response.data === 'Username/Email is already in use.') {
+                        alert('Username or Email is already in use. Please choose another.');
+                    } else {
+                        alert(`Registration failed: ${error.response.data}`);
+                    }
+                } else {
+                    alert('Registration failed! Please try again.');
+                }
             }
         },
     });
@@ -84,6 +94,15 @@ const Register = () => {
                             value={formik.values.phoneNumber}
                         />
                     </div>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            name="address"
+                            placeholder="Address"
+                            onChange={formik.handleChange}
+                            value={formik.values.address}
+                        />
+                    </div>
                     <button type="submit" className="register-button">
                         Register
                     </button>
@@ -93,7 +112,6 @@ const Register = () => {
                     <p>Do you have an account?</p>
                     <div className="social-icons">
                         <img src="https://www.google.com/favicon.ico" alt="Google" />
-
                         <img
                             src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
                             alt="GitHub"
