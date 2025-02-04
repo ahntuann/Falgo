@@ -21,19 +21,21 @@ const Login = () => {
         onSubmit: async (values) => {
             try {
                 const response = await axios.post('http://localhost:5180/api/account/login', values);
+                const userId = response.data.userId;
                 console.log('Login successful:', response.data);
-                alert('Login successful!');
+                alert('Login successful! ');
+
                 navigate('/homepage'); // Chuyển hướng đến Homepage sau khi login thành công
             } catch (error) {
                 console.error('Login failed:', error.response?.data || error.message);
-                alert('Login failed!');
+                alert(`Login failed! ${error.response?.data || error.message}`);
             }
         },
     });
 
     // Hàm xử lý đăng nhập với Google
     const handleGoogleLogin = () => {
-        window.location.href = 'http://localhost:5180/api/account/login-google';
+        window.location.href = 'http://localhost:5180/api/account/google-login';
     };
 
     return (

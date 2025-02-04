@@ -41,49 +41,63 @@ namespace api.Controllers
             if (!result.Succeeded) return Unauthorized("Invalid username or password");
 
             var token = GenerateJwtToken(user);
-            return Ok(new { Token = token, User = new { user.UserName, user.Email } });
+            return Ok(new { Token = token, User = new { user.Id, user.UserName, user.Email } });
         }
 
         // Đăng nhập bằng Google
-        [HttpGet("login-google")]
-        public IActionResult LoginWithGoogle()
+    [HttpGet("google-login")]
+    public IActionResult GoogleLogin()
+    {
+    var redirectUrl = Url.Action("HandleGoogleCallback", "Account", null, Request.Scheme);
+    var properties = _signInManager.ConfigureExternalAuthenticationProperties(GoogleDefaults.AuthenticationScheme, redirectUrl);
+    return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+    }
+
+
+    [HttpGet("google-callback")]
+    public async Task<IActionResult> HandleGoogleCallback()
+    {
+        var info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info == null) return BadRequest("Google login failed.");
+
+        var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+        if (string.IsNullOrEmpty(email)) return BadRequest("Email not found in Google account.");
+
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
         {
-            var redirectUrl = Url.Action(nameof(HandleGoogleCallback), "Account", null, Request.Scheme);
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(GoogleDefaults.AuthenticationScheme, redirectUrl);
-            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
-        }
-
-        // Xử lý callback từ Google
-        [HttpGet("google-callback")]
-        public async Task<IActionResult> HandleGoogleCallback()
-        {
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null) return BadRequest("Google login failed.");
-
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user == null)
+            user = new AppUser
             {
-                user = new AppUser
-                {
-                    UserName = email,
-                    Email = email,
-                    FullName = info.Principal.FindFirstValue(ClaimTypes.Name)
-                };
-                var result = await _userManager.CreateAsync(user);
-                if (!result.Succeeded) return BadRequest(result.Errors);
-            }
+                UserName = email,
+                Email = email,
+                FullName = info.Principal.FindFirstValue(ClaimTypes.Name)
+            };
 
-            var token = GenerateJwtToken(user);
-            return Ok(new { Token = token, User = new { user.UserName, user.Email } });
+            var result = await _userManager.CreateAsync(user);
+            if (!result.Succeeded) return BadRequest(result.Errors);
         }
+
+        // Đăng nhập bằng Cookie
+        await _signInManager.SignInAsync(user, isPersistent: false);
+        
+        return Ok(new { message = "Login successful!", user = new { user.Id, user.UserName, user.Email } });
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return Ok(new { message = "Logout successful!" });
+    }
 
         // Đăng ký tài khoản
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var existingUser = await _userManager.FindByEmailAsync(registerDto.Email);
+            if (existingUser != null) return BadRequest("Email is already in use.");
 
             var user = new AppUser
             {
@@ -98,7 +112,7 @@ namespace api.Controllers
             var result = await _userManager.CreateAsync(user, registerDto.Password);
             if (!result.Succeeded) return BadRequest(result.Errors);
 
-            return Ok(new { UserName = user.UserName, Email = user.Email });
+            return Ok(new { User = new { user.Id, user.UserName, user.Email } });
         }
 
         // Hàm tạo JWT token
