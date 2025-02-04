@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos.Problem;
+using api.Helpers;
 using api.Model;
 
 namespace api.Mappers

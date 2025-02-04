@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos.Problem;
+using api.Helpers;
 using api.Interface;
 using api.Mappers;
 
@@ -18,9 +19,13 @@ namespace api.Services
             _submissionRepository = submissionRepository;
         }
 
-        public async Task<List<ViewAllProblemDto>> GetAllProblemsWithStatsAsync(string userId)
+        public async Task<List<ViewAllProblemDto>> GetAllProblemsWithStatsAsync(string userId, QueryObject query)
         {
             var problems = await _problemRepository.GetAllProblemAsync();
+            if (!string.IsNullOrWhiteSpace(query.Title))
+            {
+                problems = problems.Where(p => p.Title.Contains(query.Title, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
             var result = new List<ViewAllProblemDto>();
 
             foreach (var problem in problems)
