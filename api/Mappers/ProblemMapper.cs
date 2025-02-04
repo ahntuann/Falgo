@@ -23,7 +23,7 @@ namespace api.Mappers
                 Score = problem.TotalPoint,
                 AcceptanceRate = totalSubmissions > 0 ? (double)acceptedSubmissions / totalSubmissions * 100 : 0,
                 AcceptedCount = acceptedSubmissions,
-                SolvedStatus = submissions.Any(s => s.AppUser.Id.Equals(userId) && s.Status == "Accepted") ? "Not passed" : "Passed"
+                SolvedStatus = submissions.Any(s => s.AppUser.Id.Equals(userId) && s.Status == "Accepted") ? "Passed" : "Not passed"
             };
 
             return problemDto;
