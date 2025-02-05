@@ -1,0 +1,34 @@
+.wrapper {
+    width: 100%;
+    height: var(--nav-bar-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: inherit;
+}
+
+.logo-img {
+    height: var(--logo-navbar-height);
+}
+
+.navBarItem {
+    list-style: none;
+    text-decoration: none;
+    color: var(--text-color);
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 1.8rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+        color: #fff;
+        transform: scale(1.1);
+        background-color: rgba(0, 123, 255, 0.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+}

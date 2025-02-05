@@ -1,10 +1,9 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
-import './App.css';
 import routes from '~/routes/index.js';
 import useAuth from '~/hooks/useAuth.js';
 import NotFound from '~/components/shared/NotFound';
-import Login from '~/components/user/Login';
+import { Login } from '~/components/user/pages';
 
 function App() {
     const { userRole } = useAuth();
@@ -12,7 +11,7 @@ function App() {
     return (
         <Router>
             <div className="App">
-                <Routes>
+                <Routes key={userRole}>
                     <Route path="/notfound" element={<NotFound />} />
                     <Route path="/login" element={<Login />} />
                     {routes.map((route) => {

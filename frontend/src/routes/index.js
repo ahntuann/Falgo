@@ -1,6 +1,5 @@
-import Home from '~/components/user/Home';
-import Profile from '~/components/user/Profile';
-import DefaultLayout from '~/layouts/DefaultLayout';
+import { Home, Profile } from '~/components/user/pages';
+import { DefaultLayout } from '~/layouts';
 
 const routes = [
     {

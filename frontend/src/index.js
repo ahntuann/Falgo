@@ -4,13 +4,16 @@ import './index.css';
 import App from '~/App.js';
 import reportWebVitals from './reportWebVitals.js';
 import AuthProvider from '~/context/AuthProvider';
+import GlobalStyles from '~/components/shared/GlobalStyles';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <AuthProvider>
-            <App />
-        </AuthProvider>
+        <GlobalStyles>
+            <AuthProvider>
+                <App />
+            </AuthProvider>
+        </GlobalStyles>
     </React.StrictMode>,
 );
 
