@@ -19,9 +19,21 @@ namespace api.Repository
             _Context = Context;
         }
 
+        public async Task<Blog> CreateAsync(Blog BlogModel)
+        {
+            await _Context.Blogs.AddAsync(BlogModel);
+            await _Context.SaveChangesAsync();
+            return BlogModel;
+        }
+
         public async Task<List<Blog>> GetAllAsync()
         {
             return await _Context.Blogs.ToListAsync();
+        }
+
+        public async Task<Blog?> GetByIDAsync(int id)
+        {
+            return await _Context.Blogs.FirstOrDefaultAsync(i => i.ID == id);
         }
     }
 }

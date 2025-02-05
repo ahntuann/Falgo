@@ -10,7 +10,8 @@ namespace api.Interface
 {
     public interface IBlogRepository
     {
-
         Task<List<Blog>> GetAllAsync();
+        Task<Blog?> GetByIDAsync(int id);
+        Task<Blog> CreateAsync(Blog BlogModel);
     }
 }
