@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos;
+using api.Dtos.BlogSpace;
 using api.Interface;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +33,6 @@ namespace api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID([FromRoute] int id)
         {
-            // var stock = await _context.stock.FindAsync(id);
             var stock = await _BlogRepo.GetByIDAsync(id);
 
             if (stock == null)
@@ -50,7 +50,31 @@ namespace api.Controllers
             await _BlogRepo.CreateAsync(BlogModel);
             return CreatedAtAction(nameof(GetByID), new { id = BlogModel.ID }, BlogModel.ToBlogDto());
         }
+        [HttpPut]
+        [Route("{id}")]
 
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateBlogRequesDto updateDto)
+        {
+            var BlogModel = await _BlogRepo.UpdateAync(id, updateDto);
+            if (BlogModel == null)
+            {
+                return NotFound();
+            }
 
+            return Ok(BlogModel.ToBlogDto());
+        }
+        [HttpDelete]
+        [Route("{id}")]
+
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var stockModel = await _BlogRepo.DeleteAync(id);
+
+            if (stockModel == null)
+            {
+                return NotFound();
+            }
+            return Ok(stockModel.ID + "Delete");
+        }
     }
 }
