@@ -26,6 +26,10 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDBContext>()
     .AddDefaultTokenProviders();
 
+//
+builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+//
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
