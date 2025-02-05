@@ -11,9 +11,9 @@ namespace api.Model
         [Required]
         public string ContestId { get; set; } = string.Empty;
         [Required]
-        public string UserId { get; set; } = string.Empty;
+        public string Id { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public Contest Contest { get; set; } = new Contest();
-        public User User { get; set; } = new User();
+        public AppUser AppUser { get; set; } = new AppUser();
     }
 }
