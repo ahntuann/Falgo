@@ -15,7 +15,7 @@ function LoginRegisterPart() {
             </span>
             or
             <span className={cs('login')}>
-                <Link className={cs('login-link')} to="/login">
+                <Link className={cs('login-link')} to="/register">
                     Register
                 </Link>
             </span>

@@ -36,7 +36,7 @@ function Home() {
         },
     ];
 
-    const { userRole, logInAsUser } = useContext(AuthContext);
+    const { userRole } = useContext(AuthContext);
 
     const [problemDailyFocus, setProblemDailyFocus] = useState(0);
 
@@ -45,7 +45,6 @@ function Home() {
             <div className={cs('slider')}>
                 <SliderBanner sliders={sliders} />
             </div>
-            <button onClick={logInAsUser}>login</button>
 
             {userRole === 'user' ? (
                 <div className={cs('problemDaily', 'homeComponents')}>

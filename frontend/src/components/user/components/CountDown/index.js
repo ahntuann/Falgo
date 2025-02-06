@@ -9,8 +9,6 @@ function CountDown({ classNames, endDate }) {
     const countDown = useCallback(() => {
         let difference = new Date(endDate) - new Date();
 
-        console.log(endDate);
-
         if (difference > 0) {
             const day = Math.floor(difference / (1000 * 60 * 60 * 24));
             difference -= day * 1000 * 60 * 60 * 24;

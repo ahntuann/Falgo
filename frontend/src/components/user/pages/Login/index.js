@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import './Login.css';
+import AuthContext from '~/context/AuthContext';
 
 const Login = () => {
     const navigate = useNavigate();
+
+    const { logInAsUser } = useContext(AuthContext);
 
     const formik = useFormik({
         initialValues: {
@@ -20,7 +23,10 @@ const Login = () => {
         }),
         onSubmit: async (values) => {
             try {
-                const response = await axios.post('http://localhost:5180/api/account/login', values);
+                const response = await axios.post(
+                    'http://localhost:5180/api/account/login',
+                    values,
+                );
 
                 console.log('API Response:', response.data);
 
@@ -30,8 +36,10 @@ const Login = () => {
                     throw new Error('User ID not found in response data');
                 }
 
-                console.log('User ID:', userId);
-                alert('Login successful!');
+                const user = response.data;
+                localStorage.setItem('user', JSON.stringify(user));
+                logInAsUser();
+
                 navigate('/');
             } catch (error) {
                 console.error('Login failed:', error.response?.data || error.message);
@@ -59,7 +67,9 @@ const Login = () => {
                             value={formik.values.username}
                             required
                         />
-                        {formik.errors.username && <div className="error-message">{formik.errors.username}</div>}
+                        {formik.errors.username && (
+                            <div className="error-message">{formik.errors.username}</div>
+                        )}
                     </div>
                     <div className="input-group">
                         <label htmlFor="password">Password</label>
@@ -71,7 +81,9 @@ const Login = () => {
                             value={formik.values.password}
                             required
                         />
-                        {formik.errors.password && <div className="error-message">{formik.errors.password}</div>}
+                        {formik.errors.password && (
+                            <div className="error-message">{formik.errors.password}</div>
+                        )}
                     </div>
                     <div className="form-links">
                         <Link to="/register" className="create-account-link">
@@ -86,7 +98,11 @@ const Login = () => {
                     </button>
 
                     {/* Nút đăng nhập với Google */}
-                    <button type="button" className="google-login-button" onClick={handleGoogleLogin}>
+                    <button
+                        type="button"
+                        className="google-login-button"
+                        onClick={handleGoogleLogin}
+                    >
                         <FcGoogle className="google-icon" /> Sign in with Google
                     </button>
                 </form>
