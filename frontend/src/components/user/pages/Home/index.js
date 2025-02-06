@@ -36,7 +36,7 @@ function Home() {
         },
     ];
 
-    const { userRole } = useContext(AuthContext);
+    const { userRole, logout } = useContext(AuthContext);
 
     const [problemDailyFocus, setProblemDailyFocus] = useState(0);
 
@@ -100,6 +100,7 @@ function Home() {
                     </div>
                 </div>
             ) : null}
+            <div onClick={() => logout()}>logout</div>
 
             <div className={cs('contestBrief', 'homeComponents')}>
                 <div className={cs('category', 'contestBriefCategory')}>Cuộc thi lập trình</div>
