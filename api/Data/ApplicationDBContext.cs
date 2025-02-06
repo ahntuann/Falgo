@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace api.Data
 {
@@ -24,15 +25,42 @@ namespace api.Data
         public DbSet<Contest> Contests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    base.OnModelCreating(modelBuilder);
+
+    
+    modelBuilder.Entity<ContestProblem>(entity =>
+    {
+        entity.HasKey(cp => new { cp.ContestId, cp.ProblemId });
+    });
+
+    
+    modelBuilder.Entity<ContestRegistion>()
+        .HasKey(cr => new { cr.Id, cr.ContestId });
+
+    
+    List<IdentityRole> roles = new List<IdentityRole>
+    {
+        new IdentityRole
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<ContestProblem>(entity =>
-            {
-                entity.HasKey(cp => new { cp.ContestId, cp.ProblemId });
-            });
-            modelBuilder.Entity<ContestRegistion>()
-                .HasKey(cr => new { cr.Id, cr.ContestId });
+            Name = "User",
+            NormalizedName = "USER"
+        },
+        new IdentityRole
+        {
+            Name = "Guest",
+            NormalizedName = "GUEST"
+        },
+        new IdentityRole
+        {
+            Name = "Admin",
+            NormalizedName = "ADMIN"
         }
+    };
+
+    modelBuilder.Entity<IdentityRole>().HasData(roles);
+}
+
 
     }
 }
