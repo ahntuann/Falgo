@@ -10,6 +10,8 @@
     left: 50%;
     transform: translateX(-50%);
     width: inherit;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
 }
 
 .logo-img {
@@ -26,7 +28,7 @@
     transition: all 0.3s ease;
 
     &:hover {
-        color: #fff;
+        color: #056f5d;
         transform: scale(1.1);
         background-color: rgba(0, 123, 255, 0.1);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

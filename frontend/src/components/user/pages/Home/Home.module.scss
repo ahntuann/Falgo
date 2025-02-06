@@ -3,17 +3,94 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
 }
 
+//
+.homeComponents {
+    margin-top: 50px;
+}
+
+// Slider
 .slider {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 0;
     width: 100%;
 }
 
 .sliderImg {
     width: 100%;
+}
+
+// Problem Daily
+.problemDaily {
+    width: 100%;
+}
+
+.problemDailyNames {
+    display: flex;
+    width: 100%;
+}
+
+.category {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-right: 50px;
+    color: #65656c;
+    background-color: var(--background-color);
+    border: none;
+    cursor: pointer;
+    padding: 10px 0;
+    position: relative;
+    display: inline-block;
+    margin-top: 30px;
+}
+
+.category::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0px;
+    height: 2px;
+    background-color: var(--primary-text-color);
+    transform: translateX(-100%);
+}
+
+.contestBriefCategory,
+.problemDailyName.active {
+    color: var(--primary-text-color);
+}
+
+.contestBriefCategory::after,
+.problemDailyName.active::after {
+    width: 50%;
+    animation: slideIn 0.2s ease-in-out;
+}
+
+@keyframes slideIn {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 50%;
+    }
+}
+
+.problemDailyItem {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+//
+.contests {
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+}
+
+.footer {
+    height: 100px;
 }

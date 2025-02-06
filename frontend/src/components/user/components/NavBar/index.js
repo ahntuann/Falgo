@@ -5,8 +5,7 @@ import style from './NavBar.module.scss';
 import logo from '~/assets/images/logo/logo.jpg';
 import { useContext } from 'react';
 import AuthContext from '~/context/AuthContext';
-import LoginRegisterPart from '~/components/user/components/LoginRegisterPart';
-import UserPart from '~/components/user/components/UserPart';
+import { LoginRegisterPart, UserPart } from '~/components/user/components';
 
 const cs = classNames.bind(style);
 

@@ -1,0 +1,62 @@
+.wrapper {
+    width: 18%;
+    aspect-ratio: 1 / 1;
+    border: 1px solid #000;
+    border-radius: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.name,
+.point,
+.author {
+    width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+.name {
+    font-weight: 600;
+    position: absolute;
+    top: 10px;
+}
+
+.point {
+    font-size: 1.4rem;
+}
+
+.getInProblem {
+    font-size: 6.5rem;
+    cursor: pointer;
+}
+
+.author {
+    font-size: 1.4rem;
+    opacity: 0.8;
+    font-weight: 600;
+}
+
+.footer {
+    margin-top: 10px;
+    display: flex;
+    position: absolute;
+    bottom: 10px;
+    width: 90%;
+    border-top: 1px solid #000;
+    justify-content: space-between;
+}
+
+.numberSubmissionSpan {
+    font-weight: 600;
+}
+
+.numberSubmission,
+.numberPass {
+    font-size: 1.4rem;
+}
