@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using api.Repository;
 using api.Interface;
 using api.Services;
 using Microsoft.OpenApi.Models;
@@ -96,8 +97,11 @@ builder.Services.AddAuthentication(options =>
         )
     };
 });
-
+//Add DI
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
+builder.Services.AddScoped<IProblemRepository, ProblemRepository>();
+builder.Services.AddScoped<IProblemService, ProblemService>();
 
 var app = builder.Build();
 

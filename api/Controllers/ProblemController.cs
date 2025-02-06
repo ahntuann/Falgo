@@ -39,7 +39,7 @@ namespace api.Controllers
             {
                 return NotFound();
             }
-            if (categories.Contains(query.ProblemCategory))
+            if (!categories.Contains(query.ProblemCategory))
             {
                 return NotFound();
             }
