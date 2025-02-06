@@ -27,6 +27,7 @@ namespace api.Model
         public string Language { get; set; } = string.Empty;
         [Required]
         public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
+        [Required]
         public Problem Problem { get; set; } = new Problem();
         public AppUser AppUser { get; set; } = new AppUser();
     }
