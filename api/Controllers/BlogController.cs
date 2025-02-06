@@ -7,6 +7,7 @@ using api.Dtos;
 using api.Dtos.BlogSpace;
 using api.Interface;
 using api.Mappers;
+using api.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -41,6 +42,18 @@ namespace api.Controllers
             }
 
             return Ok(stock.ToBlogDto());
+        }
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetByUserID([FromRoute] int userId)
+        {
+            var blogs = await _BlogRepo.GetByUserIDAsync(userId);
+
+            if (blogs == null)
+            {
+                return NotFound("No blogs found for this user.");
+            }
+
+            return Ok(blogs.ToBlogDto());
         }
         [HttpPost]
         public async Task<IActionResult> create([FromBody] CreateBlogRequestDto BlogDto)

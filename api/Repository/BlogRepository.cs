@@ -49,6 +49,11 @@ namespace api.Repository
             return await _Context.Blogs.FirstOrDefaultAsync(i => i.ID == id);
         }
 
+        public async Task<Blog?> GetByUserIDAsync(int id)
+        {
+            return await _Context.Blogs.FirstOrDefaultAsync(i => i.UserId == id);
+        }
+
         public async Task<Blog?> UpdateAync(int id, UpdateBlogRequesDto BlogDto)
         {
             var existingBlog = await _Context.Blogs.FirstOrDefaultAsync(x => x.ID == id);

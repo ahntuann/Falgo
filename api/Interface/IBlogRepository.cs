@@ -13,6 +13,7 @@ namespace api.Interface
     {
         Task<List<Blog>> GetAllAsync();
         Task<Blog?> GetByIDAsync(int id);
+        Task<Blog?> GetByUserIDAsync(int id);
         Task<Blog> CreateAsync(Blog BlogModel);
         Task<Blog?> UpdateAync(int id, UpdateBlogRequesDto BlogDto);
         Task<Blog?> DeleteAync(int id);
