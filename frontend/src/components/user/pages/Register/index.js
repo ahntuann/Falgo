@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
+import moment from 'moment';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -28,12 +29,21 @@ const Register = () => {
             dob: Yup.date().required('Date of birth is required').nullable(),
         }),
         onSubmit: async (values) => {
-            const formattedDateOfBirth = new Date(values.dob).toISOString().slice(0, 19);
-            values.dob = formattedDateOfBirth;
-            console.log('DOB value before sending:', values.dob);
+            const formattedDateOfBirth = moment(values.dob).toISOString();
+            const requestData = {
+                fullName: values.fullName,
+                username: values.username,
+                password: values.password,
+                email: values.email,
+                phoneNumber: values.phoneNumber,
+                address: values.address,
+                DateOfBirth: formattedDateOfBirth,
+            };
+            console.log('DOB value before sending:', requestData.DateOfBirth);
+            console.log('Sending values:', requestData);
 
             try {
-                await axios.post('http://localhost:5180/api/account/register', values);
+                await axios.post('http://localhost:5180/api/account/register', requestData);
                 alert('Registration successful!');
                 navigate('/login');
             } catch (error) {

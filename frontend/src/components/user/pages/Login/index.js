@@ -21,13 +21,18 @@ const Login = () => {
         onSubmit: async (values) => {
             try {
                 const response = await axios.post('http://localhost:5180/api/account/login', values);
-                const userId = response.data.user.id;
-                console.log(userId);
 
-                console.log('Login successful:', response.data);
+                console.log('API Response:', response.data);
+
+                const userId = response.data?.id;
+
+                if (!userId) {
+                    throw new Error('User ID not found in response data');
+                }
+
+                console.log('User ID:', userId);
                 alert('Login successful!');
-
-                navigate('/homepage');
+                navigate('/');
             } catch (error) {
                 console.error('Login failed:', error.response?.data || error.message);
                 alert(`Login failed! ${error.response?.data || error.message}`);
@@ -35,7 +40,6 @@ const Login = () => {
         },
     });
 
-    // Hàm xử lý đăng nhập với Google
     const handleGoogleLogin = () => {
         window.location.href = 'http://localhost:5180/api/account/google-login';
     };

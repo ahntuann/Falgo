@@ -59,8 +59,15 @@ public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
 [HttpPost("register")]
 public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
 {
-    if (!ModelState.IsValid) return BadRequest(ModelState);
-    Console.WriteLine($"Received DOB: {registerDto.DateOfBirth}");
+    if (!ModelState.IsValid) 
+{
+    foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+    {
+        Console.WriteLine(error.ErrorMessage);
+    }
+    return BadRequest(ModelState);
+}
+
     
     var isUserExists = await _userManager.Users.AnyAsync(u => u.UserName == registerDto.Username);
     var isEmailExists = await _userManager.Users.AnyAsync(u => u.Email == registerDto.Email);
