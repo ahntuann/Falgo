@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import './Problems.module.scss';
+
+import classNames from 'classnames/bind';
+
+import style from './Problems.module.scss';
+
+const cs = classNames.bind(style);
 
 const ProblemList = () => {
     const [problems, setProblems] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [totalPages, setTotalPages] = useState(1);
     const [query, setQuery] = useState({
         ProblemTitle: '',
         ProblemCategory: '',
@@ -14,11 +21,22 @@ const ProblemList = () => {
         PageNumber: 1,
         PageSize: 15,
     });
-    const [totalPages, setTotalPages] = useState(1);
+
+    const debounceRef = useRef(null);
 
     useEffect(() => {
-        fetchProblems();
         fetchCategories();
+    }, []);
+
+    useEffect(() => {
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
+        }
+        debounceRef.current = setTimeout(() => {
+            fetchProblems();
+        }, 1000);
+
+        return () => clearTimeout(debounceRef.current);
     }, [query]);
 
     const fetchProblems = async () => {
@@ -51,9 +69,9 @@ const ProblemList = () => {
     };
 
     return (
-        <div className="problem-list">
+        <div className={cs('problemList')}>
             <h2>Danh sách câu hỏi</h2>
-            <div className="filters">
+            <div className={cs('filters')}>
                 <input
                     type="text"
                     name="ProblemTitle"
@@ -95,6 +113,7 @@ const ProblemList = () => {
             <table>
                 <thead>
                     <tr>
+                        <th>Mã câu hỏi</th>
                         <th>Tên</th>
                         <th>Dạng câu hỏi</th>
                         <th>Tỉ lệ hoàn thành</th>
@@ -106,17 +125,22 @@ const ProblemList = () => {
                 <tbody>
                     {problems.map((problem) => (
                         <tr key={problem.id}>
+                            <td>{problem.problemId}</td>
                             <td>{problem.title}</td>
                             <td>{problem.category}</td>
                             <td>{problem.acceptanceRate}%</td>
                             <td>{problem.acceptedCount}</td>
                             <td>{problem.score}</td>
-                            <td>{problem.solvedStatus}</td>
+                            <td>
+                                {problem.solvedStatus === 'Not passed'
+                                    ? 'Chưa hoàn thành'
+                                    : 'Đã hoàn thành'}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <div className="pagination">
+            <div className={cs('pagination')}>
                 <button
                     disabled={query.PageNumber === 1}
                     onClick={() => setQuery({ ...query, PageNumber: query.PageNumber - 1 })}

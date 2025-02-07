@@ -1,72 +1,119 @@
-$primary-color: #007bff;
-$border-color: #ccc;
-$padding-size: 10px;
-$border-radius: 5px;
+.problemList {
+    padding: 1.5rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-.problems-container {
-    width: 90%;
-    margin: auto;
-    padding: 20px;
-}
-
-.title {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-}
-
-.filters {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-
-    input,
-    select {
-        padding: 8px;
-        border: 1px solid $border-color;
-        border-radius: $border-radius;
-    }
-
-    .checkbox {
-        display: flex;
-        align-items: center;
-    }
-}
-
-.table {
-    width: 100%;
-    border-collapse: collapse;
-
-    th {
-        background-color: $primary-color;
-        color: white;
-        padding: $padding-size;
-    }
-
-    td {
-        border: 1px solid $border-color;
-        padding: 8px;
+    h2 {
+        margin-bottom: 1rem;
+        font-size: 3rem;
+        color: #333;
         text-align: center;
     }
-}
 
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    .filters {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
 
-    button {
-        padding: 5px 10px;
-        border: 1px solid $primary-color;
-        background-color: $primary-color;
-        color: white;
-        cursor: pointer;
-        margin: 0 5px;
-        border-radius: $border-radius;
+        input[type='text'],
+        select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1.6rem;
+            transition: border-color 0.3s ease;
+            &:focus {
+                outline: none;
+                border-color: #007bff;
+            }
+        }
 
-        &:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+        label {
+            display: flex;
+            align-items: center;
+            font-size: 1.6rem;
+            color: #555;
+            input[type='checkbox'] {
+                margin-right: 0.5rem;
+            }
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            &:hover {
+                background-color: #0056b3;
+            }
+        }
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 1.5rem;
+        background-color: #fff;
+
+        thead {
+            background-color: #f1f1f1;
+            th {
+                padding: 0.75rem;
+                text-align: left;
+                font-weight: 600;
+                border-bottom: 2px solid #ddd;
+            }
+        }
+
+        tbody {
+            tr {
+                &:hover {
+                    cursor: pointer;
+                    background-color: #f9f9f9;
+                }
+                td {
+                    padding: 0.75rem;
+                    border-bottom: 1px solid #eee;
+                    color: #333;
+                }
+            }
+        }
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            &:disabled {
+                background-color: #ccc;
+                cursor: not-allowed;
+            }
+            &:hover:not(:disabled) {
+                background-color: #0056b3;
+            }
+        }
+
+        span {
+            font-size: 1rem;
+            color: #333;
         }
     }
 }
