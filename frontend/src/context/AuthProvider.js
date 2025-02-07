@@ -5,8 +5,14 @@ function AuthProvider({ children }) {
     const userRoleNow = localStorage.getItem('user');
 
     const [userRole, setUserRole] = useState(userRoleNow !== null ? 'user' : 'guest');
+    const [appUser, setAppUser] = useState(
+        userRole !== null ? JSON.parse(localStorage.getItem('user')) : null,
+    );
 
-    const logInAsUser = () => setUserRole('user');
+    const logInAsUser = () => {
+        setAppUser(JSON.parse(localStorage.getItem('user')));
+        setUserRole('user');
+    };
     const logInAsAdmin = () => setUserRole('admin');
     const logout = () => {
         localStorage.removeItem('user');
@@ -14,7 +20,7 @@ function AuthProvider({ children }) {
     };
 
     return (
-        <AuthContext.Provider value={{ userRole, logInAsAdmin, logInAsUser, logout }}>
+        <AuthContext.Provider value={{ userRole, appUser, logInAsAdmin, logInAsUser, logout }}>
             {children}
         </AuthContext.Provider>
     );

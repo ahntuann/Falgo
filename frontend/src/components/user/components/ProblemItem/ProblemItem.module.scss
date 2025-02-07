@@ -43,8 +43,10 @@
 }
 
 .footer {
-    margin-top: 10px;
+    padding: 3px;
     display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
     bottom: 10px;
     width: 90%;
@@ -59,4 +61,25 @@
 .numberSubmission,
 .numberPass {
     font-size: 1.4rem;
+}
+
+.status {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.status.error {
+    color: rgb(194, 7, 7);
+}
+
+.status.warning {
+    color: rgb(185, 185, 3);
+}
+
+.status.success {
+    color: green;
 }
