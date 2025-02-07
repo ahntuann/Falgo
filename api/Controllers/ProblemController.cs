@@ -41,7 +41,7 @@ namespace api.Controllers
             }
             if (!categories.Contains(query.ProblemCategory))
             {
-                return NotFound();
+                return Ok(result);
             }
             return Ok(result);
         }

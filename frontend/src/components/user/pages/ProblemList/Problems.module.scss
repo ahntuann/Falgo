@@ -1,0 +1,72 @@
+$primary-color: #007bff;
+$border-color: #ccc;
+$padding-size: 10px;
+$border-radius: 5px;
+
+.problems-container {
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+
+    input,
+    select {
+        padding: 8px;
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+    }
+
+    .checkbox {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+        background-color: $primary-color;
+        color: white;
+        padding: $padding-size;
+    }
+
+    td {
+        border: 1px solid $border-color;
+        padding: 8px;
+        text-align: center;
+    }
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    button {
+        padding: 5px 10px;
+        border: 1px solid $primary-color;
+        background-color: $primary-color;
+        color: white;
+        cursor: pointer;
+        margin: 0 5px;
+        border-radius: $border-radius;
+
+        &:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    }
+}

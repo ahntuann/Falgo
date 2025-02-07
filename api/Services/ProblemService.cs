@@ -7,7 +7,6 @@ using api.Helpers;
 using api.Interface;
 using api.Mappers;
 using api.Model;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace api.Services
 {
@@ -26,9 +25,8 @@ namespace api.Services
             var problems = await _problemRepository.GetAllProblemAsync();
             var categories = problems
                 .Select(p => p.Category)
-                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .Where(c => !string.IsNullOrWhiteSpace(c)).Distinct()
                 .ToList();
-
             return categories;
         }
 
