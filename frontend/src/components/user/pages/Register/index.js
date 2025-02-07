@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -8,6 +8,11 @@ import moment from 'moment';
 
 const Register = () => {
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false); // 👁 Trạng thái hiển thị mật khẩu
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -22,7 +27,13 @@ const Register = () => {
         validationSchema: Yup.object({
             fullName: Yup.string().required('Full name is required'),
             username: Yup.string().required('Username is required'),
-            password: Yup.string().min(12, 'At least 12 characters').required('Password is required'),
+            password: Yup.string()
+                .min(12, 'At least 12 characters')
+                .matches(/[0-9]/, 'Must contain at least one number')
+                .matches(/[a-z]/, 'Must contain at least one lowercase letter')
+                .matches(/[A-Z]/, 'Must contain at least one uppercase letter')
+                .matches(/[^a-zA-Z0-9]/, 'Must contain at least one special character')
+                .required('Password is required'),
             email: Yup.string().email('Invalid email').required('Email is required'),
             phoneNumber: Yup.string().required('Phone number is required'),
             address: Yup.string().required('Address is required'),
@@ -39,8 +50,6 @@ const Register = () => {
                 address: values.address,
                 DateOfBirth: formattedDateOfBirth,
             };
-            console.log('DOB value before sending:', requestData.DateOfBirth);
-            console.log('Sending values:', requestData);
 
             try {
                 await axios.post('http://localhost:5180/api/account/register', requestData);
@@ -84,15 +93,23 @@ const Register = () => {
                             value={formik.values.username}
                         />
                     </div>
-                    <div className="input-group">
+                    <div className="input-group password-group">
                         <input
-                            type="password"
+                            type={showPassword ? 'text' : 'password'}
                             name="password"
                             placeholder="Password"
                             onChange={formik.handleChange}
                             value={formik.values.password}
                         />
+                        <span className="eye-icon" onClick={togglePasswordVisibility}>
+                            {showPassword ? '🙈' : '👁'}
+                        </span>
                     </div>
+
+                    {formik.errors.password && formik.touched.password && (
+                        <p className="error-message">{formik.errors.password}</p>
+                    )}
+
                     <div className="input-group">
                         <input
                             type="email"
@@ -132,17 +149,6 @@ const Register = () => {
                         Register
                     </button>
                 </form>
-
-                <div className="social-login">
-                    <p>Do you have an account?</p>
-                    <div className="social-icons">
-                        <img src="https://www.google.com/favicon.ico" alt="Google" />
-                        <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
-                            alt="GitHub"
-                        />
-                    </div>
-                </div>
             </div>
         </div>
     );
