@@ -7,7 +7,6 @@ using api.Helpers;
 using api.Interface;
 using api.Mappers;
 using api.Model;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace api.Services
 {
@@ -26,24 +25,44 @@ namespace api.Services
             var problems = await _problemRepository.GetAllProblemAsync();
             var categories = problems
                 .Select(p => p.Category)
-                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .Where(c => !string.IsNullOrWhiteSpace(c)).Distinct()
                 .ToList();
-
             return categories;
         }
 
         public async Task<PageResult<ViewAllProblemDto>> GetAllProblemsWithStatsAsync(string userId, QueryObject query)
         {
-            var problems = (await _problemRepository.GetAllProblemAsync()).AsQueryable();
+            var problemsQuery = (await _problemRepository.GetAllProblemAsync()).AsQueryable();
             //Search theo title cua problem
             if (!string.IsNullOrWhiteSpace(query.ProblemTitle))
             {
-                problems = problems.Where(p => p.Title.Contains(query.ProblemTitle, StringComparison.OrdinalIgnoreCase));
+                problemsQuery = problemsQuery.Where(p => p.Title.Contains(query.ProblemTitle, StringComparison.OrdinalIgnoreCase));
             }
             //Search theo category cua problem
             if (!string.IsNullOrWhiteSpace(query.ProblemCategory))
             {
-                problems = problems.Where(p => p.Category.Equals(query.ProblemCategory, StringComparison.OrdinalIgnoreCase));
+                problemsQuery = problemsQuery.Where(p => p.Category.Equals(query.ProblemCategory, StringComparison.OrdinalIgnoreCase));
+            }
+            var problems = new List<ViewAllProblemDto>();
+            foreach (var problem in problemsQuery)
+            {
+                var submissions = await _submissionRepository.GetSubmissionsByProblemIdAsync(problem.ProblemId);
+                var problemDto = ProblemMapper.ToViewAllProblemDto(problem, submissions, userId);
+                problems.Add(problemDto);
+            }
+            //Sorting
+            if (!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                problems = query.SortBy switch
+                {
+                    "ar" => query.IsDescending.Equals("true") ? problems.OrderByDescending(p => p.AcceptanceRate).ToList()
+                                                            : problems.OrderBy(p => p.AcceptanceRate).ToList(),
+                    "ac" => query.IsDescending.Equals("true") ? problems.OrderByDescending(p => p.AcceptedCount).ToList()
+                                                            : problems.OrderBy(p => p.AcceptedCount).ToList(),
+                    "p" => query.IsDescending.Equals("true") ? problems.OrderByDescending(p => p.Score).ToList()
+                                        : problems.OrderBy(p => p.Score).ToList(),
+                    _ => problems
+                };
             }
             var result = new List<ViewAllProblemDto>();
             //Tinh toan de phan trang
@@ -51,33 +70,17 @@ namespace api.Services
             //Lay ket qua problem tu db
             foreach (var problem in problems.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize))
             {
-                var submissions = await _submissionRepository.GetSubmissionsByProblemIdAsync(problem.ProblemId);
-                var problemDto = ProblemMapper.ToViewAllProblemDto(problem, submissions, userId);
                 //Filter loc problem da hoan thanh
                 bool hidePassed = false;
                 if (!string.IsNullOrWhiteSpace(query.HidePassed))
                 {
                     bool.TryParse(query.HidePassed, out hidePassed);
                 }
-                if (hidePassed && problemDto.SolvedStatus.Equals("Passed"))
+                if (hidePassed && problem.SolvedStatus.Equals("Passed"))
                 {
                     continue;
                 }
-                result.Add(problemDto);
-            }
-            //Sorting
-            if (!string.IsNullOrWhiteSpace(query.SortBy))
-            {
-                result = query.SortBy switch
-                {
-                    "ar" => query.IsDescending.Equals("true") ? result.OrderByDescending(p => p.AcceptanceRate).ToList()
-                                                            : result.OrderBy(p => p.AcceptanceRate).ToList(),
-                    "ac" => query.IsDescending.Equals("true") ? result.OrderByDescending(p => p.AcceptedCount).ToList()
-                                                            : result.OrderBy(p => p.AcceptedCount).ToList(),
-                    "p" => query.IsDescending.Equals("true") ? result.OrderByDescending(p => p.Score).ToList()
-                                        : result.OrderBy(p => p.Score).ToList(),
-                    _ => result
-                };
+                result.Add(problem);
             }
             return new PageResult<ViewAllProblemDto>
             {
