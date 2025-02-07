@@ -24,7 +24,7 @@ namespace api.Mappers
             };
         }
 
-        public static ProblemHomePageMostAttempedDto AddNumAttempted(this ProblemHomePageMostAttempedDto problem, int numAttempted)
+        public static ProblemHomePageMostAttempedDto AddNumAttempted(this ProblemHomePageMostAttempedDto problem, (int numAttempted, int numSucces) data)
         {
             return new ProblemHomePageMostAttempedDto
             {
@@ -36,7 +36,25 @@ namespace api.Mappers
                 TimeLimit = problem.TimeLimit,
                 MemoryLimit = problem.MemoryLimit,
                 Author = problem.Author,
-                TimeAttempted = numAttempted
+                TimeAttempted = data.numAttempted,
+                NumSucces = data.numSucces
+            };
+        }
+
+        public static ProblemHomePageNotDoneDto ToProblemHomePageNotDoneFromProblem(this Problem problem, (int point, string status) data)
+        {
+            return new ProblemHomePageNotDoneDto
+            {
+                ProblemId = problem.ProblemId,
+                Category = problem.Category,
+                Title = problem.Title,
+                Detail = problem.Detail,
+                TotalPoint = problem.TotalPoint,
+                TimeLimit = problem.TimeLimit,
+                MemoryLimit = problem.MemoryLimit,
+                Author = problem.Author,
+                Point = data.point,
+                Status = data.status
             };
         }
     }

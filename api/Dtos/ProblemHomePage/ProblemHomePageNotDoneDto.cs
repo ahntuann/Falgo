@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace api.Dtos.ProblemHomePage
 {
-    public class ProblemHomePageMostAttempedDto
+    public class ProblemHomePageNotDoneDto
     {
         public string ProblemId { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
@@ -15,12 +15,12 @@ namespace api.Dtos.ProblemHomePage
         public int TimeLimit { get; set; }
         public int MemoryLimit { get; set; }
         public string? Author { get; set; }
-        public int TimeAttempted { get; set; }
-        public int NumSucces { get; set; }
+        public float Point { get; set; }
+        public string Status { get; set; } = string.Empty;
 
         public override bool Equals(object obj)
         {
-            return obj is ProblemHomePageMostAttempedDto dto &&
+            return obj is ProblemHomePageNotDoneDto dto &&
                    ProblemId == dto.ProblemId;
         }
 

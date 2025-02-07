@@ -20,7 +20,7 @@ namespace api.Repository
 
         public async Task<List<Submission>> GetAllSubmissionAtMonthAsync(int month, int year)
         {
-            return await _context.Submissions.Where(x => x.SubmittedAt.Year == year && x.SubmittedAt.Month == month).Include(x => x.Problem).ToListAsync();
+            return await _context.Submissions.Where(x => x.SubmittedAt.Year == year && x.SubmittedAt.Month == month).Include(x => x.Problem).Include(x => x.AppUser).ToListAsync();
         }
 
         public async Task<List<Submission>> GetSubmissionsByProblemIdAsync(string problemId)

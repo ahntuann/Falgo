@@ -9,5 +9,6 @@ namespace api.Interface
     public interface IProblemHomePageServices
     {
         public Task<List<ProblemHomePageMostAttempedDto?>> GetXProblemHomePageMostAttmpedAsync(int pageSize, int month, int year);
+        public Task<List<ProblemHomePageNotDoneDto?>> GetXProblemAreNotDoneAsync(int pageSize, string userId, int month, int year);
     }
 }

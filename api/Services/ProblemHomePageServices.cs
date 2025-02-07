@@ -16,6 +16,21 @@ namespace api.Services
             _submissionRepo = submissionRepo;
         }
 
+        public async Task<List<ProblemHomePageNotDoneDto?>> GetXProblemAreNotDoneAsync(int pageSize, string userId, int month, int year)
+        {
+            var submissions = await _submissionRepo.GetAllSubmissionAtMonthAsync(month, year);
+
+            if (submissions == null)
+                return null;
+
+            var problems = submissions.Where(x => x.AppUser.Id.Equals(userId) && !x.Status.Equals("Accepted"))
+                                .Take(pageSize)
+                                .Select(x => x.Problem.ToProblemHomePageNotDoneFromProblem((x.Point, x.Status)))
+                                .ToList();
+
+            return problems;
+        }
+
         public async Task<List<ProblemHomePageMostAttempedDto?>> GetXProblemHomePageMostAttmpedAsync(int pageSize, int month, int year)
         {
             var submissions = await _submissionRepo.GetAllSubmissionAtMonthAsync(month, year);
@@ -23,9 +38,15 @@ namespace api.Services
             if (submissions == null)
                 return null;
 
-            Dictionary<ProblemHomePageMostAttempedDto, int> problemExistTime = submissions
-                                                        .GroupBy(x => x.Problem.ToProblemHomePageMostAttempedDtoFromProblem())
-                                                        .ToDictionary(x => x.Key, x => x.Count());
+            var problemExistTime = submissions
+                .GroupBy(x => x.Problem.ToProblemHomePageMostAttempedDtoFromProblem())
+                .ToDictionary(
+                    g => g.Key,
+                    g => (
+                        g.Count(),
+                        g.Count(x => x.Status.Equals("Accepted"))
+                    )
+                );
 
             var topX = problemExistTime.OrderByDescending(x => x.Value).Take(pageSize).ToList();
 

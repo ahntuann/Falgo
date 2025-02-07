@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dtos.ProblemHomePage;
 using api.Helpers;
 using api.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,15 @@ namespace api.Controllers
             if (query.MostAttemped == true)
             {
                 var problems = await _proService.GetXProblemHomePageMostAttmpedAsync(query.PageSize, DateTime.Now.Month, DateTime.Now.Year);
+
+                if (problems == null)
+                    return NotFound("There are no problems in this month");
+
+                return Ok(problems);
+            }
+            else if (query.NotDone == true)
+            {
+                var problems = await _proService.GetXProblemAreNotDoneAsync(query.PageSize, query.userId, DateTime.Now.Month, DateTime.Now.Year);
 
                 if (problems == null)
                     return NotFound("There are no problems in this month");
