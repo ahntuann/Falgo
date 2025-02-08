@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos;
-using api.Dtos.Problem;
-using api.Model.BlogSpace;
+using api.Dtos.BlogSpace;
+using api.Model;
 
 namespace api.Mappers
 {
@@ -15,20 +15,30 @@ namespace api.Mappers
             return new BlogDto
             {
                 ID = BlogModel.ID,
+
+                UserId = BlogModel.UserId,
+
                 GuestName = BlogModel.GuestName,
                 GuestEmail = BlogModel.GuestEmail,
+
                 Thumbnail = BlogModel.Thumbnail,
                 title = BlogModel.title,
                 description = BlogModel.description,
                 Content = BlogModel.Content,
+                ImageBlog = BlogModel.ImageBlog,
+                CategoryBlog = BlogModel.CategoryBlog,
+                Status = BlogModel.Status,
+
                 CreateOn = BlogModel.CreateOn,
-                Status = BlogModel.Status
+                DatePublic = BlogModel.DatePublic,
+                TagBlog = BlogModel.TagBlog
             };
         }
         public static Blog ToBlogFromCreateDto(this CreateBlogRequestDto BlogDto)
         {
             return new Blog
             {
+                UserId = BlogDto.UserId,
                 GuestName = BlogDto.GuestName,
                 GuestEmail = BlogDto.GuestEmail,
                 Thumbnail = BlogDto.Thumbnail,

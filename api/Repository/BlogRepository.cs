@@ -6,7 +6,6 @@ using api.Data;
 using api.Dtos.BlogSpace;
 using api.Interface;
 using api.Model;
-using api.Model.BlogSpace;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -49,9 +48,9 @@ namespace api.Repository
             return await _Context.Blogs.FirstOrDefaultAsync(i => i.ID == id);
         }
 
-        public async Task<Blog?> GetByUserIDAsync(int id)
+        public async Task<List<Blog>> GetByUserIDAsync(string id)
         {
-            return await _Context.Blogs.FirstOrDefaultAsync(i => i.UserId == id);
+            return await _Context.Blogs.Where(i => (i.UserId).Equals(id)).ToListAsync();
         }
 
         public async Task<Blog?> UpdateAync(int id, UpdateBlogRequesDto BlogDto)

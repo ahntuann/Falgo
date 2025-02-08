@@ -2,14 +2,27 @@ import React, { useState } from 'react';
 import AuthContext from '~/context/AuthContext';
 
 function AuthProvider({ children }) {
-    const [userRole, setUserRole] = useState('guest');
+    const userRoleNow = localStorage.getItem('user');
 
-    const logInAsUser = () => setUserRole('user');
+    const [userRole, setUserRole] = useState(userRoleNow !== null ? 'user' : 'guest');
+    const [appUser, setAppUser] = useState(
+        userRole !== null ? JSON.parse(localStorage.getItem('user')) : null,
+    );
+
+    const logInAsUser = () => {
+        setAppUser(JSON.parse(localStorage.getItem('user')));
+        setUserRole('user');
+    };
     const logInAsAdmin = () => setUserRole('admin');
-    const logout = () => setUserRole('guest');
+    const logout = () => {
+        localStorage.removeItem('user');
+        setUserRole('guest');
+    };
 
     return (
-        <AuthContext.Provider value={{ userRole, logInAsAdmin, logInAsUser, logout }}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={{ userRole, appUser, logInAsAdmin, logInAsUser, logout }}>
+            {children}
+        </AuthContext.Provider>
     );
 }
 

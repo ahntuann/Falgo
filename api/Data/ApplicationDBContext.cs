@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using api.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using api.Model.BlogSpace;
+using Microsoft.AspNetCore.Identity;
 
 namespace api.Data
 {
@@ -26,24 +26,45 @@ namespace api.Data
 
         //BlogDaTa
         public DbSet<Blog> Blogs { get; set; }
-        public DbSet<CategoryBlog> CategoryBlog { get; set; }
         public DbSet<CommentBlog> CommentBlog { get; set; }
-        public DbSet<ImageBlog> ImageBlog { get; set; }
-        public DbSet<TagBlog> TagBlog { get; set; }
         //EndBlogData
-        //
-        public DbSet<User> User { get; set; }
-        //
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+
             modelBuilder.Entity<ContestProblem>(entity =>
             {
                 entity.HasKey(cp => new { cp.ContestId, cp.ProblemId });
             });
+
+
             modelBuilder.Entity<ContestRegistion>()
                 .HasKey(cr => new { cr.Id, cr.ContestId });
+
+
+            List<IdentityRole> roles = new List<IdentityRole>
+    {
+        new IdentityRole
+        {
+            Name = "User",
+            NormalizedName = "USER"
+        },
+        new IdentityRole
+        {
+            Name = "Guest",
+            NormalizedName = "GUEST"
+        },
+        new IdentityRole
+        {
+            Name = "Admin",
+            NormalizedName = "ADMIN"
         }
+    };
+
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
+        }
+
 
     }
 }

@@ -28,7 +28,6 @@ namespace api.Controllers
         {
             var blogs = await _BlogRepo.GetAllAsync();
             var blogsDto = blogs.Select(s => s.ToBlogDto());
-
             return Ok(blogsDto);
         }
         [HttpGet("{id}")]
@@ -44,16 +43,12 @@ namespace api.Controllers
             return Ok(stock.ToBlogDto());
         }
         [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetByUserID([FromRoute] int userId)
+        public async Task<IActionResult> GetByUserID([FromRoute] string userId)
         {
             var blogs = await _BlogRepo.GetByUserIDAsync(userId);
+            var blogsDto = blogs.Select(s => s.ToBlogDto());
 
-            if (blogs == null)
-            {
-                return NotFound("No blogs found for this user.");
-            }
-
-            return Ok(blogs.ToBlogDto());
+            return Ok(blogsDto);
         }
         [HttpPost]
         public async Task<IActionResult> create([FromBody] CreateBlogRequestDto BlogDto)

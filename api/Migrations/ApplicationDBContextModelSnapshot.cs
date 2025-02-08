@@ -47,6 +47,26 @@ namespace api.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "3f84f18c-d882-400b-9ba9-6b514bc4e9e7",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "3bf736ed-866a-4abf-8efa-2b972e85d957",
+                            Name = "Guest",
+                            NormalizedName = "GUEST"
+                        },
+                        new
+                        {
+                            Id = "034d052b-feed-4cf8-a015-cc8ee5ef963e",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -163,9 +183,21 @@ namespace api.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -173,6 +205,15 @@ namespace api.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastLoginAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastSolvedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -200,6 +241,12 @@ namespace api.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TotalSolved")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalSubmissions")
+                        .HasColumnType("int");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -220,13 +267,17 @@ namespace api.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("api.Model.BlogSpace.Blog", b =>
+            modelBuilder.Entity("api.Model.Blog", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("CategoryBlog")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -244,7 +295,15 @@ namespace api.Migrations
                     b.Property<string>("GuestName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageBlog")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TagBlog")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -252,8 +311,8 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("description")
                         .IsRequired()
@@ -270,29 +329,7 @@ namespace api.Migrations
                     b.ToTable("Blogs");
                 });
 
-            modelBuilder.Entity("api.Model.BlogSpace.CategoryBlog", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<int?>("BlogId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("BlogId");
-
-                    b.ToTable("CategoryBlog");
-                });
-
-            modelBuilder.Entity("api.Model.BlogSpace.CommentBlog", b =>
+            modelBuilder.Entity("api.Model.CommentBlog", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -319,50 +356,6 @@ namespace api.Migrations
                     b.HasIndex("BlogId");
 
                     b.ToTable("CommentBlog");
-                });
-
-            modelBuilder.Entity("api.Model.BlogSpace.ImageBlog", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<int?>("BlogId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("BlogId");
-
-                    b.ToTable("ImageBlog");
-                });
-
-            modelBuilder.Entity("api.Model.BlogSpace.TagBlog", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<int?>("BlogId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TagName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("BlogId");
-
-                    b.ToTable("TagBlog");
                 });
 
             modelBuilder.Entity("api.Model.Contest", b =>
@@ -590,65 +583,6 @@ namespace api.Migrations
                     b.ToTable("TestCaseStatuses");
                 });
 
-            modelBuilder.Entity("api.Model.User", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Avatar")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastLoginAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastSolvedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TotalSolved")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalSubmissions")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -700,46 +634,19 @@ namespace api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("api.Model.BlogSpace.Blog", b =>
+            modelBuilder.Entity("api.Model.Blog", b =>
                 {
-                    b.HasOne("api.Model.User", "User")
+                    b.HasOne("api.Model.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("api.Model.BlogSpace.CategoryBlog", b =>
+            modelBuilder.Entity("api.Model.CommentBlog", b =>
                 {
-                    b.HasOne("api.Model.BlogSpace.Blog", "Blog")
-                        .WithMany("CategoryBlog")
-                        .HasForeignKey("BlogId");
-
-                    b.Navigation("Blog");
-                });
-
-            modelBuilder.Entity("api.Model.BlogSpace.CommentBlog", b =>
-                {
-                    b.HasOne("api.Model.BlogSpace.Blog", "Blog")
+                    b.HasOne("api.Model.Blog", "Blog")
                         .WithMany("CommentBlog")
-                        .HasForeignKey("BlogId");
-
-                    b.Navigation("Blog");
-                });
-
-            modelBuilder.Entity("api.Model.BlogSpace.ImageBlog", b =>
-                {
-                    b.HasOne("api.Model.BlogSpace.Blog", "Blog")
-                        .WithMany("ImageBlog")
-                        .HasForeignKey("BlogId");
-
-                    b.Navigation("Blog");
-                });
-
-            modelBuilder.Entity("api.Model.BlogSpace.TagBlog", b =>
-                {
-                    b.HasOne("api.Model.BlogSpace.Blog", "Blog")
-                        .WithMany("TagBlog")
                         .HasForeignKey("BlogId");
 
                     b.Navigation("Blog");
@@ -824,15 +731,9 @@ namespace api.Migrations
                     b.Navigation("Submission");
                 });
 
-            modelBuilder.Entity("api.Model.BlogSpace.Blog", b =>
+            modelBuilder.Entity("api.Model.Blog", b =>
                 {
-                    b.Navigation("CategoryBlog");
-
                     b.Navigation("CommentBlog");
-
-                    b.Navigation("ImageBlog");
-
-                    b.Navigation("TagBlog");
                 });
 
             modelBuilder.Entity("api.Model.Contest", b =>

@@ -1,6 +1,5 @@
-import Home from '~/components/user/Home';
-import Profile from '~/components/user/Profile';
-import DefaultLayout from '~/layouts/DefaultLayout';
+import { Home, ProblemList, Profile } from '~/components/user/pages';
+import { DefaultLayout } from '~/layouts';
 
 const routes = [
     {
@@ -14,6 +13,12 @@ const routes = [
         path: '/profile',
         layout: DefaultLayout,
         role: ['user'],
+    },
+    {
+        component: ProblemList,
+        path: '/problems',
+        layout: DefaultLayout,
+        role: ['user', 'guest'],
     },
 ];
 

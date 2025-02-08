@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using api.Model.BlogSpace;
+using api.Model;
 
 namespace api.Dtos
 {
     public class CreateBlogRequestDto
     {
+        public string? UserId { get; set; }
+        
         public string? GuestName { get; set; }
         public string? GuestEmail { get; set; }
 
