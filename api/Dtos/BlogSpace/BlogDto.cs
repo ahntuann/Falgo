@@ -11,7 +11,6 @@ namespace api.Dtos.BlogSpace
         public int ID { get; set; }
 
         public string? UserId { get; set; }
-        // public AppUser? User { get; set; }
 
         public string? GuestName { get; set; }
         public string? GuestEmail { get; set; }

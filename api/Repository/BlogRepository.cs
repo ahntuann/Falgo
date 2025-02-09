@@ -50,7 +50,7 @@ namespace api.Repository
 
         public async Task<List<Blog>> GetByUserIDAsync(string id)
         {
-            return await _Context.Blogs.Where(i => (i.UserId).Equals(id)).ToListAsync();
+            return await _Context.Blogs.Where(i => (i.UserId ?? "").Equals(id)).ToListAsync();
         }
 
         public async Task<Blog?> UpdateAync(int id, UpdateBlogRequesDto BlogDto)

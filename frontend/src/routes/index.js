@@ -1,4 +1,4 @@
-import { Home, ProblemList, Profile } from '~/components/user/pages';
+import { Home, ProblemList, Profile,Blog } from '~/components/user/pages';
 import { DefaultLayout } from '~/layouts';
 
 const routes = [
@@ -17,6 +17,12 @@ const routes = [
     {
         component: ProblemList,
         path: '/problems',
+        layout: DefaultLayout,
+        role: ['user', 'guest'],
+    },
+    {
+        component: Blog,
+        path: '/Blog',
         layout: DefaultLayout,
         role: ['user', 'guest'],
     },

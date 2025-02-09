@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using api.Data;
 using api.Dtos;
 using api.Dtos.BlogSpace;
+using api.Extensions;
 using api.Interface;
 using api.Mappers;
 using api.Model;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -17,10 +19,11 @@ namespace api.Controllers
     public class BlogController : ControllerBase
     {
         private readonly IBlogRepository _BlogRepo;
-
-        public BlogController(IBlogRepository blogRepo)
+        private readonly UserManager<AppUser> _userManager;
+        public BlogController(IBlogRepository blogRepo, UserManager<AppUser> userManager)
         {
             _BlogRepo = blogRepo;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -54,8 +57,13 @@ namespace api.Controllers
         public async Task<IActionResult> create([FromBody] CreateBlogRequestDto BlogDto)
         {
 
-            var BlogModel = BlogDto.ToBlogFromCreateDto();
+            string? userId = User.GetUserId();
+
+            var BlogModel = BlogDto.ToBlogFromCreateDto(userId);
+            BlogModel.UserId = userId;
+
             await _BlogRepo.CreateAsync(BlogModel);
+
             return CreatedAtAction(nameof(GetByID), new { id = BlogModel.ID }, BlogModel.ToBlogDto());
         }
         [HttpPut]
@@ -63,6 +71,21 @@ namespace api.Controllers
 
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateBlogRequesDto updateDto)
         {
+            if (User?.Identity?.IsAuthenticated != true)
+            {
+                return Unauthorized("Bạn Cần đăng nhập.");
+            }
+            string? userId = User.GetUserId();
+            var CheckBlogModel = await _BlogRepo.GetByIDAsync(id);
+            if (CheckBlogModel == null)
+            {
+                return NotFound("Không tìm thấy bài viết.");
+            }
+            if (CheckBlogModel.UserId != userId)
+            {
+                return Forbid("Bạn không có quyền chỉnh sửa bài viết này.");
+            }
+
             var BlogModel = await _BlogRepo.UpdateAync(id, updateDto);
             if (BlogModel == null)
             {
@@ -76,6 +99,20 @@ namespace api.Controllers
 
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            if (User?.Identity?.IsAuthenticated != true)
+            {
+                return Unauthorized("Bạn Cần đăng nhập.");
+            }
+            string? userId = User.GetUserId();
+            var CheckBlogModel = await _BlogRepo.GetByIDAsync(id);
+            if (CheckBlogModel == null)
+            {
+                return NotFound("Không tìm thấy bài viết.");
+            }
+            if (CheckBlogModel.UserId != userId)
+            {
+                return Forbid("Bạn không có quyền chỉnh xóa bài viết này.");
+            }
             var stockModel = await _BlogRepo.DeleteAync(id);
 
             if (stockModel == null)

@@ -8,7 +8,7 @@ namespace api.Dtos
 {
     public class CreateBlogRequestDto
     {
-        public string? UserId { get; set; }
+        // public string? UserId { get; set; }
         
         public string? GuestName { get; set; }
         public string? GuestEmail { get; set; }

@@ -5,7 +5,6 @@ import useAuth from '~/hooks/useAuth.js';
 import NotFound from '~/components/shared/NotFound';
 import { Login } from '~/components/user/pages';
 import { Register } from '~/components/user/pages';
-import { Blog } from '~/components/user/pages';
 function App() {
     const { userRole } = useAuth();
 
@@ -16,7 +15,6 @@ function App() {
                     <Route path="/notfound" element={<NotFound />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/Blog" element={<Blog />} />
                     {routes.map((route) => {
                         const Component = route.component;
                         const Layout = route.layout;
