@@ -80,8 +80,12 @@
 .problemDailyItem {
     margin-top: 10px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
+}
+
+.notFirst {
+    margin-left: 3.6%;
 }
 
 //

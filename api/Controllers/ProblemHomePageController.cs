@@ -40,6 +40,15 @@ namespace api.Controllers
 
                 return Ok(problems);
             }
+            else if (query.Done == true)
+            {
+                var problems = await _proService.GetXProblemDonedAsync(query.PageSize, query.userId, DateTime.Now.Month, DateTime.Now.Year);
+
+                if (problems == null)
+                    return NotFound("There are no problems in this month");
+
+                return Ok(problems);
+            }
 
             return BadRequest();
         }

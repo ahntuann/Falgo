@@ -84,6 +84,8 @@ function Home() {
                                 <ProblemItem
                                     key={i}
                                     isMostAttempted={problemDailyFocus === 0}
+                                    isDoned={problemDailyFocus === 2}
+                                    classNames={i !== 0 && cs('notFirst')}
                                     name={problem.title}
                                     point={problem.totalPoint}
                                     pointAchive={problem.point}

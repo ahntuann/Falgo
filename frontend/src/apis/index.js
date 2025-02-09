@@ -4,7 +4,7 @@ import { API_ROOT } from '~/ultils/constants';
 export const fetchProblemHomePageAPI = async ({ mostAttempted, notDone, done, userId }) => {
     try {
         const response = await axios.get(
-            `${API_ROOT}/api/problemhome?MostAttemped=${mostAttempted}&NotDone=${notDone}&userId=${userId}`,
+            `${API_ROOT}/api/problemhome?MostAttemped=${mostAttempted}&NotDone=${notDone}&userId=${userId}&Done=${done}`,
         );
 
         return response.data;

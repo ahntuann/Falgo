@@ -23,10 +23,29 @@ namespace api.Services
             if (submissions == null)
                 return null;
 
-            var problems = submissions.Where(x => x.AppUser.Id.Equals(userId) && !x.Status.Equals("Accepted"))
+            var problems = submissions
+                                .Where(x => x.AppUser.Id.Equals(userId) && !x.Status.Equals("Accepted"))
+                                .GroupBy(x => x.Problem.ToProblemHomePageNotDoneFromProblem((x.Point, x.Status)))
                                 .Take(pageSize)
-                                .Select(x => x.Problem.ToProblemHomePageNotDoneFromProblem((x.Point, x.Status)))
+                                .Select(x => x.Key)
                                 .ToList();
+
+            return problems;
+        }
+
+        public async Task<List<ProblemHomePageDonedDto?>> GetXProblemDonedAsync(int pageSize, string userId, int month, int year)
+        {
+            var submissions = await _submissionRepo.GetAllSubmissionAtMonthAsync(month, year);
+
+            if (submissions == null)
+                return null;
+
+            var problems = submissions
+                            .Where(x => x.AppUser.Id == userId && x.Status.Equals("Accepted"))
+                            .GroupBy(x => x.Problem.ToProblemHomePageDonedFromPoblem())
+                            .Take(pageSize)
+                            .Select(x => x.Key)
+                            .ToList();
 
             return problems;
         }

@@ -15,16 +15,21 @@ function ProblemItem({
     numberSubmission,
     numberPass,
     isMostAttempted,
+    isDoned,
+    classNames,
 }) {
     const errorLog = ['Runtime Error', 'Wrong Answer'];
     const warningLog = ['Time Limit Exceeded', 'Partial Correct'];
     const successLog = ['Accepted'];
 
     return (
-        <div className={cs('wrapper')}>
+        <div className={cs('wrapper', classNames)}>
             <div className={cs('name')}>{name}</div>
             <div className={cs('point')}>
-                {!isMostAttempted && <span className={cs('pointAchive')}>{pointAchive} / </span>}
+                {!isMostAttempted && !isDoned && (
+                    <span className={cs('pointAchive')}>{pointAchive} / </span>
+                )}
+                {isDoned && <span className={cs('pointAchive')}>{point} / </span>}
                 {point}
             </div>
             <div className={cs('getInProblem')}>
