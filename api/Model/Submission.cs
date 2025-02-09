@@ -23,12 +23,10 @@ namespace api.Model
         [Required]
         public int MemoryUsed { get; set; }
         [Required]
-        [MaxLength(50)]
-        public string Language { get; set; } = string.Empty;
-        [Required]
         public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
         [Required]
         public Problem Problem { get; set; } = new Problem();
         public AppUser AppUser { get; set; } = new AppUser();
+        public ProgrammingLanguage ProgrammingLanguage { get; set; } = new ProgrammingLanguage();
     }
 }

@@ -25,21 +25,21 @@ namespace api.Data
         public DbSet<Contest> Contests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-{
-    base.OnModelCreating(modelBuilder);
+        {
+            base.OnModelCreating(modelBuilder);
 
-    
-    modelBuilder.Entity<ContestProblem>(entity =>
-    {
-        entity.HasKey(cp => new { cp.ContestId, cp.ProblemId });
-    });
 
-    
-    modelBuilder.Entity<ContestRegistion>()
-        .HasKey(cr => new { cr.Id, cr.ContestId });
+            modelBuilder.Entity<ContestProblem>(entity =>
+            {
+                entity.HasKey(cp => new { cp.ContestId, cp.ProblemId });
+            });
 
-    
-    List<IdentityRole> roles = new List<IdentityRole>
+
+            modelBuilder.Entity<ContestRegistion>()
+                .HasKey(cr => new { cr.Id, cr.ContestId });
+
+
+            List<IdentityRole> roles = new List<IdentityRole>
     {
         new IdentityRole
         {
@@ -58,8 +58,8 @@ namespace api.Data
         }
     };
 
-    modelBuilder.Entity<IdentityRole>().HasData(roles);
-}
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
+        }
 
 
     }
