@@ -12,3 +12,15 @@ export const fetchProblemHomePageAPI = async ({ mostAttempted, notDone, done, us
         console.log(error);
     }
 };
+
+export const fetchContestBriefAPI = async ({ isNewest, pageSize }) => {
+    try {
+        const response = await axios.get(
+            `${API_ROOT}/api/contest?IsNewest=${isNewest}&PageSize=${pageSize}`,
+        );
+
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};

@@ -106,6 +106,10 @@ builder.Services.AddScoped<IProblemService, ProblemService>();
 // Tuan DI
 builder.Services.AddScoped<IProblemHomePageRepository, ProblemHomePageRepository>();
 builder.Services.AddScoped<IProblemHomePageServices, ProblemHomePageServices>();
+builder.Services.AddScoped<IContestService, ContestService>();
+builder.Services.AddScoped<IContestRepository, ContestRepository>();
+builder.Services.AddScoped<IContestRegistationRepository, ContestRegistationRepository>();
+builder.Services.AddScoped<IContestRegistationService, ContestRegistationService>();
 
 var app = builder.Build();
 

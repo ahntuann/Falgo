@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -11,9 +12,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250209130232_AddFieldBannerToContests")]
+    partial class AddFieldBannerToContests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,19 +54,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f9560003-6dc4-4cd7-b751-023ec9c4c0c0",
+                            Id = "9ef03920-fedc-46b4-acb0-1ef5b3085cf8",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "0898a1d9-6ba3-49fe-aef6-8dfcdbab55e5",
+                            Id = "4558eff9-626e-45b1-ac71-a06760d47509",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         },
                         new
                         {
-                            Id = "b0728509-e7d7-4831-a725-4a954010860e",
+                            Id = "ca7529d7-2874-4c84-981f-a71d22f92d78",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -284,8 +287,8 @@ namespace api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DueTime")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("DueTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");

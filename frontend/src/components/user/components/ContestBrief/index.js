@@ -5,7 +5,7 @@ import CountDown from '~/components/user/components/CountDown';
 const cs = classNames.bind(style);
 
 function ContestBrief({ contest }) {
-    const { banner, title, totalPoint, level, endDate, dueTime, numberRegister } = contest;
+    const { banner, title, totalPoint, level, endDate, dueTime, numRegis } = contest;
 
     return (
         <div className={cs('wrapper')}>
@@ -36,7 +36,7 @@ function ContestBrief({ contest }) {
                 <div className={cs('registerEndDate')}>
                     <div className={cs('numberRegister')}>
                         Đã có
-                        <span className={cs('numberRegisterNumber')}>{numberRegister}</span>
+                        <span className={cs('numberRegisterNumber')}>{numRegis}</span>
                         người đăng ký
                     </div>
 
