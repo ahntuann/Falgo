@@ -110,6 +110,8 @@ builder.Services.AddScoped<IContestService, ContestService>();
 builder.Services.AddScoped<IContestRepository, ContestRepository>();
 builder.Services.AddScoped<IContestRegistationRepository, ContestRegistationRepository>();
 builder.Services.AddScoped<IContestRegistationService, ContestRegistationService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

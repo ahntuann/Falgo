@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace api.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class InitDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -67,11 +67,12 @@ namespace api.Migrations
                 {
                     ContestId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ContestName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    DueTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DueTime = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalPoint = table.Column<int>(type: "int", nullable: false),
-                    Level = table.Column<int>(type: "int", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Level = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Banner = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,6 +98,18 @@ namespace api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Problems", x => x.ProblemId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProgrammingLanguage",
+                columns: table => new
+                {
+                    ProgrammingLanguageId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Language = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProgrammingLanguage", x => x.ProgrammingLanguageId);
                 });
 
             migrationBuilder.CreateTable(
@@ -256,38 +269,6 @@ namespace api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Submissions",
-                columns: table => new
-                {
-                    SubmissionId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Point = table.Column<int>(type: "int", nullable: false),
-                    SourceCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ExecuteTime = table.Column<double>(type: "float", nullable: false),
-                    MemoryUsed = table.Column<int>(type: "int", nullable: false),
-                    Language = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    SubmittedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ProblemId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Submissions", x => x.SubmissionId);
-                    table.ForeignKey(
-                        name: "FK_Submissions_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Submissions_Problems_ProblemId",
-                        column: x => x.ProblemId,
-                        principalTable: "Problems",
-                        principalColumn: "ProblemId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TestCases",
                 columns: table => new
                 {
@@ -306,6 +287,43 @@ namespace api.Migrations
                         principalTable: "Problems",
                         principalColumn: "ProblemId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Submissions",
+                columns: table => new
+                {
+                    SubmissionId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Point = table.Column<int>(type: "int", nullable: false),
+                    SourceCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ExecuteTime = table.Column<double>(type: "float", nullable: false),
+                    MemoryUsed = table.Column<int>(type: "int", nullable: false),
+                    SubmittedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProblemId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProgrammingLanguageId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Submissions", x => x.SubmissionId);
+                    table.ForeignKey(
+                        name: "FK_Submissions_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Submissions_Problems_ProblemId",
+                        column: x => x.ProblemId,
+                        principalTable: "Problems",
+                        principalColumn: "ProblemId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Submissions_ProgrammingLanguage_ProgrammingLanguageId",
+                        column: x => x.ProgrammingLanguageId,
+                        principalTable: "ProgrammingLanguage",
+                        principalColumn: "ProgrammingLanguageId");
                 });
 
             migrationBuilder.CreateTable(
@@ -335,9 +353,9 @@ namespace api.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "064579e0-7b4d-4b70-9793-82c7a6e54d8c", null, "Guest", "GUEST" },
-                    { "89f1ce15-26fe-47fe-92de-8d633f5bf7b5", null, "Admin", "ADMIN" },
-                    { "c2b895c5-6a1c-47d8-a97e-75f35eebc778", null, "User", "USER" }
+                    { "ac56008f-2070-4160-9b0f-93767e3606ab", null, "Guest", "GUEST" },
+                    { "b009e43d-cfc1-429e-8d2f-cd3872189665", null, "Admin", "ADMIN" },
+                    { "fb25f9aa-218b-496b-9217-2aedb9bc8904", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -405,6 +423,11 @@ namespace api.Migrations
                 column: "ProblemId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Submissions_ProgrammingLanguageId",
+                table: "Submissions",
+                column: "ProgrammingLanguageId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TestCases_ProblemId",
                 table: "TestCases",
                 column: "ProblemId");
@@ -459,6 +482,9 @@ namespace api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Problems");
+
+            migrationBuilder.DropTable(
+                name: "ProgrammingLanguage");
         }
     }
 }

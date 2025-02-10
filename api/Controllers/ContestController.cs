@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dtos.ContesRegistation;
 using api.Helpers;
 using api.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,11 @@ namespace api.Controllers
     public class ContestController : ControllerBase
     {
         private readonly IContestService _contestService;
-        public ContestController(IContestService contestService)
+        private readonly IContestRegistationService _contestRegisService;
+        public ContestController(IContestService contestService, IContestRegistationService contestRegisService)
         {
             _contestService = contestService;
+            _contestRegisService = contestRegisService;
         }
 
         [HttpGet]
@@ -32,6 +35,23 @@ namespace api.Controllers
             }
 
             return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> RegisterContest([FromBody] CreateContestRegistionDto createRegisDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var success = await _contestRegisService.CreateContestRegisAsync(createRegisDto.ContestId, createRegisDto.UserId);
+
+            if (success == null)
+                return BadRequest("User or Contest invalid");
+            else if (success == false)
+                return BadRequest("User already has registered this contest.");
+            else
+                return Ok();
         }
     }
 }

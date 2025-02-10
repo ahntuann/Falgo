@@ -51,19 +51,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f9560003-6dc4-4cd7-b751-023ec9c4c0c0",
+                            Id = "fb25f9aa-218b-496b-9217-2aedb9bc8904",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "0898a1d9-6ba3-49fe-aef6-8dfcdbab55e5",
+                            Id = "ac56008f-2070-4160-9b0f-93767e3606ab",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         },
                         new
                         {
-                            Id = "b0728509-e7d7-4831-a725-4a954010860e",
+                            Id = "b009e43d-cfc1-429e-8d2f-cd3872189665",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -290,8 +290,9 @@ namespace api.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TotalPoint")
                         .HasColumnType("int");
@@ -388,6 +389,19 @@ namespace api.Migrations
                     b.ToTable("Problems");
                 });
 
+            modelBuilder.Entity("api.Model.ProgrammingLanguage", b =>
+                {
+                    b.Property<string>("ProgrammingLanguageId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Language")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ProgrammingLanguageId");
+
+                    b.ToTable("ProgrammingLanguage");
+                });
+
             modelBuilder.Entity("api.Model.Submission", b =>
                 {
                     b.Property<string>("SubmissionId")
@@ -400,11 +414,6 @@ namespace api.Migrations
                     b.Property<double>("ExecuteTime")
                         .HasColumnType("float");
 
-                    b.Property<string>("Language")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<int>("MemoryUsed")
                         .HasColumnType("int");
 
@@ -413,6 +422,9 @@ namespace api.Migrations
 
                     b.Property<string>("ProblemId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProgrammingLanguageId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SourceCode")
@@ -432,6 +444,8 @@ namespace api.Migrations
                     b.HasIndex("AppUserId");
 
                     b.HasIndex("ProblemId");
+
+                    b.HasIndex("ProgrammingLanguageId");
 
                     b.ToTable("Submissions");
                 });
@@ -599,9 +613,15 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("api.Model.ProgrammingLanguage", "ProgrammingLanguage")
+                        .WithMany()
+                        .HasForeignKey("ProgrammingLanguageId");
+
                     b.Navigation("AppUser");
 
                     b.Navigation("Problem");
+
+                    b.Navigation("ProgrammingLanguage");
                 });
 
             modelBuilder.Entity("api.Model.TestCase", b =>
