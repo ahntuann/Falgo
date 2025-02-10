@@ -29,9 +29,9 @@ namespace api.Controllers
             if (isRegis == null)
                 return BadRequest("Invalid User or Contest");
             else if (isRegis == false)
-                return Ok(false);
+                return Ok(new { isRegis = false });
             else
-                return Ok(true);
+                return Ok(new { isRegis = true });
         }
     }
 }

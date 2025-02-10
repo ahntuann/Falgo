@@ -41,10 +41,6 @@ function Home() {
         );
     }, []);
 
-    useEffect(() => {
-        console.log(contests);
-    }, [contests]);
-
     return (
         <div className={cs('wrapper')}>
             <div className={cs('slider')}>

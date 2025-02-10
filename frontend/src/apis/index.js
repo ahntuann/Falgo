@@ -24,3 +24,29 @@ export const fetchContestBriefAPI = async ({ isNewest, pageSize }) => {
         console.log(error);
     }
 };
+
+export const fetchCheckIfUserRegisContestAPI = async (userId, contestId) => {
+    try {
+        const response = await axios.get(
+            `${API_ROOT}/api/user/isRegis?UserId=${userId}&ContestId=${contestId}`,
+        );
+
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const registerUserForContest = async (userId, contestId) => {
+    try {
+        const response = await axios.post(`${API_ROOT}/api/contest/register`, {
+            contestId,
+            userId,
+            isExist: false,
+        });
+
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};

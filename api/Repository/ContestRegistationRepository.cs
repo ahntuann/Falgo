@@ -22,8 +22,6 @@ namespace api.Repository
             var contestRegis = await _context.ContestRegistions
                                                 .FirstOrDefaultAsync(x => x.ContestId.Equals(contest.ContestId) && x.Id.Equals(appUser.Id));
 
-
-            System.Console.WriteLine($"contest regis!!! {contestRegis}");
             return contestRegis;
         }
 
