@@ -50,3 +50,13 @@ export const registerUserForContest = async (userId, contestId) => {
         console.log(error);
     }
 };
+
+export const fetchAllProgrammingLanguageAPI = async () => {
+    try {
+        const response = await axios.get(`${API_ROOT}/api/programingLanguage`);
+
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
