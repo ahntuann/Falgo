@@ -51,19 +51,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fb25f9aa-218b-496b-9217-2aedb9bc8904",
+                            Id = "7ed3597a-7f26-4f0b-9b1d-bf0da31a7d7c",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "ac56008f-2070-4160-9b0f-93767e3606ab",
+                            Id = "51110b24-78f8-44bb-bd29-7459615c2a1f",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         },
                         new
                         {
-                            Id = "b009e43d-cfc1-429e-8d2f-cd3872189665",
+                            Id = "4d2b285e-48d2-412a-8c67-077ecacf9dff",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -516,6 +516,7 @@ namespace api.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProgrammingLanguageId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SourceCode")
@@ -724,7 +725,9 @@ namespace api.Migrations
 
                     b.HasOne("api.Model.ProgrammingLanguage", "ProgrammingLanguage")
                         .WithMany()
-                        .HasForeignKey("ProgrammingLanguageId");
+                        .HasForeignKey("ProgrammingLanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AppUser");
 
