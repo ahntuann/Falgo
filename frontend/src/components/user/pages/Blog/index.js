@@ -1,108 +1,122 @@
-import React, { useState } from "react";
-import useAuth from "~/hooks/useAuth.js";
-import "./Blog.css";
+import React, { useEffect, useState, useRef } from "react";
+import axios from "axios";
+import classNames from "classnames/bind";
+import styles from "./Blog.module.scss";
+const cs = classNames.bind(styles);
 
-const postsData = [
-    {
-        id: 1,
-        title: "Học React từ A-Z",
-        description: "Bài viết hướng dẫn học React từ cơ bản đến nâng cao",
-        category: "Lập trình",
-        tags: ["React", "JavaScript", "Web Dev"],
-        thumbnail: "https://via.placeholder.com/150",
-        date: "2025-02-07",
-    },
-    // Thêm nhiều bài viết tại đây
-];
+const Blog = ({ currentUser }) => {
+    const [blogs, setBlogs] = useState([]);
+    const [categories, setCategories] = useState([
+        "Mẹo lập trình", "Hướng dẫn", "Xu hướng lập trình", "Kinh Nghiệm", "Thử thách", "Câu Hỏi"
+    ]);
+    const [query, setQuery] = useState({
+        search: "",
+        category: "",
+        sort: "newest",
+        page: 1,
+        postsPerPage: 10,
+        dateFilter: ""
+    });
+    const debounceRef = useRef(null);
 
-const Blog = () => {
-    const { userRole } = useAuth();
-    const [searchTerm, setSearchTerm] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
-    const [sortBy, setSortBy] = useState("date"); // Sắp xếp theo ngày
-    const postsPerPage = 10;
+    useEffect(() => {
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => {
+            fetchBlogs();
+        }, 1000);
+        return () => clearTimeout(debounceRef.current);
+    }, [query]);
 
-    // Lọc bài viết theo tìm kiếm
-    const filteredPosts = postsData
-        .filter((post) => post.title.toLowerCase().includes(searchTerm.toLowerCase()))
-        .sort((a, b) => (sortBy === "date" ? new Date(b.date) - new Date(a.date) : a.title.localeCompare(b.title)));
+    const fetchBlogs = async () => {
+        try {
+            const response = await axios.get("http://localhost:5180/api/BlogController", {
+                params: Object.fromEntries(
+                    Object.entries(query).filter(([_, value]) => value !== "")
+                ),
+            });
+            setBlogs(response.data || []);
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu blog:", error);
+            setBlogs([]);
+        }
+    };
 
-    // Xác định bài viết hiển thị
-    const indexOfLastPost = currentPage * postsPerPage;
-    const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+    const handleChange = (e) => {
+        setQuery({ ...query, [e.target.name]: e.target.value });
+    };
 
     return (
-        <div className="blog-container">
-            <h2 className="BlogTilte">Blog</h2>
-            {/* Thanh tìm kiếm */}
-            <input
-                type="text"
-                placeholder="Tìm bài viết..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-bar"
-            />
-            <select onChange={(e) => setSortBy(e.target.value)}>
-                <option value="date">Sắp xếp theo ngày</option>
-                <option value="title">Sắp xếp theo tiêu đề</option>
-            </select>
-
-            {/* Danh sách bài viết */}
-            <div className="post-list">
-                {currentPosts.map((post) => (
-                    <div key={post.id} className="post">
-                        <img src={post.thumbnail} alt={post.title} className="thumbnail" />
-                        <h2>{post.title}</h2>
-                        <p>{post.description}</p>
-                        <span className="category">{post.category}</span>
-                        <span className="date">{post.date}</span>
-                        <div className="tags">
-                            {post.tags.map((tag, index) => (
-                                <span key={index} className="tag">#{tag}</span>
-                            ))}
-                        </div>
-                        <button className="read-more">Đọc thêm</button>
-                        {userRole === "user" && (
-                            <>
-                                <button className="delete">Xóa</button>
-                                <button className="edit">Chỉnh sửa</button>
-                            </>
-                        )}
+        <div className={cs("container")}> 
+            <h2 className={cs("title")}>Danh sách bài viết</h2>
+            <div className={cs("search-bar")}>
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Tìm kiếm bài viết..."
+                    value={query.search}
+                    onChange={handleChange}
+                />
+            </div>
+            <div className={cs("blog")}> 
+                <div className={cs("sidebar")}> 
+                    <h3>Danh mục</h3>
+                    <div className={cs("category-list")}>
+                        {categories.map((category, index) => (
+                            <button key={index} onClick={() => setQuery({ ...query, category })}>
+                                {category}
+                            </button>
+                        ))}
                     </div>
-                ))}
+                    <h3>Lọc</h3>
+                    <input
+                        type="date"
+                        name="dateFilter"
+                        value={query.dateFilter}
+                        onChange={handleChange}
+                    />
+                    <h3>Sắp xếp</h3>
+                    <select name="sort" value={query.sort} onChange={handleChange}>
+                        <option value="newest">Mới nhất</option>
+                        <option value="oldest">Cũ nhất</option>
+                    </select>
+                    <button className={cs("reset-button")} onClick={() => setQuery({
+                        search: "", category: "", sort: "newest", page: 1, postsPerPage: 10, dateFilter: ""
+                    })}>Reset</button>
+                </div>
+                <div className={cs("blog-list")}> 
+                    {blogs.map((blog) => (
+                        <div key={blog.id} className={cs("blog-item")}>
+                            <img src={blog.thumbnail} alt={blog.title} className={cs("thumbnail")} />
+                            <div className={cs("content")}> 
+                                <h2>{blog.title}</h2>
+                                <p>{blog.description}</p>
+                                <p>Ngày đăng: {blog.CreateOn}</p>
+                                <div className={cs("actions")}>
+                                    <button>Đọc thêm</button>
+                                    {currentUser?.id === blog.userId && (
+                                        <>
+                                            <button>Chỉnh sửa</button>
+                                            <button>Xóa</button>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
-
-            {/* Sidebar */}
-            <div className="sidebar">
-                <h3>Danh mục</h3>
-                <ul>
-                    <li>Công nghệ</li>
-                    <li>Lập trình</li>
-                    <li>Cuộc sống</li>
-                </ul>
-
-                <h3>Bài viết mới nhất</h3>
-                <ul>
-                    <li>Bài viết A</li>
-                    <li>Bài viết B</li>
-                </ul>
-
-                <h3>Bài viết phổ biến</h3>
-                <ul>
-                    <li>Bài viết X</li>
-                    <li>Bài viết Y</li>
-                </ul>
-            </div>
-
-            {/* Phân trang */}
-            <div className="pagination">
-                <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
+            <div className={cs("pagination")}>
+                <button
+                    disabled={query.page === 1}
+                    onClick={() => setQuery({ ...query, page: query.page - 1 })}
+                >
                     Trước
                 </button>
-                <span>Trang {currentPage}</span>
-                <button onClick={() => setCurrentPage(currentPage + 1)} disabled={indexOfLastPost >= filteredPosts.length}>
-                    Tiếp
+                <span>Trang {query.page}</span>
+                <button
+                    onClick={() => setQuery({ ...query, page: query.page + 1 })}
+                >
+                    Sau
                 </button>
             </div>
         </div>

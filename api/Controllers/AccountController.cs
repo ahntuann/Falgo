@@ -48,8 +48,8 @@ namespace api.Controllers
             return Ok(new NewUserDto
             {
                 Id = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
+                UserName = user.UserName ?? string.Empty,
+                Email = user.Email ?? string.Empty,
                 Token = _tokenService.CreateToken(user),
                 DateOfBirth = user.DateOfBirth
             });

@@ -33,6 +33,7 @@ namespace api.Controllers
             var blogsDto = blogs.Select(s => s.ToBlogDto());
             return Ok(blogsDto);
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByID([FromRoute] int id)
         {
@@ -45,6 +46,7 @@ namespace api.Controllers
 
             return Ok(stock.ToBlogDto());
         }
+
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetByUserID([FromRoute] string userId)
         {
@@ -53,6 +55,7 @@ namespace api.Controllers
 
             return Ok(blogsDto);
         }
+
         [HttpPost]
         public async Task<IActionResult> create([FromBody] CreateBlogRequestDto BlogDto)
         {
@@ -66,6 +69,7 @@ namespace api.Controllers
 
             return CreatedAtAction(nameof(GetByID), new { id = BlogModel.ID }, BlogModel.ToBlogDto());
         }
+
         [HttpPut]
         [Route("{id}")]
 
@@ -94,6 +98,7 @@ namespace api.Controllers
 
             return Ok(BlogModel.ToBlogDto());
         }
+
         [HttpDelete]
         [Route("{id}")]
 

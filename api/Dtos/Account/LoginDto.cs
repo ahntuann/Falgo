@@ -8,9 +8,9 @@ namespace api.Dto.Account
 {
     public class LoginDto
     {
-    [Required] public string Username { get; set; }
-    [Required] public string Password { get; set; }
+        [Required] public required string Username { get; set; }
+        [Required] public required string Password { get; set; }
 
 
-}
+    }
 }

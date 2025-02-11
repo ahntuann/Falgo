@@ -1,1 +1,0 @@
-\RFD:\chuy√™n ng√†nh\k√¨ 5\Project P+N\Falgo_Project\Falgo\api\api.csproj¢net8.0ÚCSharp12
