@@ -8,6 +8,7 @@ namespace api.Interface
 {
     public interface IContestRepository
     {
-        public Task<List<Contest?>> GetXContestsNewest(int pageSize);
+        public Task<List<Contest?>> GetXContestsNewestAsync(int pageSize);
+        public Task<Contest?> GetContestByIdAsync(string id);
     }
 }

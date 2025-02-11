@@ -21,7 +21,7 @@ namespace api.Services
 
         public async Task<List<ContestBriefDto?>> GetXNewestContestAsync(int pageSize)
         {
-            var contests = await _contestRepo.GetXContestsNewest(pageSize);
+            var contests = await _contestRepo.GetXContestsNewestAsync(pageSize);
 
             if (contests == null)
                 return null;

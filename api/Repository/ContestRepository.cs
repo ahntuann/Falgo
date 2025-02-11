@@ -17,7 +17,14 @@ namespace api.Repository
             _context = context;
         }
 
-        public async Task<List<Contest?>> GetXContestsNewest(int pageSize)
+        public async Task<Contest?> GetContestByIdAsync(string id)
+        {
+            var contest = await _context.Contests.FirstOrDefaultAsync(x => x.ContestId == id);
+
+            return contest;
+        }
+
+        public async Task<List<Contest?>> GetXContestsNewestAsync(int pageSize)
         {
             var contests = await _context.Contests
                                 .OrderByDescending(x => x.CreatedAt)

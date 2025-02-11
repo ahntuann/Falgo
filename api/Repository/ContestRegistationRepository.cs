@@ -17,6 +17,37 @@ namespace api.Repository
             _context = context;
         }
 
+        public async Task<ContestRegistion?> GetContestRegistionByUserAndContestAsync(AppUser appUser, Contest contest)
+        {
+            var contestRegis = await _context.ContestRegistions
+                                                .FirstOrDefaultAsync(x => x.ContestId.Equals(contest.ContestId) && x.Id.Equals(appUser.Id));
+
+            return contestRegis;
+        }
+
+        public async Task<ContestRegistion?> CreateContestRegistionAsync(Contest contest, AppUser appUser)
+        {
+            var contestRegis = await GetContestRegistionByUserAndContestAsync(appUser, contest);
+
+            if (contestRegis == null)
+            {
+                var newContestRegis = new ContestRegistion
+                {
+                    AppUser = appUser,
+                    Contest = contest,
+                    Id = appUser.Id,
+                    ContestId = contest.ContestId
+                };
+
+                await _context.AddAsync(newContestRegis);
+                await _context.SaveChangesAsync();
+
+                return newContestRegis;
+            }
+
+            return null;
+        }
+
         public async Task<List<ContestRegistion?>> GetAllRegistationAsync(Contest contests)
         {
             var registations = await _context.ContestRegistions
