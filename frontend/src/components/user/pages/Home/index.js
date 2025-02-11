@@ -107,16 +107,18 @@ function Home() {
                 </div>
             </div>
 
-            <div className={cs('yourSkill', 'homeComponents')}>
-                <div className={cs('category', 'yourSkillCategory')}>Kỹ năng của bạn</div>
+            {userRole === 'user' && (
+                <div className={cs('yourSkill', 'homeComponents')}>
+                    <div className={cs('category', 'yourSkillCategory')}>Kỹ năng của bạn</div>
 
-                <div className={cs('skillWrapper')}>
-                    {skills !== undefined &&
-                        skills.map((skill, i) => (
-                            <SkillItem key={i} skill={skill} userId={appUser.id} />
-                        ))}
+                    <div className={cs('skillWrapper')}>
+                        {skills !== undefined &&
+                            skills.map((skill, i) => (
+                                <SkillItem key={i} skill={skill} userId={appUser.id} />
+                            ))}
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div className={cs('footer')}></div>
         </div>
