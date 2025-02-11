@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -11,9 +12,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250211084756_newDateBase")]
+    partial class newDateBase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,19 +54,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "67c4edb6-6706-4e26-a1f9-c1fd766c0f97",
+                            Id = "fee44f6a-3286-47d5-9c09-247579c4744c",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "b6351a86-e579-4676-9d74-24e04665b837",
+                            Id = "e54da266-cf0b-4e70-842b-f828901cf5de",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         },
                         new
                         {
-                            Id = "2916b2c5-72d1-4bbc-8ab2-71700347dfc6",
+                            Id = "a44c71f9-bedc-45de-8953-1e8495bcbf8f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -316,7 +319,8 @@ namespace api.Migrations
 
                     b.Property<string>("description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1)
+                        .HasColumnType("nvarchar(1)");
 
                     b.Property<string>("title")
                         .IsRequired()

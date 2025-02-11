@@ -20,7 +20,6 @@ namespace api.Model
 
         public string Thumbnail { get; set; } = string.Empty;
         public string title { get; set; } = string.Empty;
-        [StringLength(1, ErrorMessage = "Mô tả không được vượt quá 200 ký tự.")]
         public string description { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
         public string ImageBlog { get; set; } = string.Empty;

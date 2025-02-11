@@ -3,9 +3,17 @@ import axios from "axios";
 import classNames from "classnames/bind";
 import styles from "./Blog.module.scss";
 import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
+
+import { useContext } from 'react';
+import AuthContext from '~/context/AuthContext';
+
 const cs = classNames.bind(styles);
 
-const Blog = ({ currentUser }) => {
+const Blog = () => {
+
+    const { userRole } = useContext(AuthContext);
+
+
     const [blogs, setBlogs] = useState([]);
     const [categories] = useState([
         "Mẹo lập trình", "Hướng dẫn", "Xu hướng lập trình", "Kinh Nghiệm", "Thử thách", "Câu Hỏi"
@@ -38,6 +46,7 @@ const Blog = ({ currentUser }) => {
 
     useEffect(() => {
         console.log("Dữ liệu blog nhận được:", blogs);
+        console.log("Blog UserId:", blogs.userId);
     }, [blogs]);
     
     useEffect(() => {
@@ -145,6 +154,8 @@ const Blog = ({ currentUser }) => {
 
                 {/* sidebar */}
                 <div className={cs("sidebar")}> 
+                    
+                     {/* category */}
                     <h3>Danh mục</h3>
                     <div className={cs("category-list")}>
                         {categories.map((category, index) => (
@@ -157,45 +168,55 @@ const Blog = ({ currentUser }) => {
                             </button>
                         ))}
                     </div>
+                    {/* End category */}
 
+                    {/* sortBy */}
                     <h3>Sắp xếp theo</h3>
-                    <select name="sortBy" value={query.sortBy} onChange={handleChange}>
-                        <option value="createOn">Ngày đăng</option>
-                        <option value="title">Tiêu đề</option>
-                    </select>
+                    <div className={cs("sort-controls")}>
+                        <select name="sortBy" value={query.sortBy} onChange={handleChange}>
+                            <option value="createOn">Ngày đăng</option>
+                            <option value="title">Tiêu đề</option>
+                        </select>
+                        <button onClick={() => setQuery(prev => ({ ...prev, IsDescending: !prev.IsDescending }))}>
+                            {query.IsDescending ? "Giảm dần" : "Tăng dần"}
+                        </button>
+                    </div>
+                    {/* End sortBy */}
 
-                    <button onClick={() => setQuery(prev => ({ ...prev, IsDescending: !prev.IsDescending }))}>
-                        {query.IsDescending ? "Giảm dần" : "Tăng dần"}
-                    </button>
-
+                    {/* date-filter */}
                     <h3>Lọc theo ngày</h3>
                     <div className={cs("date-filter")}>
-                        <select name="day" value={dateFilter.day} onChange={handleDateChange}>
-                            <option value="">Ngày</option>
-                            {[...Array(31)].map((_, i) => (
-                                <option key={i + 1} value={i + 1}>{i + 1}</option>
-                            ))}
-                        </select>
+                        <div className={cs("DateInput")}>
+                            <select name="day" value={dateFilter.day} onChange={handleDateChange}>
+                                <option value="">Ngày</option>
+                                {[...Array(31)].map((_, i) => (
+                                    <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                ))}
+                            </select>
 
-                        <select name="month" value={dateFilter.month} onChange={handleDateChange}>
-                            <option value="">Tháng</option>
-                            {[...Array(12)].map((_, i) => (
-                                <option key={i + 1} value={i + 1}>{i + 1}</option>
-                            ))}
-                        </select>
-
-                        <input 
-                            type="number" 
-                            name="year" 
-                            placeholder="Nhập năm" 
-                            value={dateFilter.year} 
-                            onChange={handleDateChange} 
-                        />
+                            <select name="month" value={dateFilter.month} onChange={handleDateChange}>
+                                <option value="">Tháng</option>
+                                {[...Array(12)].map((_, i) => (
+                                    <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                ))}
+                            </select>
+                            <input 
+                                type="number" 
+                                name="year" 
+                                placeholder="năm" 
+                                value={dateFilter.year} 
+                                onChange={handleDateChange} 
+                            />
+                        </div>
 
                         <button onClick={handleFilterByDate}>Lọc</button>
                     </div>
-                    
+                    {/* End date-filter */}
+
+                    {/* reset-button */}
                     <button className={cs("reset-button")} onClick={handleReset}>Reset</button>
+                    {/* End reset-button */}
+                
                 </div>
                 {/* End sidebar */}
 
@@ -228,14 +249,17 @@ const Blog = ({ currentUser }) => {
                                 <p>Ngày đăng: {blog.createOn ? new Date(blog.createOn + "Z").toLocaleDateString("vi-VN") : "Không có dữ liệu"}</p>
 
                                 <div className={cs("actions")}>
+                                    <div className={cs('userPart')}>
+                                        {userRole !== 'guest' && (
+                                            <>
+                                                <button className={cs("edit")}>Chỉnh sửa</button>
+                                                <button className={cs("delete")}>Xóa</button>
+                                            </>
+                                        )}
+                                    </div>
                                     <button>Đọc thêm</button>
-                                    {currentUser?.id === blog.userId && (
-                                        <>
-                                            <button>Chỉnh sửa</button>
-                                            <button>Xóa</button>
-                                        </>
-                                    )}
                                 </div>
+
                             </div>
                         </div>
                     ))} 
