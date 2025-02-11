@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import classNames from "classnames/bind";
 import styles from "./Blog.module.scss";
+import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
 const cs = classNames.bind(styles);
 
 const Blog = ({ currentUser }) => {
@@ -18,6 +19,12 @@ const Blog = ({ currentUser }) => {
         postsPerPage: 10,
         dateFilter: ""
     });
+    const [dateFilter, setDateFilter] = useState({
+        day: "",
+        month: "",
+        year: ""
+    });
+    
 
     const debounceRef = useRef(null);
 
@@ -32,7 +39,11 @@ const Blog = ({ currentUser }) => {
     useEffect(() => {
         console.log("Dữ liệu blog nhận được:", blogs);
     }, [blogs]);
-
+    
+    useEffect(() => {
+        handleFilterByDate();
+    }, [dateFilter]);
+    
     const fetchBlogs = async () => {
         try {
             const params = Object.fromEntries(
@@ -61,6 +72,7 @@ const Blog = ({ currentUser }) => {
         return 0;
     });
 
+    
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setQuery((prev) => ({
@@ -84,7 +96,37 @@ const Blog = ({ currentUser }) => {
             dateFilter: ""
         });
     };
-
+    const handleDateChange = (e) => {
+        const { name, value } = e.target;
+        setDateFilter((prev) => ({ ...prev, [name]: value }));
+    };
+    const handleFilterByDate = () => {
+        let filterString = "";
+        if (dateFilter.year) {
+            filterString = dateFilter.year;
+            if (dateFilter.month) {
+                filterString += `-${dateFilter.month.padStart(2, "0")}`;
+                if (dateFilter.day) {
+                    filterString += `-${dateFilter.day.padStart(2, "0")}`;
+                }
+            }
+        }
+        setQuery((prev) => ({ ...prev, dateFilter: filterString }));
+    };
+    const filteredBlogs = sortedBlogs.filter(blog => {
+        if (!query.dateFilter) return true; // Nếu không chọn ngày thì hiển thị tất cả
+    
+        const blogDate = new Date(blog.createOn);
+        const blogYear = blogDate.getFullYear();
+        const blogMonth = blogDate.getMonth() + 1;
+        const blogDay = blogDate.getDate();
+    
+        if (dateFilter.year && blogYear !== Number(dateFilter.year)) return false;
+        if (dateFilter.month && blogMonth !== Number(dateFilter.month)) return false;
+        if (dateFilter.day && blogDay !== Number(dateFilter.day)) return false;
+    
+        return true;
+    });
     return (
         <div className={cs("container")}> 
             <h2 className={cs("title")}>Danh sách bài viết</h2>
@@ -97,7 +139,11 @@ const Blog = ({ currentUser }) => {
                     onChange={handleChange}
                 />
             </div>
+
+            {/* DataBase */}
             <div className={cs("blog")}> 
+
+                {/* sidebar */}
                 <div className={cs("sidebar")}> 
                     <h3>Danh mục</h3>
                     <div className={cs("category-list")}>
@@ -122,25 +168,63 @@ const Blog = ({ currentUser }) => {
                         {query.IsDescending ? "Giảm dần" : "Tăng dần"}
                     </button>
 
-                    <h3>
-                        Lọc <input
-                        type="date"
-                        name="dateFilter"
-                        value={query.dateFilter}
-                        onChange={handleChange}
-                    />  
-                    </h3>
+                    <h3>Lọc theo ngày</h3>
+                    <div className={cs("date-filter")}>
+                        <select name="day" value={dateFilter.day} onChange={handleDateChange}>
+                            <option value="">Ngày</option>
+                            {[...Array(31)].map((_, i) => (
+                                <option key={i + 1} value={i + 1}>{i + 1}</option>
+                            ))}
+                        </select>
+
+                        <select name="month" value={dateFilter.month} onChange={handleDateChange}>
+                            <option value="">Tháng</option>
+                            {[...Array(12)].map((_, i) => (
+                                <option key={i + 1} value={i + 1}>{i + 1}</option>
+                            ))}
+                        </select>
+
+                        <input 
+                            type="number" 
+                            name="year" 
+                            placeholder="Nhập năm" 
+                            value={dateFilter.year} 
+                            onChange={handleDateChange} 
+                        />
+
+                        <button onClick={handleFilterByDate}>Lọc</button>
+                    </div>
                     
                     <button className={cs("reset-button")} onClick={handleReset}>Reset</button>
                 </div>
+                {/* End sidebar */}
+
+                {/* BBloglist */}
                 <div className={cs("blog-list")}> 
                     {sortedBlogs.map((blog) => (
                         <div key={blog.id} className={cs("blog-item")}>
-                            <img src={blog.thumbnail} alt={blog.title} className={cs("thumbnail")} />
+                        <img 
+                            src={blog.thumbnail && blog.thumbnail.startsWith("http") ? blog.thumbnail : NoImage}
+                            alt={blog.title} 
+                            className={cs("thumbnail")} 
+                        />
+
                             <div className={cs("content")}>
                                 <h2>{blog.title}</h2>
                                 <p>{blog.description}</p>
-                                <p>{blog.CategoryBlog}</p>
+                                {blog.categoryBlog && blog.categoryBlog.trim() !== "" && (
+                                    <div className={cs("category-tags")}>
+                                        {blog.categoryBlog.split(",").map((category, index) => (
+                                            <button
+                                                key={index}
+                                                className={cs("category-item")}
+                                                onClick={() => handleCategoryChange(category.trim())}
+                                            >
+                                                {category.trim()}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                                 <p>Ngày đăng: {blog.createOn ? new Date(blog.createOn + "Z").toLocaleDateString("vi-VN") : "Không có dữ liệu"}</p>
 
                                 <div className={cs("actions")}>
@@ -156,7 +240,11 @@ const Blog = ({ currentUser }) => {
                         </div>
                     ))} 
                 </div>
+                {/* End Bloglist */}
             </div>
+            {/* End DataBase */}
+
+            {/* pagination */}
             <div className={cs("pagination")}>
                 <button
                     disabled={query.page === 1}
@@ -171,6 +259,8 @@ const Blog = ({ currentUser }) => {
                     Sau
                 </button>
             </div>
+            {/* End pagination */}
+
         </div>
     );
 };
