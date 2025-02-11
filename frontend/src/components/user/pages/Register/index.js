@@ -8,7 +8,7 @@ import moment from 'moment';
 
 const Register = () => {
     const navigate = useNavigate();
-    const [showPassword, setShowPassword] = useState(false); // 👁 Trạng thái hiển thị mật khẩu
+    const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
