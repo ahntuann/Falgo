@@ -14,15 +14,16 @@ namespace api.Model
         [MaxLength(100)]
         public string ContestName { get; set; } = string.Empty;
         [Required]
-        public DateTime DueTime { get; set; }
+        public int DueTime { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         [Required]
         public int TotalPoint { get; set; }
         [Required]
-        public int Level { get; set; }
+        public string Level { get; set; } = string.Empty;
         [Required]
         public DateTime EndDate { get; set; }
+        public string Banner { get; set; } = string.Empty;
         public ICollection<ContestProblem>? ContestProblems { get; set; }
     }
 }

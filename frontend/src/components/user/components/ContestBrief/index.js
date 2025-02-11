@@ -2,10 +2,29 @@ import classNames from 'classnames/bind';
 
 import style from './ContestBrief.module.scss';
 import CountDown from '~/components/user/components/CountDown';
+import { useContext, useEffect, useState } from 'react';
+import { fetchCheckIfUserRegisContestAPI, registerUserForContest } from '~/apis';
+import AuthContext from '~/context/AuthContext';
 const cs = classNames.bind(style);
 
 function ContestBrief({ contest }) {
-    const { banner, title, totalPoint, level, endDate, dueTime, numberRegister } = contest;
+    const { contestId, banner, title, totalPoint, level, endDate, dueTime, numRegis } = contest;
+    const { appUser } = useContext(AuthContext);
+
+    const [isRegis, setIsRegis] = useState(false);
+
+    // Check if user register contest
+    useEffect(() => {
+        fetchCheckIfUserRegisContestAPI(appUser.id, contestId).then((x) => setIsRegis(x.isRegis));
+    }, [appUser, contestId]);
+
+    // Register User for contest
+    const registerUser = () => {
+        registerUserForContest(appUser.id, contestId).then(() => {
+            alert('Bạn đã đăng ký thành công!');
+            setIsRegis(true);
+        });
+    };
 
     return (
         <div className={cs('wrapper')}>
@@ -36,7 +55,7 @@ function ContestBrief({ contest }) {
                 <div className={cs('registerEndDate')}>
                     <div className={cs('numberRegister')}>
                         Đã có
-                        <span className={cs('numberRegisterNumber')}>{numberRegister}</span>
+                        <span className={cs('numberRegisterNumber')}>{numRegis}</span>
                         người đăng ký
                     </div>
 
@@ -44,7 +63,13 @@ function ContestBrief({ contest }) {
                 </div>
             </div>
 
-            <div className={cs('register')}>Đăng ký ngay</div>
+            {isRegis ? (
+                <div className={cs('register')}>Bạn đã đăng ký</div>
+            ) : (
+                <div onClick={() => registerUser()} className={cs('register')}>
+                    Đăng ký ngay
+                </div>
+            )}
         </div>
     );
 }

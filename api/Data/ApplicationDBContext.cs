@@ -23,6 +23,7 @@ namespace api.Data
         public DbSet<TestCaseStatus> TestCaseStatuses { get; set; }
         public DbSet<ContestProblem> ContestProblems { get; set; }
         public DbSet<Contest> Contests { get; set; }
+        public DbSet<ProgrammingLanguage> ProgrammingLanguage { get; set; }
 
         //BlogDaTa
         public DbSet<Blog> Blogs { get; set; }

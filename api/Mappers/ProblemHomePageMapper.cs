@@ -57,5 +57,20 @@ namespace api.Mappers
                 Status = data.status
             };
         }
+
+        public static ProblemHomePageDonedDto ToProblemHomePageDonedFromPoblem(this Problem problem)
+        {
+            return new ProblemHomePageDonedDto
+            {
+                ProblemId = problem.ProblemId,
+                Category = problem.Category,
+                Title = problem.Title,
+                Detail = problem.Detail,
+                TotalPoint = problem.TotalPoint,
+                TimeLimit = problem.TimeLimit,
+                MemoryLimit = problem.MemoryLimit,
+                Author = problem.Author,
+            };
+        }
     }
 }

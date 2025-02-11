@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Helpers;
 using api.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -21,6 +22,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
+        
         public async Task<IActionResult> GetAllProblemsForUserAsync([FromQuery] QueryObject query)
         {
             var userId = HttpContext.User?.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;

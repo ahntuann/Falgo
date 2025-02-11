@@ -6,6 +6,7 @@ using api.Dtos.Account;
 using api.Interface;
 using api.Model;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -101,6 +102,61 @@ namespace api.Controllers
             });
 
         }
+
+[HttpGet("google-login")]
+    public IActionResult GoogleLogin()
+    {
+        var redirectUrl = Url.Action("GoogleLoginCallback", "Account", null, Request.Scheme);
+        var properties = _signInManager.ConfigureExternalAuthenticationProperties(GoogleDefaults.AuthenticationScheme, redirectUrl);
+        return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+    }
+
+    
+    [HttpGet("signin-google")]
+    public async Task<IActionResult> GoogleLoginCallback()
+    {
+        var authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+        if (!authenticateResult.Succeeded)
+        {
+            return BadRequest("Google login failed.");
+        }
+
+        var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims;
+        var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+        if (string.IsNullOrEmpty(email))
+        {
+            return BadRequest("Email not found.");
+        }
+
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            user = new AppUser
+            {
+                UserName = email.Split('@')[0],
+                Email = email,
+                FullName = name ?? "Google User",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            var createUser = await _userManager.CreateAsync(user);
+            if (!createUser.Succeeded)
+            {
+                return BadRequest("Failed to create user.");
+            }
+
+            await _userManager.AddToRoleAsync(user, "User");
+        }
+
+        var token = _tokenService.CreateToken(user);
+
+        var frontendUrl = "http://localhost:3000/google-callback";
+    return Redirect($"{frontendUrl}?token={token}&id={user.Id}&userName={user.UserName}&email={user.Email}");
+}
+
+   
 
     }
 }

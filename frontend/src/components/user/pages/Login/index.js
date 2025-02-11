@@ -9,7 +9,6 @@ import AuthContext from '~/context/AuthContext';
 
 const Login = () => {
     const navigate = useNavigate();
-
     const { logInAsUser } = useContext(AuthContext);
 
     const formik = useFormik({
@@ -39,7 +38,6 @@ const Login = () => {
                 const user = response.data;
                 localStorage.setItem('user', JSON.stringify(user));
                 logInAsUser();
-
                 navigate('/');
             } catch (error) {
                 console.error('Login failed:', error.response?.data || error.message);

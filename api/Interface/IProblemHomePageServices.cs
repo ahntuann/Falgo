@@ -10,5 +10,6 @@ namespace api.Interface
     {
         public Task<List<ProblemHomePageMostAttempedDto?>> GetXProblemHomePageMostAttmpedAsync(int pageSize, int month, int year);
         public Task<List<ProblemHomePageNotDoneDto?>> GetXProblemAreNotDoneAsync(int pageSize, string userId, int month, int year);
+        public Task<List<ProblemHomePageDonedDto?>> GetXProblemDonedAsync(int pageSize, string userId, int month, int year);
     }
 }

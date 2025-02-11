@@ -57,11 +57,13 @@
     transform: translateX(-100%);
 }
 
+.yourSkillCategory,
 .contestBriefCategory,
 .problemDailyName.active {
     color: var(--primary-text-color);
 }
 
+.yourSkillCategory::after,
 .contestBriefCategory::after,
 .problemDailyName.active::after {
     width: 50%;
@@ -80,8 +82,12 @@
 .problemDailyItem {
     margin-top: 10px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
+}
+
+.notFirst {
+    margin-left: 3.6%;
 }
 
 //
@@ -91,6 +97,18 @@
     display: flex;
 }
 
+//
+.skillWrapper {
+    margin-top: 10px;
+    width: 100%;
+    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+//
 .footer {
     height: 100px;
 }

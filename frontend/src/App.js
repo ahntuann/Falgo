@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-
+import GoogleCallback from '~/components/user/pages/Login/GoogleCallback';
 import routes from '~/routes/index.js';
 import useAuth from '~/hooks/useAuth.js';
 import NotFound from '~/components/shared/NotFound';
@@ -15,6 +15,7 @@ function App() {
                     <Route path="/notfound" element={<NotFound />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/google-callback" element={<GoogleCallback />} />
                     {routes.map((route) => {
                         const Component = route.component;
                         const Layout = route.layout;
@@ -35,11 +36,18 @@ function App() {
 
                         if (userRole === 'guest' && route.role.includes('user')) {
                             return (
-                                <Route key={route.path} path={route.path} element={<Navigate to="/login" replace />} />
+                                <Route
+                                    key={route.path}
+                                    path={route.path}
+                                    element={<Navigate to="/login" replace />}
+                                />
                             );
                         }
 
-                        if ((userRole === 'guest' || userRole === 'user') && route.role.includes('admin')) {
+                        if (
+                            (userRole === 'guest' || userRole === 'user') &&
+                            route.role.includes('admin')
+                        ) {
                             return (
                                 <Route
                                     key={route.path}
