@@ -12,7 +12,8 @@ const cs = classNames.bind(styles);
 const Blog = () => {
 
     const { userRole } = useContext(AuthContext);
-
+    const userNow = localStorage.getItem('user');
+    const userObject = userNow ? JSON.parse(userNow) : null;
 
     const [blogs, setBlogs] = useState([]);
     const [categories] = useState([
@@ -44,10 +45,6 @@ const Blog = () => {
         return () => clearTimeout(debounceRef.current);
     }, [query]);
 
-    useEffect(() => {
-        console.log("Dữ liệu blog nhận được:", blogs);
-        console.log("Blog UserId:", blogs.userId);
-    }, [blogs]);
     
     useEffect(() => {
         handleFilterByDate();
@@ -58,9 +55,7 @@ const Blog = () => {
             const params = Object.fromEntries(
                 Object.entries(query).filter(([_, value]) => value !== "")
             );
-            console.log("Fetching blogs with:", params);
             const response = await axios.get("http://localhost:5180/api/BlogController", { params });
-            console.log("Response data:", response.data);
             setBlogs(response.data || []);
         } catch (error) {
             console.error("Lỗi khi lấy dữ liệu blog:", error);
@@ -220,7 +215,7 @@ const Blog = () => {
                 </div>
                 {/* End sidebar */}
 
-                {/* BBloglist */}
+                {/* Bloglist */}
                 <div className={cs("blog-list")}> 
                     {sortedBlogs.map((blog) => (
                         <div key={blog.id} className={cs("blog-item")}>
@@ -250,7 +245,7 @@ const Blog = () => {
 
                                 <div className={cs("actions")}>
                                     <div className={cs('userPart')}>
-                                        {userRole !== 'guest' && (
+                                        {userRole !== 'guest' && userObject && userObject.id === blog.userId && (
                                             <>
                                                 <button className={cs("edit")}>Chỉnh sửa</button>
                                                 <button className={cs("delete")}>Xóa</button>
