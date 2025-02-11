@@ -1,8 +1,8 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import './Login.css';
 import AuthContext from '~/context/AuthContext';
@@ -10,7 +10,7 @@ import AuthContext from '~/context/AuthContext';
 const Login = () => {
     const navigate = useNavigate();
     const { logInAsUser } = useContext(AuthContext);
-    const location = useLocation();
+
     const formik = useFormik({
         initialValues: {
             username: '',
@@ -49,41 +49,6 @@ const Login = () => {
     const handleGoogleLogin = () => {
         window.location.href = 'http://localhost:5180/api/account/google-login';
     };
-
-    const checkGoogleAuth = async () => {
-        try {
-            console.log('Fetching Google login response...');
-            const response = await fetch('http://localhost:5180/api/account/signin-google', {
-                credentials: 'include',
-            });
-
-            if (!response.ok) throw new Error('Google login failed');
-
-            const data = await response.json();
-            console.log('Google login response:', data);
-
-            if (!data || !data.Token) {
-                throw new Error('Invalid response from server');
-            }
-
-            localStorage.setItem('user', JSON.stringify(data));
-            console.log('User stored in localStorage, navigating to home...');
-
-            logInAsUser();
-            navigate('/');
-        } catch (error) {
-            console.error('Google Login error:', error);
-            alert('Google Login failed! ' + error.message);
-        }
-    };
-
-    useEffect(() => {
-        console.log('Checking Google authentication...');
-        if (location.search.includes('code=')) {
-            console.log('Google auth code detected, attempting to log in...');
-            checkGoogleAuth();
-        }
-    }, [location.search]);
 
     return (
         <div className="login-container">

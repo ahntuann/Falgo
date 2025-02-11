@@ -152,14 +152,9 @@ namespace api.Controllers
 
         var token = _tokenService.CreateToken(user);
 
-        return Ok(new
-        {
-            Id = user.Id,
-            UserName = user.UserName,
-            Email = user.Email,
-            Token = token
-        });
-    }
+        var frontendUrl = "http://localhost:3000/google-callback";
+    return Redirect($"{frontendUrl}?token={token}&id={user.Id}&userName={user.UserName}&email={user.Email}");
+}
 
    
 
