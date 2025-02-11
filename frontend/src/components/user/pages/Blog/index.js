@@ -15,6 +15,9 @@ const Blog = () => {
     const userNow = localStorage.getItem('user');
     const userObject = userNow ? JSON.parse(userNow) : null;
 
+    const [originalBlogs, setOriginalBlogs] = useState([]); // Lưu dữ liệu gốc
+    const [filteredBlogs, setFilteredBlogs] = useState([]); // Lưu danh sách đã lọc
+    
     const [blogs, setBlogs] = useState([]);
     const [categories] = useState([
         "Mẹo lập trình", "Hướng dẫn", "Xu hướng lập trình", "Kinh Nghiệm", "Thử thách", "Câu Hỏi"
@@ -48,7 +51,8 @@ const Blog = () => {
     
     useEffect(() => {
         handleFilterByDate();
-    }, [dateFilter]);
+    }, [dateFilter, originalBlogs]); // Lọc khi dữ liệu gốc hoặc bộ lọc thay đổi
+    
     
     const fetchBlogs = async () => {
         try {
@@ -56,25 +60,49 @@ const Blog = () => {
                 Object.entries(query).filter(([_, value]) => value !== "")
             );
             const response = await axios.get("http://localhost:5180/api/BlogController", { params });
-            setBlogs(response.data || []);
+    
+            let fetchedBlogs = response.data || [];
+    
+            // Sắp xếp ngay khi nhận dữ liệu
+            fetchedBlogs = fetchedBlogs.sort((a, b) => {
+                if (query.sortBy === "createOn") {
+                    return query.IsDescending
+                        ? new Date(b.createOn) - new Date(a.createOn)
+                        : new Date(a.createOn) - new Date(b.createOn);
+                } else if (query.sortBy === "title") {
+                    return query.IsDescending
+                        ? b.title.localeCompare(a.title)
+                        : a.title.localeCompare(b.title);
+                }
+                return 0;
+            });
+    
+            setOriginalBlogs(fetchedBlogs);
+            setFilteredBlogs(fetchedBlogs);
         } catch (error) {
             console.error("Lỗi khi lấy dữ liệu blog:", error);
-            setBlogs([]);
+            setOriginalBlogs([]);
+            setFilteredBlogs([]);
         }
     };
+    
 
-    const sortedBlogs = [...blogs].sort((a, b) => {
-        if (query.sortBy === "createOn") {
-            return query.IsDescending
-                ? new Date(b.createOn) - new Date(a.createOn)
-                : new Date(a.createOn) - new Date(b.createOn);
-        } else if (query.sortBy === "title") {
-            return query.IsDescending
-                ? b.title.localeCompare(a.title)
-                : a.title.localeCompare(b.title);
-        }
-        return 0;
-    });
+
+    useEffect(() => {
+        setFilteredBlogs(prevBlogs => [...prevBlogs].sort((a, b) => {
+            if (query.sortBy === "createOn") {
+                return query.IsDescending
+                    ? new Date(b.createOn) - new Date(a.createOn)
+                    : new Date(a.createOn) - new Date(b.createOn);
+            } else if (query.sortBy === "title") {
+                return query.IsDescending
+                    ? b.title.localeCompare(a.title)
+                    : a.title.localeCompare(b.title);
+            }
+            return 0;
+        }));
+    }, [query.sortBy, query.IsDescending]);
+    
 
     
     const handleChange = (e) => {
@@ -100,37 +128,36 @@ const Blog = () => {
             dateFilter: ""
         });
     };
+
     const handleDateChange = (e) => {
         const { name, value } = e.target;
-        setDateFilter((prev) => ({ ...prev, [name]: value }));
+        setDateFilter((prev) => ({
+            ...prev,
+            [name]: value  // Cập nhật giá trị lọc
+        }));
     };
+    
     const handleFilterByDate = () => {
-        let filterString = "";
-        if (dateFilter.year) {
-            filterString = dateFilter.year;
-            if (dateFilter.month) {
-                filterString += `-${dateFilter.month.padStart(2, "0")}`;
-                if (dateFilter.day) {
-                    filterString += `-${dateFilter.day.padStart(2, "0")}`;
-                }
-            }
-        }
-        setQuery((prev) => ({ ...prev, dateFilter: filterString }));
+        const { day, month, year } = dateFilter;
+    
+        const filtered = originalBlogs.filter(blog => {
+            const blogDate = new Date(blog.createOn); // Đổi blog.createOn thành Date object
+            const blogDay = blogDate.getDate();
+            const blogMonth = blogDate.getMonth() + 1; // Tháng bắt đầu từ 0
+            const blogYear = blogDate.getFullYear();
+    
+            return (
+                (year ? blogYear === Number(year) : true) &&
+                (month ? blogMonth === Number(month) : true) &&
+                (day ? blogDay === Number(day) : true)
+            );
+        });
+    
+        setFilteredBlogs(filtered); // Cập nhật danh sách hiển thị
     };
-    const filteredBlogs = sortedBlogs.filter(blog => {
-        if (!query.dateFilter) return true; // Nếu không chọn ngày thì hiển thị tất cả
     
-        const blogDate = new Date(blog.createOn);
-        const blogYear = blogDate.getFullYear();
-        const blogMonth = blogDate.getMonth() + 1;
-        const blogDay = blogDate.getDate();
     
-        if (dateFilter.year && blogYear !== Number(dateFilter.year)) return false;
-        if (dateFilter.month && blogMonth !== Number(dateFilter.month)) return false;
-        if (dateFilter.day && blogDay !== Number(dateFilter.day)) return false;
     
-        return true;
-    });
     return (
         <div className={cs("container")}> 
             <h2 className={cs("title")}>Danh sách bài viết</h2>
@@ -217,7 +244,7 @@ const Blog = () => {
 
                 {/* Bloglist */}
                 <div className={cs("blog-list")}> 
-                    {sortedBlogs.map((blog) => (
+                    {filteredBlogs.map((blog) => (
                         <div key={blog.id} className={cs("blog-item")}>
                         <img 
                             src={blog.thumbnail && blog.thumbnail.startsWith("http") ? blog.thumbnail : NoImage}
