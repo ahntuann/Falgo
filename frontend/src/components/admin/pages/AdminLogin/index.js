@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import {  useNavigate } from 'react-router-dom';
-import './AdminLogin.css'
+import { useNavigate } from 'react-router-dom';
+import './AdminLogin.css';
 import AuthContext from '~/context/AuthContext';
 
 const AdminLogin = () => {
     const navigate = useNavigate();
-    const { logInAsAdmin} = useContext(AuthContext);
+    const { logInAsAdmin } = useContext(AuthContext);
 
     const formik = useFormik({
         initialValues: {
@@ -21,10 +21,7 @@ const AdminLogin = () => {
         }),
         onSubmit: async (values) => {
             try {
-                const response = await axios.post(
-                    'http://localhost:5180/api/AdminLogin',
-                    values,
-                );
+                const response = await axios.post('http://localhost:5180/api/AdminLogin', values);
 
                 console.log('API Response:', response.data);
                 logInAsAdmin();
@@ -68,7 +65,7 @@ const AdminLogin = () => {
                             <div className="error-message">{formik.errors.password}</div>
                         )}
                     </div>
-                   
+
                     <button type="submit" className="login-button">
                         Sign in
                     </button>

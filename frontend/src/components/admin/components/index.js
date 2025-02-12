@@ -1,2 +1,3 @@
 export { default as Sidebar } from './sidebar';
-export { default as DateFilter } from './DateFilter';
+export { default as DateFilterUser } from './DateFilterUser';
+export { default as DateFilterSubmissions } from './DateFilterSubmissions';

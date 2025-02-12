@@ -140,7 +140,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserAdminRepository, UserAdminRepository>();
 builder.Services.AddScoped<IProgramingLanguageService, ProgramingLanguageService>();
 builder.Services.AddScoped<IProgramingLanguageRepository, ProgramingLanguageRepository>();
-
+builder.Services.AddScoped<ISubmissionsAdminRepository, SubmissionsAdminRepository>();
 // Logging
 builder.Logging.AddConsole();
 

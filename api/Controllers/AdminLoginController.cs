@@ -21,9 +21,9 @@ namespace api.Controllers
         
     }
     [HttpPost]
-     public async Task<IActionResult> LoginAdmin([FromBody] LoginDto loginDto)
+     public async Task<IActionResult> LoginAdmin([FromBody] LoginAdminDto loginAdminDto)
         {
-            if (loginDto.Username != "admin"||loginDto.Password!= "admin") 
+            if (loginAdminDto.Username != "admin"||loginAdminDto.Password!= "admin") 
 
              return Unauthorized("Username not found or password incorrect");
 

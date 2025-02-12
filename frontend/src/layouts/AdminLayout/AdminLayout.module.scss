@@ -3,9 +3,9 @@
     height: 100vh;
     width: 100vw;
     overflow: hidden;
-  }
-  
-  .sidebar {
+}
+
+.sidebar {
     background-color: #2d2d2d;
     color: white;
     padding: 1rem;
@@ -18,9 +18,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  .mainContent {
+}
+
+.mainContent {
     flex: 1;
     padding: 1.5rem;
     background-color: #f4f4f4;
@@ -28,10 +28,10 @@
     display: flex;
     flex-direction: column;
     width: calc(100% - 250px);
-   // margin-left: 250px;
-  }
-  
-  .topNav {
+    margin-left: 250px;
+}
+
+.topNav {
     background: white;
     padding: 1rem;
     border-radius: 8px;
@@ -39,9 +39,9 @@
     font-size: 1.5rem;
     font-weight: bold;
     text-align: center;
-  }
-  
-  .contentContainer {
+}
+
+.contentContainer {
     margin-top: 1rem;
     padding: 1rem;
     background: white;
@@ -50,5 +50,4 @@
     flex-grow: 1;
     width: 100%;
     overflow-y: auto;
-  }
-  
+}

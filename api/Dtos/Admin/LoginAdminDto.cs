@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 namespace api.Dtos.Admin
 {
-    public class LoginDto
+    public class LoginAdminDto
     {
          [Required] public required string Username { get; set; }
         [Required] public required string Password { get; set; }

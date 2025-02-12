@@ -19,9 +19,6 @@ namespace api.Repository
         }
          public async Task<int>CountNumberOfUsersWithTime(DateTime? startDate,DateTime? endDate)
          {
-
-
-       
         return await _context.AppUsers
             .Where(u => u.CreatedAt >= startDate && u.CreatedAt <= endDate)
             .CountAsync();
