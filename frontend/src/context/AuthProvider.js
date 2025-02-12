@@ -16,6 +16,7 @@ function AuthProvider({ children }) {
     const logInAsAdmin = () => setUserRole('admin');
     const logout = () => {
         localStorage.removeItem('user');
+        window.location.reload();
         setUserRole('guest');
     };
 

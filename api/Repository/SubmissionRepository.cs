@@ -25,7 +25,10 @@ namespace api.Repository
 
         public async Task<List<Submission>> GetSubmissionsByProblemIdAsync(string problemId)
         {
-            return await _context.Submissions.Where(s => s.Problem.ProblemId.Equals(problemId)).ToListAsync();
+            return await _context.Submissions
+    .Include(s => s.AppUser)
+    .Where(s => s.Problem.ProblemId == problemId)
+    .ToListAsync();
         }
     }
 }

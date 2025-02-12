@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
+import AuthContext from '~/context/AuthContext';
 import axios from 'axios';
 import './Problems.module.scss';
 
@@ -9,6 +10,7 @@ import style from './Problems.module.scss';
 const cs = classNames.bind(style);
 
 const ProblemList = () => {
+    const { appUser } = useContext(AuthContext);
     const [problems, setProblems] = useState([]);
     const [categories, setCategories] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
@@ -20,6 +22,7 @@ const ProblemList = () => {
         IsDescending: false,
         PageNumber: 1,
         PageSize: 15,
+        UserId: appUser?.id || '',
     });
 
     const debounceRef = useRef(null);
@@ -34,7 +37,7 @@ const ProblemList = () => {
         }
         debounceRef.current = setTimeout(() => {
             fetchProblems();
-        }, 1000);
+        }, 500);
 
         return () => clearTimeout(debounceRef.current);
     }, [query]);

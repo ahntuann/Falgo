@@ -20,7 +20,7 @@ namespace api.Mappers
             {
                 ProblemId = problem.ProblemId,
                 Title = problem.Title,
-                Category = problem.Category ?? "Uncategorized",
+                Category = problem.Category ?? "Không định dạng",
                 Score = problem.TotalPoint,
                 AcceptanceRate = totalSubmissions > 0 ? (double)acceptedSubmissions / totalSubmissions * 100 : 0,
                 AcceptedCount = acceptedSubmissions,
