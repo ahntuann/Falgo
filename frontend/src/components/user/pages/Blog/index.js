@@ -63,6 +63,15 @@ const Blog = () => {
     
             let fetchedBlogs = response.data || [];
     
+            // Lọc theo danh mục nếu query.category có giá trị
+            if (query.category) {
+                fetchedBlogs = fetchedBlogs.filter(blog => {
+                    if (!blog.categoryBlog) return false; // Tránh lỗi nếu categoryBlog null
+                    const categoriesArray = blog.categoryBlog.split(",").map(cat => cat.trim());
+                    return categoriesArray.includes(query.category);
+                });
+            }
+    
             // Sắp xếp ngay khi nhận dữ liệu
             fetchedBlogs = fetchedBlogs.sort((a, b) => {
                 if (query.sortBy === "createOn") {
@@ -85,6 +94,7 @@ const Blog = () => {
             setFilteredBlogs([]);
         }
     };
+    
     
 
 
@@ -114,8 +124,21 @@ const Blog = () => {
     };
 
     const handleCategoryChange = (category) => {
-        setQuery(prev => ({ ...prev, category: prev.category === category ? "" : category }));
+        setQuery(prev => ({
+            ...prev,
+            category: prev.category === category ? "" : category
+        }));
     };
+    const handleFilterByCategory = (blogs) => {
+        if (!query.category) return blogs;
+    
+        return blogs.filter(blog => {
+            if (!blog.categoryBlog) return false; // Tránh lỗi nếu dữ liệu null hoặc undefined
+            const categoriesArray = blog.categoryBlog.split(",").map(cat => cat.trim());
+            return categoriesArray.includes(query.category);
+        });
+    };
+    
 
     const handleReset = () => {
         setQuery({
