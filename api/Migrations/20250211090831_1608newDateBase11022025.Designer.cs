@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -11,13 +12,15 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250211090831_1608newDateBase11022025")]
+    partial class _1608newDateBase11022025
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -51,19 +54,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9d8011c8-185a-407e-bc25-8bb1a0cbff39",
+                            Id = "67c4edb6-6706-4e26-a1f9-c1fd766c0f97",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "4fdcc797-b056-4bb9-ab60-24735e9a38ab",
+                            Id = "b6351a86-e579-4676-9d74-24e04665b837",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         },
                         new
                         {
-                            Id = "4df76368-2d2e-45f6-914e-468eaf51681c",
+                            Id = "2916b2c5-72d1-4bbc-8ab2-71700347dfc6",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -363,10 +366,6 @@ namespace api.Migrations
                     b.Property<string>("ContestId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Banner")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ContestName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -375,15 +374,14 @@ namespace api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DueTime")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("DueTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Level")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
 
                     b.Property<int>("TotalPoint")
                         .HasColumnType("int");
@@ -480,19 +478,6 @@ namespace api.Migrations
                     b.ToTable("Problems");
                 });
 
-            modelBuilder.Entity("api.Model.ProgrammingLanguage", b =>
-                {
-                    b.Property<string>("ProgrammingLanguageId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Language")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProgrammingLanguageId");
-
-                    b.ToTable("ProgrammingLanguage");
-                });
-
             modelBuilder.Entity("api.Model.Submission", b =>
                 {
                     b.Property<string>("SubmissionId")
@@ -505,6 +490,11 @@ namespace api.Migrations
                     b.Property<double>("ExecuteTime")
                         .HasColumnType("float");
 
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<int>("MemoryUsed")
                         .HasColumnType("int");
 
@@ -513,9 +503,6 @@ namespace api.Migrations
 
                     b.Property<string>("ProblemId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProgrammingLanguageId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SourceCode")
@@ -535,8 +522,6 @@ namespace api.Migrations
                     b.HasIndex("AppUserId");
 
                     b.HasIndex("ProblemId");
-
-                    b.HasIndex("ProgrammingLanguageId");
 
                     b.ToTable("Submissions");
                 });
@@ -722,15 +707,9 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("api.Model.ProgrammingLanguage", "ProgrammingLanguage")
-                        .WithMany()
-                        .HasForeignKey("ProgrammingLanguageId");
-
                     b.Navigation("AppUser");
 
                     b.Navigation("Problem");
-
-                    b.Navigation("ProgrammingLanguage");
                 });
 
             modelBuilder.Entity("api.Model.TestCase", b =>

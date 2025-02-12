@@ -138,8 +138,15 @@ builder.Services.AddScoped<IContestRegistationService, ContestRegistationService
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserAdminRepository, UserAdminRepository>();
+builder.Services.AddScoped<IProgramingLanguageService, ProgramingLanguageService>();
+builder.Services.AddScoped<IProgramingLanguageRepository, ProgramingLanguageRepository>();
+
 // Logging
 builder.Logging.AddConsole();
+
+//
+builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+//
 
 var app = builder.Build();
 

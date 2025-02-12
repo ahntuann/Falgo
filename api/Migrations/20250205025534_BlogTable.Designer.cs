@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -11,13 +12,15 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250205025534_BlogTable")]
+    partial class BlogTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -47,26 +50,6 @@ namespace api.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "9d8011c8-185a-407e-bc25-8bb1a0cbff39",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = "4fdcc797-b056-4bb9-ab60-24735e9a38ab",
-                            Name = "Guest",
-                            NormalizedName = "GUEST"
-                        },
-                        new
-                        {
-                            Id = "4df76368-2d2e-45f6-914e-468eaf51681c",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -183,21 +166,9 @@ namespace api.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Avatar")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateOfBirth")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -205,15 +176,6 @@ namespace api.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastLoginAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastSolvedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -241,12 +203,6 @@ namespace api.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TotalSolved")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalSubmissions")
-                        .HasColumnType("int");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -267,17 +223,13 @@ namespace api.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("api.Model.Blog", b =>
+            modelBuilder.Entity("api.Model.BlogSpace.Blog", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("CategoryBlog")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -295,15 +247,7 @@ namespace api.Migrations
                     b.Property<string>("GuestName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageBlog")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TagBlog")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -311,8 +255,8 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("description")
                         .IsRequired()
@@ -329,7 +273,29 @@ namespace api.Migrations
                     b.ToTable("Blogs");
                 });
 
-            modelBuilder.Entity("api.Model.CommentBlog", b =>
+            modelBuilder.Entity("api.Model.BlogSpace.CategoryBlog", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int?>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("CategoryBlog");
+                });
+
+            modelBuilder.Entity("api.Model.BlogSpace.CommentBlog", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -358,14 +324,54 @@ namespace api.Migrations
                     b.ToTable("CommentBlog");
                 });
 
+            modelBuilder.Entity("api.Model.BlogSpace.ImageBlog", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int?>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("ImageBlog");
+                });
+
+            modelBuilder.Entity("api.Model.BlogSpace.TagBlog", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int?>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TagName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("TagBlog");
+                });
+
             modelBuilder.Entity("api.Model.Contest", b =>
                 {
                     b.Property<string>("ContestId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Banner")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContestName")
                         .IsRequired()
@@ -375,15 +381,14 @@ namespace api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DueTime")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("DueTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Level")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
 
                     b.Property<int>("TotalPoint")
                         .HasColumnType("int");
@@ -480,19 +485,6 @@ namespace api.Migrations
                     b.ToTable("Problems");
                 });
 
-            modelBuilder.Entity("api.Model.ProgrammingLanguage", b =>
-                {
-                    b.Property<string>("ProgrammingLanguageId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Language")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProgrammingLanguageId");
-
-                    b.ToTable("ProgrammingLanguage");
-                });
-
             modelBuilder.Entity("api.Model.Submission", b =>
                 {
                     b.Property<string>("SubmissionId")
@@ -505,6 +497,11 @@ namespace api.Migrations
                     b.Property<double>("ExecuteTime")
                         .HasColumnType("float");
 
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<int>("MemoryUsed")
                         .HasColumnType("int");
 
@@ -513,9 +510,6 @@ namespace api.Migrations
 
                     b.Property<string>("ProblemId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProgrammingLanguageId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SourceCode")
@@ -535,8 +529,6 @@ namespace api.Migrations
                     b.HasIndex("AppUserId");
 
                     b.HasIndex("ProblemId");
-
-                    b.HasIndex("ProgrammingLanguageId");
 
                     b.ToTable("Submissions");
                 });
@@ -601,6 +593,65 @@ namespace api.Migrations
                     b.ToTable("TestCaseStatuses");
                 });
 
+            modelBuilder.Entity("api.Model.User", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Avatar")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastLoginAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastSolvedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TotalSolved")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalSubmissions")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -652,19 +703,46 @@ namespace api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("api.Model.Blog", b =>
+            modelBuilder.Entity("api.Model.BlogSpace.Blog", b =>
                 {
-                    b.HasOne("api.Model.AppUser", "User")
+                    b.HasOne("api.Model.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("api.Model.CommentBlog", b =>
+            modelBuilder.Entity("api.Model.BlogSpace.CategoryBlog", b =>
                 {
-                    b.HasOne("api.Model.Blog", "Blog")
+                    b.HasOne("api.Model.BlogSpace.Blog", "Blog")
+                        .WithMany("CategoryBlog")
+                        .HasForeignKey("BlogId");
+
+                    b.Navigation("Blog");
+                });
+
+            modelBuilder.Entity("api.Model.BlogSpace.CommentBlog", b =>
+                {
+                    b.HasOne("api.Model.BlogSpace.Blog", "Blog")
                         .WithMany("CommentBlog")
+                        .HasForeignKey("BlogId");
+
+                    b.Navigation("Blog");
+                });
+
+            modelBuilder.Entity("api.Model.BlogSpace.ImageBlog", b =>
+                {
+                    b.HasOne("api.Model.BlogSpace.Blog", "Blog")
+                        .WithMany("ImageBlog")
+                        .HasForeignKey("BlogId");
+
+                    b.Navigation("Blog");
+                });
+
+            modelBuilder.Entity("api.Model.BlogSpace.TagBlog", b =>
+                {
+                    b.HasOne("api.Model.BlogSpace.Blog", "Blog")
+                        .WithMany("TagBlog")
                         .HasForeignKey("BlogId");
 
                     b.Navigation("Blog");
@@ -722,15 +800,9 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("api.Model.ProgrammingLanguage", "ProgrammingLanguage")
-                        .WithMany()
-                        .HasForeignKey("ProgrammingLanguageId");
-
                     b.Navigation("AppUser");
 
                     b.Navigation("Problem");
-
-                    b.Navigation("ProgrammingLanguage");
                 });
 
             modelBuilder.Entity("api.Model.TestCase", b =>
@@ -755,9 +827,15 @@ namespace api.Migrations
                     b.Navigation("Submission");
                 });
 
-            modelBuilder.Entity("api.Model.Blog", b =>
+            modelBuilder.Entity("api.Model.BlogSpace.Blog", b =>
                 {
+                    b.Navigation("CategoryBlog");
+
                     b.Navigation("CommentBlog");
+
+                    b.Navigation("ImageBlog");
+
+                    b.Navigation("TagBlog");
                 });
 
             modelBuilder.Entity("api.Model.Contest", b =>

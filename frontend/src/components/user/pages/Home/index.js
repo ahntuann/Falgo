@@ -7,7 +7,12 @@ import slider3 from '~/assets/images/slider/slider3.png';
 import { ContestBrief, ProblemItem, SliderBanner } from '~/components/user/components';
 import { useContext, useEffect, useState } from 'react';
 import AuthContext from '~/context/AuthContext';
-import { fetchContestBriefAPI, fetchProblemHomePageAPI } from '~/apis';
+import {
+    fetchAllProgrammingLanguageAPI,
+    fetchContestBriefAPI,
+    fetchProblemHomePageAPI,
+} from '~/apis';
+import SkillItem from '~/components/user/components/SkillItem';
 
 const cs = classNames.bind(style);
 
@@ -17,8 +22,9 @@ function Home() {
     const { appUser, userRole, logout } = useContext(AuthContext);
 
     const [problemDailyFocus, setProblemDailyFocus] = useState(0);
-    const [problems, setProblems] = useState(null);
+    const [problems, setProblems] = useState([]);
     const [contests, setContests] = useState([]);
+    const [skills, setSkills] = useState([]);
 
     // fetch Problem HomePage daily
     useEffect(() => {
@@ -39,6 +45,11 @@ function Home() {
         fetchContestBriefAPI({ isNewest: true, pageSize: 2 }).then((newContests) =>
             setContests(newContests),
         );
+    }, []);
+
+    // fetch all programming language
+    useEffect(() => {
+        fetchAllProgrammingLanguageAPI().then((x) => setSkills(x));
     }, []);
 
     return (
@@ -91,11 +102,23 @@ function Home() {
             <div className={cs('contestBrief', 'homeComponents')}>
                 <div className={cs('category', 'contestBriefCategory')}>Cuộc thi lập trình</div>
                 <div className={cs('contests')}>
-                    {contests.map((contest, i) => (
-                        <ContestBrief key={i} contest={contest} />
-                    ))}
+                    {contests !== undefined &&
+                        contests.map((contest, i) => <ContestBrief key={i} contest={contest} />)}
                 </div>
             </div>
+
+            {userRole === 'user' && (
+                <div className={cs('yourSkill', 'homeComponents')}>
+                    <div className={cs('category', 'yourSkillCategory')}>Kỹ năng của bạn</div>
+
+                    <div className={cs('skillWrapper')}>
+                        {skills !== undefined &&
+                            skills.map((skill, i) => (
+                                <SkillItem key={i} skill={skill} userId={appUser.id} />
+                            ))}
+                    </div>
+                </div>
+            )}
 
             <div className={cs('footer')}></div>
         </div>

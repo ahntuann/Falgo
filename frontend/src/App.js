@@ -5,7 +5,6 @@ import useAuth from '~/hooks/useAuth.js';
 import NotFound from '~/components/shared/NotFound';
 import { Login } from '~/components/user/pages';
 import { Register } from '~/components/user/pages';
-
 function App() {
     const { userRole } = useAuth();
 

@@ -1,9 +1,12 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import AuthContext from '~/context/AuthContext';
 
 const GoogleCallback = () => {
     const navigate = useNavigate();
     const location = useLocation();
+
+    const { logInAsUser } = useContext(AuthContext);
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -14,6 +17,7 @@ const GoogleCallback = () => {
 
         if (token) {
             const userData = { id: userId, userName, email, token };
+            logInAsUser();
             localStorage.setItem('user', JSON.stringify(userData));
             console.log('User stored:', userData);
 

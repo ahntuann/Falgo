@@ -1,0 +1,222 @@
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 16px;
+}
+
+.title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 16px;
+}
+
+.search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+
+    input {
+        width: 50%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+}
+
+.category-tags {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.category-item {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.category-item:hover {
+    background-color: #dcdcdc;
+}
+
+.blog {
+    display: flex;
+    gap: 16px;
+    button {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        font-size: 1.6rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        &:hover {
+            background-color: #0056b3;
+        }
+    }
+}
+
+.sidebar {
+    width: 30%;
+    border: 1px solid #ddd;
+    padding: 16px;
+    border-radius: 8px;
+    background: #f9f9f9;
+}
+
+.category-list button, .reset-button {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 4px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover, &.active {
+        background: #ddd;
+    }
+}
+
+
+
+.date-filter,.DateInput {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap; /* Xuống dòng khi không đủ chỗ */
+    max-width: 100%; /* Đảm bảo không tràn sidebar */
+    overflow: hidden; /* Tránh bị tràn */
+    margin: auto;
+    gap: 10px;  
+    select,
+    input,
+    button {
+        height: 35px; /* Chiều cao đồng nhất */
+        width: 70px; /* Đảm bảo cùng kích thước */
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+        box-sizing: border-box; /* Đảm bảo padding không làm thay đổi kích thước */
+        font-size: 14px;
+        padding: auto;
+    }
+}
+
+
+
+
+
+
+
+.blog-list {
+    width: 70%;
+}
+
+.blog-item {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.thumbnail {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 16px;
+    border-radius: 8px;
+}
+
+.content {
+    flex: 1;
+}
+
+
+.sort-controls{
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Căn đều các phần tử */
+    gap: 10px;
+    select{
+        flex: 1 1 auto;
+        text-align: center;
+        padding: 8px 12px; /* Đảm bảo cùng padding */
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    button{
+        text-align: center;
+        padding: 8px 12px; /* Đảm bảo cùng padding */
+        border-radius: 4px;
+        font-size: 14px;
+    }
+}
+
+
+.actions,.userPart {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Căn đều các phần tử */
+    gap: 10px; /* Khoảng cách giữa các nút */
+    
+    button {
+        text-align: center;
+        padding: 8px 12px; /* Đảm bảo cùng padding */
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .edit {
+        background-color: #ffc107;
+        color: black;
+        border: none;
+    }
+
+    .delete {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+    }
+
+    .edit:hover {
+        background-color: #e0a800;
+    }
+
+    .delete:hover {
+        background-color: #c82333;
+    }
+}
+
+
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 16px;
+    gap: 8px;
+    button {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 1.6rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        &:hover {
+            background-color: #0056b3;
+        }
+    }
+}
