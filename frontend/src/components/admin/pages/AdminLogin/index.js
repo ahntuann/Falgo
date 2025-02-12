@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
-
+import {  useNavigate } from 'react-router-dom';
+import './AdminLogin.css'
 import AuthContext from '~/context/AuthContext';
 
-function AdminLogin  ()  {
+const AdminLogin = () => {
     const navigate = useNavigate();
     const { logInAsAdmin} = useContext(AuthContext);
 
@@ -27,17 +27,8 @@ function AdminLogin  ()  {
                 );
 
                 console.log('API Response:', response.data);
-
-                const userId = response.data?.id;
-
-                if (!userId) {
-                    throw new Error('User ID not found in response data');
-                }
-
-                const user = response.data;
-                localStorage.setItem('user', JSON.stringify(user));
                 logInAsAdmin();
-                navigate('/');
+                navigate('/dashboard');
             } catch (error) {
                 console.error('Login failed:', error.response?.data || error.message);
                 alert(`Login failed! ${error.response?.data || error.message}`);
@@ -77,14 +68,7 @@ function AdminLogin  ()  {
                             <div className="error-message">{formik.errors.password}</div>
                         )}
                     </div>
-                    <div className="form-links">
-                        <Link to="/register" className="create-account-link">
-                            Create new account
-                        </Link>
-                        <a href="/forgot-password" className="forgot-password-link">
-                            Forgot your password?
-                        </a>
-                    </div>
+                   
                     <button type="submit" className="login-button">
                         Sign in
                     </button>
