@@ -7,6 +7,7 @@ namespace api.Helpers
 {
     public class QueryObject
     {
+        public string? UserId { get; set; }
         public string ProblemTitle { get; set; } = string.Empty;
         public string ProblemCategory { get; set; } = string.Empty;
         public string HidePassed { get; set; } = string.Empty;
