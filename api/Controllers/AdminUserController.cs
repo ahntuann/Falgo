@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace api.Controllers
 {
     [ApiController]
-    [Route("api/Admin")]
+    [Route("api/AdminDashboard")]
     public class AdminUserController : ControllerBase
     {
         private readonly IUserAdminRepository _userAdminRepository;
@@ -18,8 +18,8 @@ namespace api.Controllers
         {
             _userAdminRepository=userAdminRepository;
         }
-       [HttpGet]
-       [Route("/Dashboard")]
+       [HttpPost("user")]
+       
     public async Task<IActionResult> NumberOfUserWithTime([FromBody] DatetimeFilterDto datetimeFilterDto)
     {
         int count = await _userAdminRepository.CountNumberOfUsersWithTime(datetimeFilterDto.startDate,datetimeFilterDto.endDate);
