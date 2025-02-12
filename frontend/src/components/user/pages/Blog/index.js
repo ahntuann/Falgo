@@ -37,7 +37,9 @@ const Blog = () => {
         year: ""
     });
     
-
+    const startIndex = (query.page - 1) * query.postsPerPage;
+    const endIndex = startIndex + query.postsPerPage;
+    const paginatedBlogs = filteredBlogs.slice(startIndex, endIndex);
     const debounceRef = useRef(null);
 
     useEffect(() => {
@@ -275,7 +277,7 @@ const Blog = () => {
 
                 {/* Bloglist */}
                 <div className={cs("blog-list")}> 
-                    {filteredBlogs.map((blog) => (
+                    {paginatedBlogs.map((blog) => (
                         <div key={blog.id} className={cs("blog-item")}>
                         <img 
                             src={blog.thumbnail && blog.thumbnail.startsWith("http") ? blog.thumbnail : NoImage}
@@ -331,10 +333,12 @@ const Blog = () => {
                 </button>
                 <span>Trang {query.page}</span>
                 <button
-                    onClick={() => setQuery(prev => ({ ...prev, page: prev.page + 1 }))}
+                    disabled={query.page >= Math.ceil(filteredBlogs.length / query.postsPerPage)}
+                    onClick={() => setQuery(prev => ({ ...prev, page: prev.page + 1 }))} 
                 >
                     Sau
                 </button>
+
             </div>
             {/* End pagination */}
 
