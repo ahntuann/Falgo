@@ -18,7 +18,7 @@ const Blog = () => {
     const [originalBlogs, setOriginalBlogs] = useState([]); // Lưu dữ liệu gốc
     const [filteredBlogs, setFilteredBlogs] = useState([]); // Lưu danh sách đã lọc
     
-    const [blogs, setBlogs] = useState([]);
+
     const [categories] = useState([
         "Mẹo lập trình", "Hướng dẫn", "Xu hướng lập trình", "Kinh Nghiệm", "Thử thách", "Câu Hỏi"
     ]);
@@ -247,6 +247,54 @@ const Blog = () => {
             {/* DataBase */}
             <div className={cs("blog")}> 
 
+                {/* Bloglist */}
+                <div className={cs("blog-list")}> 
+                    {paginatedBlogs.map((blog) => (
+                        <div key={blog.id} className={cs("blog-item")}>
+                        <img 
+                            src={blog.thumbnail && blog.thumbnail.startsWith("http") ? blog.thumbnail : NoImage}
+                            alt={blog.title} 
+                            className={cs("thumbnail")} 
+                        />
+
+                            <div className={cs("content")}>
+                                <h2>{blog.title}</h2>
+                                <p>{blog.description}</p>
+                                {blog.categoryBlog && blog.categoryBlog.trim() !== "" && (
+                                    <div className={cs("category-tags")}>
+                                        {blog.categoryBlog.split(",").map((category, index) => (
+                                            <button
+                                                key={index}
+                                                className={cs("category-item")}
+                                                onClick={() => handleCategoryChange(category.trim())}
+                                            >
+                                                {category.trim()}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                                <p>Ngày đăng: {blog.createOn ? new Date(blog.createOn + "Z").toLocaleDateString("vi-VN") : "Không có dữ liệu"}</p>
+
+                                <div className={cs("actions")}>
+                                    <div className={cs('userPart')}>
+                                        {userRole !== 'guest' && userObject && userObject.id === blog.userId && (
+                                            <>
+                                                <button className={cs("edit")}>Chỉnh sửa</button>
+                                                <button className={cs("delete")} onClick={() => handleDelete(blog.id)}>
+                                                    Xóa
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+                                    <button>Đọc thêm</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    ))} 
+                </div>
+                {/* End Bloglist */}
+
                 {/* sidebar */}
                 <div className={cs("sidebar")}> 
                     
@@ -314,54 +362,7 @@ const Blog = () => {
                 
                 </div>
                 {/* End sidebar */}
-
-                {/* Bloglist */}
-                <div className={cs("blog-list")}> 
-                    {paginatedBlogs.map((blog) => (
-                        <div key={blog.id} className={cs("blog-item")}>
-                        <img 
-                            src={blog.thumbnail && blog.thumbnail.startsWith("http") ? blog.thumbnail : NoImage}
-                            alt={blog.title} 
-                            className={cs("thumbnail")} 
-                        />
-
-                            <div className={cs("content")}>
-                                <h2>{blog.title}</h2>
-                                <p>{blog.description}</p>
-                                {blog.categoryBlog && blog.categoryBlog.trim() !== "" && (
-                                    <div className={cs("category-tags")}>
-                                        {blog.categoryBlog.split(",").map((category, index) => (
-                                            <button
-                                                key={index}
-                                                className={cs("category-item")}
-                                                onClick={() => handleCategoryChange(category.trim())}
-                                            >
-                                                {category.trim()}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                                <p>Ngày đăng: {blog.createOn ? new Date(blog.createOn + "Z").toLocaleDateString("vi-VN") : "Không có dữ liệu"}</p>
-
-                                <div className={cs("actions")}>
-                                    <div className={cs('userPart')}>
-                                        {userRole !== 'guest' && userObject && userObject.id === blog.userId && (
-                                            <>
-                                                <button className={cs("edit")}>Chỉnh sửa</button>
-                                                <button className={cs("delete")} onClick={() => handleDelete(blog.id)}>
-                                                    Xóa
-                                                </button>
-                                            </>
-                                        )}
-                                    </div>
-                                    <button>Đọc thêm</button>
-                                </div>
-
-                            </div>
-                        </div>
-                    ))} 
-                </div>
-                {/* End Bloglist */}
+                
             </div>
             {/* End DataBase */}
 

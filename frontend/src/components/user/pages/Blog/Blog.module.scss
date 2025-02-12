@@ -14,7 +14,6 @@
     display: flex;
     justify-content: center;
     margin-bottom: 16px;
-
     input {
         width: 50%;
         padding: 8px;
@@ -62,12 +61,16 @@
 }
 
 .sidebar {
-    width: 30%;
     border: 1px solid #ddd;
     padding: 16px;
     border-radius: 8px;
     background: #f9f9f9;
+    position: fixed;
+    top: 172px;
+    right: 148px;
+
 }
+
 
 .category-list button, .reset-button {
     display: block;
