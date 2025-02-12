@@ -6,7 +6,7 @@
 # Ignore environment configuration files
 .env
 appsettings.json
-
+appsettings.Development.json
 # Ignore logs
 logs/
 

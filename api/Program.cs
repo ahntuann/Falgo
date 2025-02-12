@@ -137,7 +137,7 @@ builder.Services.AddScoped<IContestRegistationRepository, ContestRegistationRepo
 builder.Services.AddScoped<IContestRegistationService, ContestRegistationService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
-
+builder.Services.AddScoped<IUserAdminRepository, UserAdminRepository>();
 // Logging
 builder.Logging.AddConsole();
 
