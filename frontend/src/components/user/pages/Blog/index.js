@@ -144,13 +144,18 @@ const Blog = () => {
         setQuery({
             search: "",
             category: "",
-            sortBy: "createOn", // Đổi thành đúng tên trường JSON
+            sortBy: "createOn",
             IsDescending: false,
             page: 1,
             postsPerPage: 10,
-            dateFilter: ""
+            dateFilter: ""  // Reset bộ lọc ngày
         });
+    
+        setDateFilter({ day: "", month: "", year: "" }); // Xóa dữ liệu ngày đã chọn
+        setFilteredBlogs(originalBlogs); // Reset danh sách blog về ban đầu
     };
+    
+    
 
     const handleDateChange = (e) => {
         const { name, value } = e.target;
