@@ -194,6 +194,41 @@ const Blog = () => {
         setFilteredBlogs(filtered); // Cập nhật danh sách hiển thị
     };
     
+    const handleDelete = async (blogId) => {
+        if (!window.confirm("Bạn có chắc chắn muốn xóa bài viết này không?")) return;
+        console.log("ID nhận được trong handleDelete:", blogId);
+        
+        try {
+            const token = localStorage.getItem("accessToken");
+            const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "*/*",
+                    "Authorization": `Bearer ${token}`
+                },
+                credentials: "include"
+            });
+    
+            if (response.status === 401) {
+                alert("Bạn cần đăng nhập để xóa bài viết!");
+                return;
+            }
+    
+            const text = await response.text(); // Đọc response dưới dạng text
+            console.log("Response từ server:", text);
+    
+            if (response.ok) {
+                alert("Xóa bài viết thành công!");
+                setFilteredBlogs(prevBlogs => prevBlogs.filter(blog => blog.id !== blogId));
+            } else {
+                alert(`Xóa thất bại! Server trả về: ${text}`);
+            }
+        } catch (error) {
+            console.error("Lỗi khi xóa bài viết:", error);
+            alert("Có lỗi xảy ra!");
+        }
+    };
     
     
     return (
@@ -313,7 +348,9 @@ const Blog = () => {
                                         {userRole !== 'guest' && userObject && userObject.id === blog.userId && (
                                             <>
                                                 <button className={cs("edit")}>Chỉnh sửa</button>
-                                                <button className={cs("delete")}>Xóa</button>
+                                                <button className={cs("delete")} onClick={() => handleDelete(blog.id)}>
+                                                    Xóa
+                                                </button>
                                             </>
                                         )}
                                     </div>
