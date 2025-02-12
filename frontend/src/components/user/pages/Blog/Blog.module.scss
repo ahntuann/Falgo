@@ -202,21 +202,47 @@
 
 .pagination {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 16px;
     gap: 8px;
-    button {
-        padding: 0.5rem 1rem;
-        border: none;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+
+    .paginationnumber button{
+
+        padding: 8px;
+        background: white;
+        border: 1px solid #ccc;
         border-radius: 4px;
-        background-color: #007bff;
-        color: #fff;
-        font-size: 1.6rem;
         cursor: pointer;
-        transition: background-color 0.3s ease;
-        &:hover {
-            background-color: #0056b3;
+        transition: 0.3s;
+        
+        &:hover,&:active {
+            background-color: #007bff;
+        }
+        &.active {
+            // background-color: #007bff;
+            display: none;
         }
     }
+
+    button {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        background-color: #007bff;
+        cursor: pointer;
+        transition: background 0.3s, color 0.3s;
+        font-size: 14px;
+
+        &:hover, &.active {
+            background-color: #0056b3;
+        }
+        &:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    }
+
 }
+
+
+

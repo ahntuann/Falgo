@@ -31,16 +31,21 @@ const Blog = () => {
         postsPerPage: 10,
         dateFilter: ""
     });
+
+    const totalPages = Math.ceil(filteredBlogs.length / query.postsPerPage);
+
+    const startIndex = (query.page - 1) * query.postsPerPage;
+    const endIndex = startIndex + query.postsPerPage;
+    const paginatedBlogs = filteredBlogs.slice(startIndex, endIndex);
+    const debounceRef = useRef(null);
+
     const [dateFilter, setDateFilter] = useState({
         day: "",
         month: "",
         year: ""
     });
     
-    const startIndex = (query.page - 1) * query.postsPerPage;
-    const endIndex = startIndex + query.postsPerPage;
-    const paginatedBlogs = filteredBlogs.slice(startIndex, endIndex);
-    const debounceRef = useRef(null);
+
 
     useEffect(() => {
         if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -49,12 +54,25 @@ const Blog = () => {
         }, 1000);
         return () => clearTimeout(debounceRef.current);
     }, [query]);
-
-    
+ 
     useEffect(() => {
         handleFilterByDate();
     }, [dateFilter, originalBlogs]); // Lọc khi dữ liệu gốc hoặc bộ lọc thay đổi
     
+    useEffect(() => {
+        setFilteredBlogs(prevBlogs => [...prevBlogs].sort((a, b) => {
+            if (query.sortBy === "createOn") {
+                return query.IsDescending
+                    ? new Date(b.createOn) - new Date(a.createOn)
+                    : new Date(a.createOn) - new Date(b.createOn);
+            } else if (query.sortBy === "title") {
+                return query.IsDescending
+                    ? b.title.localeCompare(a.title)
+                    : a.title.localeCompare(b.title);
+            }
+            return 0;
+        }));
+    }, [query.sortBy, query.IsDescending]);
     
     const fetchBlogs = async () => {
         try {
@@ -110,20 +128,7 @@ const Blog = () => {
     
 
 
-    useEffect(() => {
-        setFilteredBlogs(prevBlogs => [...prevBlogs].sort((a, b) => {
-            if (query.sortBy === "createOn") {
-                return query.IsDescending
-                    ? new Date(b.createOn) - new Date(a.createOn)
-                    : new Date(a.createOn) - new Date(b.createOn);
-            } else if (query.sortBy === "title") {
-                return query.IsDescending
-                    ? b.title.localeCompare(a.title)
-                    : a.title.localeCompare(b.title);
-            }
-            return 0;
-        }));
-    }, [query.sortBy, query.IsDescending]);
+
     
 
     
@@ -325,20 +330,50 @@ const Blog = () => {
 
             {/* pagination */}
             <div className={cs("pagination")}>
+                {/* Nút về trang đầu */}
+                <button
+                    disabled={query.page === 1}
+                    onClick={() => setQuery(prev => ({ ...prev, page: 1 }))}
+                >
+                    Đầu
+                </button>
+
+                {/* Nút lùi trang */}
                 <button
                     disabled={query.page === 1}
                     onClick={() => setQuery(prev => ({ ...prev, page: prev.page - 1 }))}
                 >
                     Trước
                 </button>
-                <span>Trang {query.page}</span>
+
+                {/* Danh sách số trang */}
+                <div className={cs("paginationnumber")}>
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <button
+                            key={index + 1}
+                            onClick={() => setQuery({ ...query, page: index + 1 })}
+                            className={query.page === index + 1 ? "active" : ""}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Nút tiến trang */}
                 <button
-                    disabled={query.page >= Math.ceil(filteredBlogs.length / query.postsPerPage)}
-                    onClick={() => setQuery(prev => ({ ...prev, page: prev.page + 1 }))} 
+                    disabled={query.page >= totalPages}
+                    onClick={() => setQuery(prev => ({ ...prev, page: prev.page + 1 }))}
                 >
                     Sau
                 </button>
 
+                {/* Nút đến trang cuối */}
+                <button
+                    disabled={query.page === totalPages}
+                    onClick={() => setQuery(prev => ({ ...prev, page: totalPages }))}
+                >
+                    Cuối
+                </button>
             </div>
             {/* End pagination */}
 
