@@ -5,6 +5,7 @@ import useAuth from '~/hooks/useAuth.js';
 import NotFound from '~/components/shared/NotFound';
 import { Login } from '~/components/user/pages';
 import { Register } from '~/components/user/pages';
+import GithubCallback from './components/user/pages/Login/GithubCallback';
 function App() {
     const { userRole } = useAuth();
 
@@ -16,6 +17,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/google-callback" element={<GoogleCallback />} />
+                    <Route path="/github-callback" element={<GithubCallback />} />
                     {routes.map((route) => {
                         const Component = route.component;
                         const Layout = route.layout;

@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
+import { FaGithub } from 'react-icons/fa';
 import './Login.css';
 import AuthContext from '~/context/AuthContext';
 
@@ -48,6 +49,10 @@ const Login = () => {
 
     const handleGoogleLogin = () => {
         window.location.href = 'http://localhost:5180/api/account/google-login';
+    };
+
+    const handleGithubLogin = () => {
+        window.location.href = 'http://localhost:5180/api/account/github-login';
     };
 
     return (
@@ -102,6 +107,15 @@ const Login = () => {
                         onClick={handleGoogleLogin}
                     >
                         <FcGoogle className="google-icon" /> Sign in with Google
+                    </button>
+
+                    {/* Nút đăng nhập với GitHub */}
+                    <button
+                        type="button"
+                        className="github-login-button"
+                        onClick={handleGithubLogin}
+                    >
+                        <FaGithub className="github-icon" /> Sign in with GitHub
                     </button>
                 </form>
             </div>
