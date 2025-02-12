@@ -72,6 +72,15 @@ const Blog = () => {
                 });
             }
     
+            // Lọc theo từ khóa tìm kiếm
+            if (query.search) {
+                const searchLower = query.search.toLowerCase();
+                fetchedBlogs = fetchedBlogs.filter(blog => 
+                    blog.title.toLowerCase().includes(searchLower) || 
+                    blog.description.toLowerCase().includes(searchLower)
+                );
+            }
+    
             // Sắp xếp ngay khi nhận dữ liệu
             fetchedBlogs = fetchedBlogs.sort((a, b) => {
                 if (query.sortBy === "createOn") {
@@ -94,6 +103,7 @@ const Blog = () => {
             setFilteredBlogs([]);
         }
     };
+    
     
     
 
@@ -122,6 +132,7 @@ const Blog = () => {
             [name]: type === "checkbox" ? checked : value
         }));
     };
+    
 
     const handleCategoryChange = (category) => {
         setQuery(prev => ({
@@ -129,16 +140,8 @@ const Blog = () => {
             category: prev.category === category ? "" : category
         }));
     };
-    const handleFilterByCategory = (blogs) => {
-        if (!query.category) return blogs;
     
-        return blogs.filter(blog => {
-            if (!blog.categoryBlog) return false; // Tránh lỗi nếu dữ liệu null hoặc undefined
-            const categoriesArray = blog.categoryBlog.split(",").map(cat => cat.trim());
-            return categoriesArray.includes(query.category);
-        });
-    };
-    
+
 
     const handleReset = () => {
         setQuery({
