@@ -43,6 +43,7 @@
     background-color: #dcdcdc;
 }
 
+
 .blog {
     display: flex;
     gap: 16px;
@@ -58,8 +59,22 @@
             background-color: #0056b3;
         }
     }
+    
 }
-
+.btn-read-more {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+  
 .sidebar {
     border: 1px solid #ddd;
     padding: 16px;
@@ -93,20 +108,20 @@
 .date-filter,.DateInput {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap; /* Xuống dòng khi không đủ chỗ */
-    max-width: 100%; /* Đảm bảo không tràn sidebar */
-    overflow: hidden; /* Tránh bị tràn */
+    flex-wrap: nowrap; 
+    max-width: 100%; 
+    overflow: hidden; 
     margin: auto;
     gap: 10px;  
     select,
     input,
     button {
-        height: 35px; /* Chiều cao đồng nhất */
-        width: 70px; /* Đảm bảo cùng kích thước */
+        height: 35px; 
+        width: 70px; 
         border: 1px solid #ccc;
         border-radius: 4px;
         text-align: center;
-        box-sizing: border-box; /* Đảm bảo padding không làm thay đổi kích thước */
+        box-sizing: border-box; 
         font-size: 14px;
         padding: auto;
     }
@@ -148,18 +163,18 @@
 .sort-controls{
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Căn đều các phần tử */
+    justify-content: space-between; 
     gap: 10px;
     select{
         flex: 1 1 auto;
         text-align: center;
-        padding: 8px 12px; /* Đảm bảo cùng padding */
+        padding: 8px 12px; 
         border-radius: 4px;
         font-size: 14px;
     }
     button{
         text-align: center;
-        padding: 8px 12px; /* Đảm bảo cùng padding */
+        padding: 8px 12px; 
         border-radius: 4px;
         font-size: 14px;
     }
@@ -169,12 +184,12 @@
 .actions,.userPart {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Căn đều các phần tử */
-    gap: 10px; /* Khoảng cách giữa các nút */
+    justify-content: space-between;
+    gap: 10px;
     
     button {
         text-align: center;
-        padding: 8px 12px; /* Đảm bảo cùng padding */
+        padding: 8px 12px; 
         border-radius: 4px;
         font-size: 14px;
     }
@@ -223,7 +238,7 @@
             background-color: #007bff;
         }
         &.active {
-            // background-color: #007bff;
+            background-color: #007bff;
             display: none;
         }
     }

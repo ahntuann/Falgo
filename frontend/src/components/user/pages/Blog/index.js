@@ -59,7 +59,7 @@ const Blog = () => {
  
     useEffect(() => {
         handleFilterByDate();
-    }, [dateFilter, originalBlogs]); // Lọc khi dữ liệu gốc hoặc bộ lọc thay đổi
+    }, [dateFilter, originalBlogs]); 
     
     useEffect(() => {
         setFilteredBlogs(prevBlogs => [...prevBlogs].sort((a, b) => {
@@ -85,16 +85,14 @@ const Blog = () => {
     
             let fetchedBlogs = response.data || [];
     
-            // Lọc theo danh mục nếu query.category có giá trị
             if (query.category) {
                 fetchedBlogs = fetchedBlogs.filter(blog => {
-                    if (!blog.categoryBlog) return false; // Tránh lỗi nếu categoryBlog null
+                    if (!blog.categoryBlog) return false; 
                     const categoriesArray = blog.categoryBlog.split(",").map(cat => cat.trim());
                     return categoriesArray.includes(query.category);
                 });
             }
     
-            // Lọc theo từ khóa tìm kiếm
             if (query.search) {
                 const searchLower = query.search.toLowerCase();
                 fetchedBlogs = fetchedBlogs.filter(blog => 
@@ -103,7 +101,6 @@ const Blog = () => {
                 );
             }
     
-            // Sắp xếp ngay khi nhận dữ liệu
             fetchedBlogs = fetchedBlogs.sort((a, b) => {
                 if (query.sortBy === "createOn") {
                     return query.IsDescending
@@ -160,11 +157,11 @@ const Blog = () => {
             IsDescending: false,
             page: 1,
             postsPerPage: 10,
-            dateFilter: ""  // Reset bộ lọc ngày
+            dateFilter: ""  
         });
     
-        setDateFilter({ day: "", month: "", year: "" }); // Xóa dữ liệu ngày đã chọn
-        setFilteredBlogs(originalBlogs); // Reset danh sách blog về ban đầu
+        setDateFilter({ day: "", month: "", year: "" }); 
+        setFilteredBlogs(originalBlogs); 
     };
     
     
@@ -173,7 +170,7 @@ const Blog = () => {
         const { name, value } = e.target;
         setDateFilter((prev) => ({
             ...prev,
-            [name]: value  // Cập nhật giá trị lọc
+            [name]: value  
         }));
     };
     
@@ -181,9 +178,9 @@ const Blog = () => {
         const { day, month, year } = dateFilter;
     
         const filtered = originalBlogs.filter(blog => {
-            const blogDate = new Date(blog.createOn); // Đổi blog.createOn thành Date object
+            const blogDate = new Date(blog.createOn); 
             const blogDay = blogDate.getDate();
-            const blogMonth = blogDate.getMonth() + 1; // Tháng bắt đầu từ 0
+            const blogMonth = blogDate.getMonth() + 1; 
             const blogYear = blogDate.getFullYear();
     
             return (
@@ -193,7 +190,7 @@ const Blog = () => {
             );
         });
     
-        setFilteredBlogs(filtered); // Cập nhật danh sách hiển thị
+        setFilteredBlogs(filtered); 
     };
 
     const handleDelete = async (blogId) => {
@@ -217,8 +214,7 @@ const Blog = () => {
                 return;
             }
     
-            const text = await response.text(); // Đọc response dưới dạng text
-            console.log("Response từ server:", text);
+            const text = await response.text(); 
     
             if (response.ok) {
                 alert("Xóa bài viết thành công!");
@@ -286,8 +282,7 @@ const Blog = () => {
                                             </>
                                         )}
                                     </div>
-                                    <button>Đọc thêm</button>
-                                    <Link to={'/DetailBlog'} state={{blog}}>Đọc thêm</Link>
+                                    <Link to={'/DetailBlog'} state={{blog}} className={cs("btn-read-more")}>Đọc thêm</Link>
                                 </div>
 
                             </div>
@@ -369,7 +364,6 @@ const Blog = () => {
 
             {/* pagination */}
             <div className={cs("pagination")}>
-                {/* Nút về trang đầu */}
                 <button
                     disabled={query.page === 1}
                     onClick={() => setQuery(prev => ({ ...prev, page: 1 }))}
@@ -377,7 +371,6 @@ const Blog = () => {
                     Đầu
                 </button>
 
-                {/* Nút lùi trang */}
                 <button
                     disabled={query.page === 1}
                     onClick={() => setQuery(prev => ({ ...prev, page: prev.page - 1 }))}
@@ -385,7 +378,6 @@ const Blog = () => {
                     Trước
                 </button>
 
-                {/* Danh sách số trang */}
                 <div className={cs("paginationnumber")}>
                     {Array.from({ length: totalPages }, (_, index) => (
                         <button
@@ -398,7 +390,6 @@ const Blog = () => {
                     ))}
                 </div>
 
-                {/* Nút tiến trang */}
                 <button
                     disabled={query.page >= totalPages}
                     onClick={() => setQuery(prev => ({ ...prev, page: prev.page + 1 }))}
@@ -406,7 +397,6 @@ const Blog = () => {
                     Sau
                 </button>
 
-                {/* Nút đến trang cuối */}
                 <button
                     disabled={query.page === totalPages}
                     onClick={() => setQuery(prev => ({ ...prev, page: totalPages }))}
