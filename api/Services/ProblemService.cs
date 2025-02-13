@@ -90,5 +90,10 @@ namespace api.Services
                 CurrentPage = query.PageNumber
             };
         }
+
+        public async Task<Problem> GetProblemByIdAsync(string problemId)
+        {
+            return await _problemRepository.GetProblemByIdAsync(problemId);
+        }
     }
 }

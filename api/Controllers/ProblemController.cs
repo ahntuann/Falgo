@@ -54,5 +54,12 @@ namespace api.Controllers
             var categories = await _problemService.GetAllCategoriesAsync();
             return Ok(categories);
         }
+        [HttpGet("problemDetail")]
+        public async Task<IActionResult> GetProblemDetailById(string problemId)
+        {
+            if (problemId.IsNullOrEmpty()) return NotFound();
+            var problem = await _problemService.GetProblemByIdAsync(problemId);
+            return Ok(problem);
+        }
     }
 }

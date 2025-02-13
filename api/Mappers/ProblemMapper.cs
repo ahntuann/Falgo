@@ -22,7 +22,9 @@ namespace api.Mappers
                 Title = problem.Title,
                 Category = problem.Category ?? "Không định dạng",
                 Score = problem.TotalPoint,
-                AcceptanceRate = totalSubmissions > 0 ? (double)acceptedSubmissions / totalSubmissions * 100 : 0,
+                AcceptanceRate = totalSubmissions > 0
+                ? Math.Round((double)acceptedSubmissions / totalSubmissions * 100, 2)
+            : 0,
                 AcceptedCount = acceptedSubmissions,
                 SolvedStatus = submissions.Any(s => s.AppUser.Id.Equals(userId) && s.Status == "Accepted") ? "Passed" : "Not passed"
             };

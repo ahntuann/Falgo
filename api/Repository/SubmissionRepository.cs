@@ -23,12 +23,36 @@ namespace api.Repository
             return await _context.Submissions.Where(x => x.SubmittedAt.Year == year && x.SubmittedAt.Month == month).Include(x => x.Problem).Include(x => x.AppUser).ToListAsync();
         }
 
+        public async Task<List<Submission?>> GetAllSubmissionAcceptedByUserAndProLanguageAsync(string userId, string proLanguageId)
+        {
+            var submissions = await _context.Submissions
+                                    .Where(x => x.AppUser.Id.Equals(userId)
+                                                && x.ProgrammingLanguage.ProgrammingLanguageId.Equals(proLanguageId)
+                                                && x.Status.Equals("Accepted"))
+                                    .Include(x => x.ProgrammingLanguage)
+                                    .ToListAsync();
+
+            return submissions;
+        }
+
+        public async Task<List<Submission?>> GetAllSubmissionNotAcceptedByUserAndProLanguageAsync(string userId, string proLanguageId)
+        {
+            var submissions = await _context.Submissions
+                                    .Where(x => x.AppUser.Id.Equals(userId)
+                                                && x.ProgrammingLanguage.ProgrammingLanguageId.Equals(proLanguageId)
+                                                && !x.Status.Equals("Accepted"))
+                                    .Include(x => x.ProgrammingLanguage)
+                                    .ToListAsync();
+
+            return submissions;
+        }
+
         public async Task<List<Submission>> GetSubmissionsByProblemIdAsync(string problemId)
         {
             return await _context.Submissions
-    .Include(s => s.AppUser)
-    .Where(s => s.Problem.ProblemId == problemId)
-    .ToListAsync();
+                        .Include(s => s.AppUser)
+                        .Where(s => s.Problem.ProblemId == problemId)
+                        .ToListAsync();
         }
         public async Task<List<Submission>> GetAllSubmissionsAsync()
         {

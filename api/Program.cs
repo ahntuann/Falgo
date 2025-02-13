@@ -120,8 +120,8 @@ builder.Services.AddAuthentication(options =>
 {
     options.ClientId = builder.Configuration["Authentication:GitHub:ClientId"];
     options.ClientSecret = builder.Configuration["Authentication:GitHub:ClientSecret"];
-    options.CallbackPath = "/signin-github"; 
-    options.Scope.Add("user:email"); 
+    options.CallbackPath = "/signin-github";
+    options.Scope.Add("user:email");
     options.SaveTokens = true;
 })
 .AddCookie();
@@ -156,6 +156,7 @@ builder.Services.AddScoped<IProgramingLanguageRepository, ProgramingLanguageRepo
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 builder.Services.AddScoped<IProblemAdminRepository, ProblemAdminRepository>();
 builder.Services.AddScoped<IProblemAdminService, ProblemAdminService>();
+builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 
 builder.Services.AddScoped<ISubmissionsAdminRepository, SubmissionsAdminRepository>();
 // Logging
