@@ -24,6 +24,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+
 .suggest-bar {
     flex: 1;
     display: flex;
@@ -83,6 +84,47 @@
 
 .suggest-item:hover {
     background: #f1f1f1;
+}
+
+/* Container chung cho các nút */
+.actions {
+    display: flex;
+    gap: 10px; 
+}
+
+/* Nút chỉnh sửa */
+.edit {
+    background-color: #ffc107;
+    color: #333;
+    padding: 8px 14px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: #e0a800;
+        transform: scale(1.05);
+    }
+}
+
+/* Nút xóa */
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: #c82333;
+        transform: scale(1.05);
+    }
 }
 
 .action-buttons{

@@ -6,7 +6,7 @@ import AuthContext from "~/context/AuthContext";
 import classNames from "classnames/bind";
 import styles from "./DetailBlog.module.scss";
 import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
-import { locale } from "moment";
+import { Link } from "react-router-dom";
 
 
 const cs = classNames.bind(styles);
@@ -87,11 +87,11 @@ const DetailBlog = () => {
                         <h2>{blog.title}</h2>
                         <p><strong>Danh mục:</strong> {blog.categoryBlog}</p>
                         <p><strong>Tác giả:</strong> {blog.guestName}</p>
-                        <p><strong>Ngày đăng:</strong> {blog.createOn}</p>                  
+                        <p><strong>Ngày đăng:</strong> {new Date(blog.createOn).toLocaleDateString("vi-VN")}</p>                
                         {/* Nút chỉnh sửa/xóa */}
                         {userRole !== "guest" && userObject?.id === blog.userId && (
                             <div className={cs("action-buttons")}>
-                                <button className={cs("edit-btn")}>Chỉnh sửa</button>
+                                <Link to={'/BlogUpdate'} state={{blog}} className={cs("edit")}>Chỉnh sửa</Link>
                                 <button className={cs("delete-btn")} onClick={() => handleDelete(blog.id)} > Xóa</button>
                             </div>
                         )}
