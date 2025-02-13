@@ -139,7 +139,7 @@ const Register = () => {
                     </div>
                     <div className="input-group">
                         <input
-                            type="datetime-local"
+                            type="date"
                             name="dob"
                             onChange={formik.handleChange}
                             value={formik.values.dob}

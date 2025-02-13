@@ -5,6 +5,7 @@ import CountDown from '~/components/user/components/CountDown';
 import { useContext, useEffect, useState } from 'react';
 import { fetchCheckIfUserRegisContestAPI, registerUserForContest } from '~/apis';
 import AuthContext from '~/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 const cs = classNames.bind(style);
 
 function ContestBrief({ contest }) {
@@ -13,13 +14,24 @@ function ContestBrief({ contest }) {
 
     const [isRegis, setIsRegis] = useState(false);
 
+    const navagate = useNavigate();
+
     // Check if user register contest
     useEffect(() => {
+        if (appUser === null) {
+            return;
+        }
+
         fetchCheckIfUserRegisContestAPI(appUser.id, contestId).then((x) => setIsRegis(x.isRegis));
     }, [appUser, contestId]);
 
     // Register User for contest
     const registerUser = () => {
+        if (appUser === null) {
+            navagate('/login');
+            return;
+        }
+
         registerUserForContest(appUser.id, contestId).then(() => {
             alert('Bạn đã đăng ký thành công!');
             setIsRegis(true);

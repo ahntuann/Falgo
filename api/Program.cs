@@ -6,12 +6,16 @@ using api.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using AspNet.Security.OAuth.GitHub;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,7 +87,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDBContext>()
 .AddDefaultTokenProviders();
 
-// Configure Authentication (JWT & Google)
+// Configure Authentication (JWT, Google, GitHub)
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -112,7 +116,16 @@ builder.Services.AddAuthentication(options =>
     options.SaveTokens = true;
     options.Scope.Add("email");
 })
+.AddGitHub(GitHubAuthenticationDefaults.AuthenticationScheme, options =>
+{
+    options.ClientId = builder.Configuration["Authentication:GitHub:ClientId"];
+    options.ClientSecret = builder.Configuration["Authentication:GitHub:ClientSecret"];
+    options.CallbackPath = "/signin-github"; 
+    options.Scope.Add("user:email"); 
+    options.SaveTokens = true;
+})
 .AddCookie();
+
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

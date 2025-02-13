@@ -1,6 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using api.Dto.Account;
 using api.Dtos.Account;
 using api.Interface;
@@ -156,7 +158,78 @@ namespace api.Controllers
     return Redirect($"{frontendUrl}?token={token}&id={user.Id}&userName={user.UserName}&email={user.Email}");
 }
 
-   
+[HttpGet("github-login")]
+public IActionResult GitHubLogin()
+{
+    var redirectUrl = Url.Action("GitHubLoginCallback", "Account", null, Request.Scheme);
+    var properties = _signInManager.ConfigureExternalAuthenticationProperties("GitHub", redirectUrl);
+    return Challenge(properties, "GitHub");
+}
+
+[HttpGet("signin-github")]
+public async Task<IActionResult> GitHubLoginCallback()
+{
+    var authenticateResult = await HttpContext.AuthenticateAsync("GitHub");
+    if (!authenticateResult.Succeeded)
+    {
+        return BadRequest("GitHub login failed.");
+    }
+
+    var claims = authenticateResult.Principal?.Identities?.FirstOrDefault()?.Claims;
+    var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+    var accessToken = authenticateResult.Properties.GetTokenValue("access_token");
+
+    string email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+    if (string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(accessToken))
+    {
+        email = await GetGitHubEmail(accessToken);
+    }
+
+    if (string.IsNullOrEmpty(email))
+    {
+        return BadRequest("Email not found.");
+    }
+
+    var user = await _userManager.FindByEmailAsync(email);
+    if (user == null)
+    {
+        user = new AppUser
+        {
+            UserName = email.Split('@')[0],
+            Email = email,
+            FullName = name ?? "GitHub User",
+            CreatedAt = DateTime.UtcNow
+        };
+
+        var createUser = await _userManager.CreateAsync(user);
+        if (!createUser.Succeeded)
+        {
+            return BadRequest("Failed to create user.");
+        }
+
+        await _userManager.AddToRoleAsync(user, "User");
+    }
+
+    var token = _tokenService.CreateToken(user);
+    var frontendUrl = "http://localhost:3000/github-callback";
+    return Redirect($"{frontendUrl}?token={token}&id={user.Id}&userName={user.UserName}&email={user.Email}");
+}
+
+    private async Task<string> GetGitHubEmail(string accessToken)
+{
+    using (var client = new HttpClient())
+    {
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("MyApp");
+
+        var response = await client.GetStringAsync("https://api.github.com/user/emails");
+        var emails = JsonSerializer.Deserialize<List<GitHubEmail>>(response);
+        var primaryEmail = emails?.FirstOrDefault(e => e.Primary && e.Verified)?.Email;
+
+        return primaryEmail ?? emails?.FirstOrDefault()?.Email;
+    }
+}
 
     }
 }
