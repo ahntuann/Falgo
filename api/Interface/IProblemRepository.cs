@@ -9,5 +9,6 @@ namespace api.Interface
     public interface IProblemRepository
     {
         public Task<List<Problem>> GetAllProblemAsync();
+        public Task<Problem> GetProblemByIdAsync(string problemId);
     }
 }

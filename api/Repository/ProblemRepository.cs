@@ -22,5 +22,10 @@ namespace api.Repository
         {
             return await _context.Problems.ToListAsync();
         }
+
+        public async Task<Problem> GetProblemByIdAsync(string problemId)
+        {
+            return await _context.Problems.FirstOrDefaultAsync(p => p.ProblemId == problemId);
+        }
     }
 }
