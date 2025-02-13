@@ -22,6 +22,10 @@ namespace api.Controllers
        
     public async Task<IActionResult> NumberOfUserWithTime([FromBody] DatetimeFilterDto datetimeFilterDto)
     {
+        if (datetimeFilterDto.startDate > datetimeFilterDto.endDate)
+    {
+        return BadRequest("Start date cannot be later than the end date.");
+    }
         int count = await _userAdminRepository.CountNumberOfUsersWithTime(datetimeFilterDto.startDate,datetimeFilterDto.endDate);
         return Ok(count);
     }

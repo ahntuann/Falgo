@@ -15,9 +15,11 @@ namespace api.Controllers
     public class AdminProblemController : ControllerBase
     {
         private readonly IProblemAdminService _IProblemAdminService;
-        public AdminProblemController(IProblemAdminService IProblemAdminService)
+       private readonly IProblemAdminRepository _IProblemAdminRepository;
+        public AdminProblemController(IProblemAdminService IProblemAdminService,IProblemAdminRepository IProblemAdminRepository)
         {
             _IProblemAdminService= IProblemAdminService;
+            _IProblemAdminRepository=IProblemAdminRepository ;
         }
         [HttpPost("problem")]
       public async Task<IActionResult> ProbSort([FromQuery] ProblemDashboardQueryObject probOb)
@@ -38,6 +40,10 @@ namespace api.Controllers
            
         }
         [HttpGet("TotalProb")]
-        
+        public async Task<IActionResult> TotalOfProblems()
+        {
+            int count = await _IProblemAdminRepository.TotalOfProblemsAsync();
+        return Ok(count);
+        }
     }
 }

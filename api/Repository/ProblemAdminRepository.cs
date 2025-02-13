@@ -21,5 +21,9 @@ namespace api.Repository
         {
             return await _context.Problems.ToListAsync();
         }
+        public async Task<int> TotalOfProblemsAsync()
+        {
+            return await _context.Problems.CountAsync();
+        }
     }
 }

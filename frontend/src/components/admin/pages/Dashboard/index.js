@@ -1,102 +1,99 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './dashboard.module.scss';
-import { DateFilterUser, DateFilterSubmissions } from '~/components/admin/components';
-import dayjs from 'dayjs';
 import { AdminLayout } from '~/layouts';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import ProblemFilter from '../../components/ProblemFilter';
+import { DateFilterSubmissions, DateFilterUser } from '../../components';
+import ContestDashboard from '../../components/ContestShowDashboard';
 const cx = classNames.bind(styles);
 
 function Dashboard() {
     const navigate = useNavigate();
-    const [filteredDataUser, setFilteredData] = useState(null);
-    const [filteredDataSubmissions, setFilteredDataSubmissions] = useState(null);
     const [totalUser, setTotalUser] = useState();
     const [totalSubmissions, setTotalSubmissions] = useState();
     const [totalProblems, setTotalProblems] = useState();
+    const [contest, setContest] = useState([]);
     useEffect(() => {
+        fetchContests();
         fetchTotalUser();
-        console.log(totalUser);
-    }, []);
-    useEffect(() => {
         fetchTotalSubmissions();
+        fetchTotalProblems();
     }, []);
-    // useEffect(() => {
-    //   fetchTotalProblems();
-    //   }, []);
-    const handleFilterData = (data) => {
-        setFilteredData(data);
-    };
+
     const role = JSON.parse(sessionStorage.getItem('admin'));
     useEffect(() => {
-        if (role == null) {
+        if (!role) {
             navigate('/');
-            console.log(role);
         }
     }, [role]);
+    const fetchContests = async () => {
+        try {
+            const response = await fetch('http://localhost:5180/api/AdminDashboard/contest');
+            if (!response.ok) throw new Error('No contests found');
+            const data = await response.json();
+
+            if (data && Array.isArray(data)) {
+                setContest(data);
+                console.log(data);
+            }
+        } catch (error) {}
+    };
     const fetchTotalUser = async () => {
         try {
-            const response = await axios.get('http://localhost:5180/api/AdminDashboard/totalUser');
-            setTotalUser(response.data);
-            console.log(response.data);
+            const response = await fetch('http://localhost:5180/api/AdminDashboard/totalUser');
+            if (!response.ok) throw new Error('Failed to fetch total users');
+            const data = await response.json();
+            setTotalUser(data);
         } catch (error) {
-            console.error('Error:', error.response ? error.response.data : error.message);
+            console.error('Error fetching users:', error.message);
         }
     };
+
     const fetchTotalSubmissions = async () => {
         try {
-            const response = await axios.get('http://localhost:5180/api/AdminDashboard/totalSub');
-            setTotalSubmissions(response.data);
+            const response = await fetch('http://localhost:5180/api/AdminDashboard/totalSub');
+            if (!response.ok) throw new Error('Failed to fetch submissions');
+            const data = await response.json();
+            setTotalSubmissions(data);
         } catch (error) {
-            console.error('Error:', error.response ? error.response.data : error.message);
+            console.error('Error fetching submissions:', error.message);
         }
     };
-    /*const fetchTotalProblems = async () => {
+
+    const fetchTotalProblems = async () => {
         try {
-            const response = await axios.get('http://localhost:5180/api/AdminDashboard/totalProb');
-            setTotalProblems(response.data);
+            const response = await fetch('http://localhost:5180/api/AdminDashboard/totalProb');
+            if (!response.ok) throw new Error('Failed to fetch problems');
+            const data = await response.json();
+            setTotalProblems(data);
         } catch (error) {
-            console.error('Error:', error.response ? error.response.data : error.message);
+            console.error('Error fetching problems:', error.message);
         }
-    };*/
+    };
 
     return (
         <AdminLayout sidebar="active">
             <div className={cx('dashboardContainer')}>
-                <div className={cx('statsGrid')}>
-                    <div className={cx('statCard')}>
-                        <h3>Total Users: {totalUser}</h3>
-                        <DateFilterUser onFilterData={handleFilterData} />
-                        {filteredDataUser && (
-                            <div>
-                                <h2>Filtered Users:</h2>
-                                <pre>{JSON.stringify(filteredDataUser, null, 2)}</pre>
-                            </div>
-                        )}
-                    </div>
+                <div className={cx('statCard')}>
+                    <h3>Total Users: {totalUser}</h3>
+                    <DateFilterUser />
                 </div>
                 <div className={cx('statCard')}>
-                    <h3>Total Submissions : {totalSubmissions}</h3>
-                    <DateFilterSubmissions onFilterSubmissions={setFilteredDataSubmissions} />
-                    {filteredDataSubmissions && (
-                        <div>
-                            <h2>Filtered Submissions:</h2>
-                            <pre>{JSON.stringify(filteredDataSubmissions, null, 2)}</pre>
-                        </div>
-                    )}
-                    <p></p>
+                    <h3>Total Submissions: {totalSubmissions}</h3>
+                    <DateFilterSubmissions />
                 </div>
                 <div className={cx('statCard')}>
-                    <ProblemFilter></ProblemFilter>
+                    <h3>Total Problems: {totalProblems}</h3>
+                    <ProblemFilter />
                 </div>
-                <div className={cx('statCard')}>
-                    <h3>Pending Requests</h3>
-                    <p></p>
-                </div>
+
+                <h3>Latest Contests</h3>
+                {contest !== undefined &&
+                    contest.map((contest, i) => <ContestDashboard key={i} contest={contest} />)}
             </div>
         </AdminLayout>
     );
 }
+
 export default Dashboard;

@@ -42,8 +42,9 @@ function Home() {
 
     // fetch Contest Brief
     useEffect(() => {
-        fetchContestBriefAPI({ isNewest: true, pageSize: 2 }).then((newContests) =>
-            setContests(newContests),
+        fetchContestBriefAPI({ isNewest: true, pageSize: 2 }).then(
+            (newContests) => setContests(newContests),
+            console.log(contests),
         );
     }, []);
 

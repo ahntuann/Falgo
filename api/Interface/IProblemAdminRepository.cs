@@ -10,5 +10,6 @@ namespace api.Interface
     {
      
         public Task<List<Problem?>>GetAllProblemAsync();
+        public Task<int> TotalOfProblemsAsync();
     }
 }
