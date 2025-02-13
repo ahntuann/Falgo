@@ -73,13 +73,13 @@ const Register = () => {
     return (
         <div className="register-container">
             <div className="register-box">
-                <h2 className="register-title">Create new account</h2>
+                <h2 className="register-title">Tạo tài khoản mới</h2>
                 <form onSubmit={formik.handleSubmit}>
                     <div className="input-group">
                         <input
                             type="text"
                             name="fullName"
-                            placeholder="Full name"
+                            placeholder="Họ và tên"
                             onChange={formik.handleChange}
                             value={formik.values.fullName}
                         />
@@ -88,7 +88,7 @@ const Register = () => {
                         <input
                             type="text"
                             name="username"
-                            placeholder="User name"
+                            placeholder="Tên đăng nhập"
                             onChange={formik.handleChange}
                             value={formik.values.username}
                         />
@@ -97,7 +97,7 @@ const Register = () => {
                         <input
                             type={showPassword ? 'text' : 'password'}
                             name="password"
-                            placeholder="Password"
+                            placeholder="Mật khẩu"
                             onChange={formik.handleChange}
                             value={formik.values.password}
                         />
@@ -123,7 +123,7 @@ const Register = () => {
                         <input
                             type="text"
                             name="phoneNumber"
-                            placeholder="Phone number"
+                            placeholder="Số điện thoại"
                             onChange={formik.handleChange}
                             value={formik.values.phoneNumber}
                         />
@@ -132,7 +132,7 @@ const Register = () => {
                         <input
                             type="text"
                             name="address"
-                            placeholder="Address"
+                            placeholder="Địa chỉ"
                             onChange={formik.handleChange}
                             value={formik.values.address}
                         />
@@ -146,7 +146,7 @@ const Register = () => {
                         />
                     </div>
                     <button type="submit" className="register-button">
-                        Register
+                        Đăng ký
                     </button>
                 </form>
             </div>

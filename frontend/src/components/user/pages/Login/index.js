@@ -58,10 +58,10 @@ const Login = () => {
     return (
         <div className="login-container">
             <div className="login-box">
-                <h2>Sign in</h2>
+                <h2>Đăng nhập</h2>
                 <form onSubmit={formik.handleSubmit}>
                     <div className="input-group">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">Tên đăng nhập</label>
                         <input
                             type="text"
                             id="username"
@@ -75,7 +75,7 @@ const Login = () => {
                         )}
                     </div>
                     <div className="input-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">Mật khẩu</label>
                         <input
                             type="password"
                             id="password"
@@ -90,14 +90,14 @@ const Login = () => {
                     </div>
                     <div className="form-links">
                         <Link to="/register" className="create-account-link">
-                            Create new account
+                            Tạo tài khoản mới
                         </Link>
                         <a href="/forgot-password" className="forgot-password-link">
-                            Forgot your password?
+                            Quên mật khẩu?
                         </a>
                     </div>
                     <button type="submit" className="login-button">
-                        Sign in
+                        Đăng nhập
                     </button>
 
                     {/* Nút đăng nhập với Google */}
@@ -106,7 +106,7 @@ const Login = () => {
                         className="google-login-button"
                         onClick={handleGoogleLogin}
                     >
-                        <FcGoogle className="google-icon" /> Sign in with Google
+                        <FcGoogle className="google-icon" /> Google
                     </button>
 
                     {/* Nút đăng nhập với GitHub */}
@@ -115,7 +115,7 @@ const Login = () => {
                         className="github-login-button"
                         onClick={handleGithubLogin}
                     >
-                        <FaGithub className="github-icon" /> Sign in with GitHub
+                        <FaGithub className="github-icon" /> GitHub
                     </button>
                 </form>
             </div>

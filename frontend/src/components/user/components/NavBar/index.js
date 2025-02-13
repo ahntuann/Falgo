@@ -1,9 +1,9 @@
 import classNames from 'classnames/bind';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import style from './NavBar.module.scss';
 import logo from '~/assets/images/logo/logo.jpg';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AuthContext from '~/context/AuthContext';
 import { LoginRegisterPart, UserPart } from '~/components/user/components';
 
@@ -11,12 +11,20 @@ const cs = classNames.bind(style);
 
 function NavBar() {
     const navBarList = [
-        { title: 'Problems', path: '/problems' },
-        { title: 'Contest', path: '/contest' },
-        { title: 'Ranking', path: '/ranking' },
-        { title: 'Blog', path: '/blog' },
-        { title: 'Profile', path: '/profile' },
+        { title: 'Bài tập', path: '/problems' },
+        { title: 'Cuộc thi', path: '/contest' },
+        { title: 'Xếp hạng', path: '/ranking' },
+        { title: 'Bài viết', path: '/blog' },
+        { title: 'Trang cá nhân', path: '/profile' },
     ];
+
+    const location = useLocation();
+
+    const [focusOn, setFocusOn] = useState(location.pathname);
+
+    useEffect(() => {
+        setFocusOn(location.pathname);
+    }, [location.pathname]);
 
     const { userRole } = useContext(AuthContext);
 
@@ -28,13 +36,26 @@ function NavBar() {
 
             <div className={cs('navBarItems')}>
                 {navBarList.map((item, index) => (
-                    <Link className={cs('navBarItem')} to={item.path} key={index}>
+                    <Link
+                        className={cs('navBarItem', {
+                            active:
+                                (item.title === 'Bài tập' && '/problems' === focusOn) ||
+                                (item.title === 'Cuộc thi' && '/contest' === focusOn) ||
+                                (item.title === 'Xếp hạng' && '/ranking' === focusOn) ||
+                                (item.title === 'Bài viết' && '/blog' === focusOn) ||
+                                (item.title === 'Trang cá nhân' && '/profile' === focusOn),
+                        })}
+                        to={item.path}
+                        key={index}
+                    >
                         {item.title}
                     </Link>
                 ))}
             </div>
 
-            <div className={cs('userPart')}>{userRole === 'guest' ? <LoginRegisterPart /> : <UserPart />}</div>
+            <div className={cs('userPart')}>
+                {userRole === 'guest' ? <LoginRegisterPart /> : <UserPart />}
+            </div>
         </div>
     );
 }
