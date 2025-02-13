@@ -153,7 +153,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProgramingLanguageService, ProgramingLanguageService>();
 builder.Services.AddScoped<IProgramingLanguageRepository, ProgramingLanguageRepository>();
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
-builder.Services.AddScoped<ISubmissionService, SubmissionService>();
+builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 
 
 // Logging
