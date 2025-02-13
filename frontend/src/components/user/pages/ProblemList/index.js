@@ -126,8 +126,8 @@ const ProblemList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {problems.map((problem) => (
-                        <tr key={problem.id}>
+                    {problems.map((problem, i) => (
+                        <tr key={i}>
                             <td>{problem.problemId}</td>
                             <td>{problem.title}</td>
                             <td>{problem.category}</td>
