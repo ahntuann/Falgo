@@ -29,20 +29,6 @@
     flex-wrap: wrap;
 }
 
-.category-item {
-    background-color: #f0f0f0;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s ease-in-out;
-}
-
-.category-item:hover {
-    background-color: #dcdcdc;
-}
-
 
 .blog {
     display: flex;
@@ -97,9 +83,10 @@
     border-radius: 4px;
     cursor: pointer;
     transition: 0.3s;
-
+    color: black;
     &:hover, &.active {
         background-color: #007bff;
+        color: white;
     }
 }
 
@@ -177,6 +164,61 @@
         padding: 8px 12px; 
         border-radius: 4px;
         font-size: 14px;
+    }
+}
+
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.userPart {
+    display: flex;
+    gap: 10px;
+}
+
+.edit, .delete, .btn-read-more {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.edit {
+    background-color: #ffc107;
+    color: #333;
+    
+    &:hover {
+        background-color: #e0a800;
+        transform: scale(1.05);
+    }
+}
+
+.delete {
+    background-color: #dc3545;
+    color: white;
+
+    &:hover {
+        background-color: #c82333;
+        transform: scale(1.05);
+    }
+}
+
+.btn-read-more {
+    background-color: #007bff;
+    color: white;
+
+    &:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
     }
 }
 

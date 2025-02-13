@@ -122,15 +122,7 @@ const Blog = () => {
             setFilteredBlogs([]);
         }
     };
-    
-    
-    
-
-
-
-    
-
-    
+      
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setQuery((prev) => ({
@@ -277,7 +269,7 @@ const Blog = () => {
                                     <div className={cs('userPart')}>
                                         {userRole !== 'guest' && userObject && userObject.id === blog.userId && (
                                             <>
-                                                <button className={cs("edit")}>Chỉnh sửa</button>
+                                                <Link to={'/BlogUpdate'} state={{blog}} className={cs("edit")}>Chỉnh sửa</Link>
                                                 <button className={cs("delete")} onClick={() => handleDelete(blog.id)}> Xóa </button>
                                             </>
                                         )}
