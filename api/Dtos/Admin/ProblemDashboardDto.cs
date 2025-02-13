@@ -10,6 +10,7 @@ namespace api.Dtos.Admin
          public string ProblemId { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
+        public double Score { get; set; }
         public int NumberOfSubmissions { get; set; }
     }
 }

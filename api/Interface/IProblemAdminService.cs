@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos.Admin;
-using api.Model;
 namespace api.Interface
 {
-    public interface IProblemAdminRepository
+    public interface IProblemAdminService
     {
-     
-        public Task<List<Problem?>>GetAllProblemAsync();
+        public Task<List<ProblemDashboardDto?>> GetxProblemDashBoardMostAttemped(int topx,Boolean IsAsc);
+
     }
 }

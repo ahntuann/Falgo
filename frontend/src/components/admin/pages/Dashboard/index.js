@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { AdminLayout } from '~/layouts';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ProblemFilter from '../../components/ProblemFilter';
 const cx = classNames.bind(styles);
 
 function Dashboard() {
@@ -22,9 +23,9 @@ function Dashboard() {
     useEffect(() => {
         fetchTotalSubmissions();
     }, []);
-    useEffect(() => {
-        fetchTotalProblems();
-    }, []);
+    // useEffect(() => {
+    //   fetchTotalProblems();
+    //   }, []);
     const handleFilterData = (data) => {
         setFilteredData(data);
     };
@@ -52,14 +53,14 @@ function Dashboard() {
             console.error('Error:', error.response ? error.response.data : error.message);
         }
     };
-    const fetchTotalProblems = async () => {
+    /*const fetchTotalProblems = async () => {
         try {
             const response = await axios.get('http://localhost:5180/api/AdminDashboard/totalProb');
             setTotalProblems(response.data);
         } catch (error) {
             console.error('Error:', error.response ? error.response.data : error.message);
         }
-    };
+    };*/
 
     return (
         <AdminLayout sidebar="active">
@@ -88,9 +89,7 @@ function Dashboard() {
                     <p></p>
                 </div>
                 <div className={cx('statCard')}>
-                    <h3>Total Submissions : {totalProblems}</h3>
-
-                    <p></p>
+                    <ProblemFilter></ProblemFilter>
                 </div>
                 <div className={cx('statCard')}>
                     <h3>Pending Requests</h3>

@@ -10,5 +10,6 @@ namespace api.Interface
     {
         public Task<List<Submission>> GetSubmissionsByProblemIdAsync(string problemId);
         public Task<List<Submission?>> GetAllSubmissionAtMonthAsync(int month, int year);
+        public Task<List<Submission?>> GetAllSubmissionsAsync();
     }
 }

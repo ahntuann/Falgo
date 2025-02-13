@@ -15,9 +15,6 @@ function DateFilterUser({ onFilterData }) {
             const response = await axios.post(
                 'http://localhost:5180/api/AdminDashboard/user',
                 requestData,
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                },
             );
 
             console.log('Filtered Data:', response.data);

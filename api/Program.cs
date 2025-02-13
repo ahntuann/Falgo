@@ -154,7 +154,8 @@ builder.Services.AddScoped<IUserAdminRepository, UserAdminRepository>();
 builder.Services.AddScoped<IProgramingLanguageService, ProgramingLanguageService>();
 builder.Services.AddScoped<IProgramingLanguageRepository, ProgramingLanguageRepository>();
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
-
+builder.Services.AddScoped<IProblemAdminRepository, ProblemAdminRepository>();
+builder.Services.AddScoped<IProblemAdminService, ProblemAdminService>();
 
 builder.Services.AddScoped<ISubmissionsAdminRepository, SubmissionsAdminRepository>();
 // Logging
