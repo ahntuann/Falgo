@@ -14,13 +14,11 @@ namespace api.Controllers
     [ApiController]
     public class ProblemController : ControllerBase
     {
-        private readonly IProblemRepository _problemRepository;
         private readonly IProblemService _problemService;
 
-        public ProblemController(IProblemService problemService, IProblemRepository problemRepository)
+        public ProblemController(IProblemService problemService)
         {
             _problemService = problemService;
-            _problemRepository = problemRepository;
         }
 
         [HttpGet]
@@ -60,7 +58,7 @@ namespace api.Controllers
         public async Task<IActionResult> GetProblemDetailById(string problemId)
         {
             if (problemId.IsNullOrEmpty()) return NotFound();
-            var problem = await _problemRepository.GetProblemByIdAsync(problemId);
+            var problem = await _problemService.GetProblemByIdAsync(problemId);
             return Ok(problem);
         }
     }

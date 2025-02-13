@@ -60,3 +60,27 @@ export const fetchAllProgrammingLanguageAPI = async () => {
         console.log(error);
     }
 };
+
+export const fetchNumberAcceptedSubmissionByLanguageAPI = async (userId, languageId) => {
+    try {
+        const response = await axios.get(
+            `${API_ROOT}/api/programingLanguage/${languageId}?UserId=${userId}&isAccepted=${true}`,
+        );
+
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const fetchNumberNotAcceptedSubmissionByLanguageAPI = async (userId, languageId) => {
+    try {
+        const response = await axios.get(
+            `${API_ROOT}/api/programingLanguage/${languageId}?UserId=${userId}&isAccepted=${false}`,
+        );
+
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
