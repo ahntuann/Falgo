@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -11,6 +11,11 @@ import AuthContext from '~/context/AuthContext';
 const Login = () => {
     const navigate = useNavigate();
     const { logInAsUser } = useContext(AuthContext);
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -18,8 +23,14 @@ const Login = () => {
             password: '',
         },
         validationSchema: Yup.object({
-            username: Yup.string().required('Required'),
-            password: Yup.string().required('Required'),
+            username: Yup.string().required('Tên đăng nhập được yêu cầu'),
+            password: Yup.string()
+                .min(12, 'Phải có ít nhất 12 ký tự')
+                .matches(/[0-9]/, 'Phải có ít nhất một số')
+                .matches(/[a-z]/, 'Phải có ít nhất một ký tự viết thường')
+                .matches(/[A-Z]/, 'Phải có ít nhất một ký tự viết hoa')
+                .matches(/[^a-zA-Z0-9]/, 'Phải có ít nhất một ký tự đặc biệt')
+                .required('Mật khẩu được yêu cầu'),
         }),
         onSubmit: async (values) => {
             try {
@@ -42,7 +53,7 @@ const Login = () => {
                 navigate('/');
             } catch (error) {
                 console.error('Login failed:', error.response?.data || error.message);
-                alert(`Login failed! ${error.response?.data || error.message}`);
+                alert('Đăng nhập không thành công! Tên đăng nhập hoặc mật khẩu không chính xác');
             }
         },
     });
@@ -74,20 +85,27 @@ const Login = () => {
                             <div className="error-message">{formik.errors.username}</div>
                         )}
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="password">Mật khẩu</label>
+
+                    <div className="input-group password-group">
+                        <label htmlFor="password" id="mat">
+                            Mật khẩu
+                        </label>
                         <input
-                            type="password"
+                            type={showPassword ? 'text' : 'password'}
                             id="password"
                             name="password"
                             onChange={formik.handleChange}
                             value={formik.values.password}
                             required
                         />
+                        <span className="eye-icon" onClick={togglePasswordVisibility}>
+                            {showPassword ? '🙈' : '👁'}
+                        </span>
                         {formik.errors.password && (
                             <div className="error-message">{formik.errors.password}</div>
                         )}
                     </div>
+
                     <div className="form-links">
                         <Link to="/register" className="create-account-link">
                             Tạo tài khoản mới
@@ -100,7 +118,6 @@ const Login = () => {
                         Đăng nhập
                     </button>
 
-                    {/* Nút đăng nhập với Google */}
                     <button
                         type="button"
                         className="google-login-button"
@@ -109,7 +126,6 @@ const Login = () => {
                         <FcGoogle className="google-icon" /> Google
                     </button>
 
-                    {/* Nút đăng nhập với GitHub */}
                     <button
                         type="button"
                         className="github-login-button"
