@@ -6,6 +6,7 @@ import logo from '~/assets/images/logo/logo.jpg';
 import { useContext, useEffect, useState } from 'react';
 import AuthContext from '~/context/AuthContext';
 import { LoginRegisterPart, UserPart } from '~/components/user/components';
+import TippyHeadless from '~/components/user/components/TippyHeadless';
 
 const cs = classNames.bind(style);
 
@@ -17,6 +18,8 @@ function NavBar() {
         { title: 'Bài viết', path: '/blog' },
         { title: 'Trang cá nhân', path: '/profile' },
     ];
+
+    const { logout } = useContext(AuthContext);
 
     const location = useLocation();
 
@@ -54,7 +57,20 @@ function NavBar() {
             </div>
 
             <div className={cs('userPart')}>
-                {userRole === 'guest' ? <LoginRegisterPart /> : <UserPart />}
+                {userRole === 'guest' ? (
+                    <LoginRegisterPart />
+                ) : (
+                    <TippyHeadless
+                        onClick={logout}
+                        customClass={cs('tippy')}
+                        content="Đăng xuất"
+                        placement="bottom"
+                    >
+                        <div>
+                            <UserPart />
+                        </div>
+                    </TippyHeadless>
+                )}
             </div>
         </div>
     );

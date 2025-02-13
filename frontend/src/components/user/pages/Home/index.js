@@ -19,7 +19,7 @@ const cs = classNames.bind(style);
 function Home() {
     const sliders = [slider1, slider2, slider3];
     const problemDailyNames = ['Bài tập nổi bật', 'Bạn đang làm dở', 'Đã hoàn thành'];
-    const { appUser, userRole, logout } = useContext(AuthContext);
+    const { appUser, userRole } = useContext(AuthContext);
 
     const [problemDailyFocus, setProblemDailyFocus] = useState(0);
     const [problems, setProblems] = useState([]);
@@ -42,9 +42,8 @@ function Home() {
 
     // fetch Contest Brief
     useEffect(() => {
-        fetchContestBriefAPI({ isNewest: true, pageSize: 2 }).then(
-            (newContests) => setContests(newContests),
-            console.log(contests),
+        fetchContestBriefAPI({ isNewest: true, pageSize: 2 }).then((newContests) =>
+            setContests(newContests),
         );
     }, []);
 
@@ -80,6 +79,8 @@ function Home() {
                             {problems.map((problem, i) => (
                                 <ProblemItem
                                     key={i}
+                                    detail={problem.detail}
+                                    itemNumber={i}
                                     isMostAttempted={problemDailyFocus === 0}
                                     isDoned={problemDailyFocus === 2}
                                     classNames={i !== 0 && cs('notFirst')}
@@ -98,7 +99,6 @@ function Home() {
                     )}
                 </div>
             ) : null}
-            <div onClick={() => logout()}>logout</div>
 
             <div className={cs('contestBrief', 'homeComponents')}>
                 <div className={cs('category', 'contestBriefCategory')}>Cuộc thi lập trình</div>

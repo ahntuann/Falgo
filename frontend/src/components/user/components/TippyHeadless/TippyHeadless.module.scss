@@ -1,0 +1,47 @@
+.tippyBox {
+    background-color: #fff;
+    color: #000;
+    font-size: 14px;
+    padding: 8px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.tippyBox.problemItem {
+    width: 210px;
+    height: 210px;
+}
+
+/* Mũi tên */
+.tippyArrow {
+    width: 12px;
+    height: 12px;
+    background: #333;
+    position: absolute;
+    transform: rotate(45deg);
+}
+
+/* Tùy chỉnh vị trí của mũi tên */
+.tippyBox[data-placement^='top'] .tippyArrow {
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.tippyBox[data-placement^='bottom'] .tippyArrow {
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+.tippyBox[data-placement^='left'] .tippyArrow {
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.tippyBox[data-placement^='right'] .tippyArrow {
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+}

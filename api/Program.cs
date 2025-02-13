@@ -157,6 +157,7 @@ builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 builder.Services.AddScoped<IProblemAdminRepository, ProblemAdminRepository>();
 builder.Services.AddScoped<IProblemAdminService, ProblemAdminService>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
+builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 
 builder.Services.AddScoped<ISubmissionsAdminRepository, SubmissionsAdminRepository>();
 // Logging
