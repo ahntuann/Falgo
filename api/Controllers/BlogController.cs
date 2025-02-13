@@ -75,20 +75,20 @@ namespace api.Controllers
 
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateBlogRequesDto updateDto)
         {
-            if (User?.Identity?.IsAuthenticated != true)
-            {
-                return Unauthorized("Bạn Cần đăng nhập.");
-            }
-            string? userId = User.GetUserId();
-            var CheckBlogModel = await _BlogRepo.GetByIDAsync(id);
-            if (CheckBlogModel == null)
-            {
-                return NotFound("Không tìm thấy bài viết.");
-            }
-            if (CheckBlogModel.UserId != userId)
-            {
-                return Forbid("Bạn không có quyền chỉnh sửa bài viết này.");
-            }
+            // if (User?.Identity?.IsAuthenticated != true)
+            // {
+            //     return Unauthorized("Bạn Cần đăng nhập.");
+            // }
+            // string? userId = User.GetUserId();
+            // var CheckBlogModel = await _BlogRepo.GetByIDAsync(id);
+            // if (CheckBlogModel == null)
+            // {
+            //     return NotFound("Không tìm thấy bài viết.");
+            // }
+            // if (CheckBlogModel.UserId != userId)
+            // {
+            //     return Forbid("Bạn không có quyền chỉnh sửa bài viết này.");
+            // }
 
             var BlogModel = await _BlogRepo.UpdateAync(id, updateDto);
             if (BlogModel == null)
@@ -101,23 +101,23 @@ namespace api.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            if (User?.Identity?.IsAuthenticated != true)
-            {
-                return Unauthorized("Bạn Cần đăng nhập.");
-            }
-            string? userId = User.GetUserId();
-            var CheckBlogModel = await _BlogRepo.GetByIDAsync(id);
-            if (CheckBlogModel == null)
-            {
-                return NotFound("Không tìm thấy bài viết.");
-            }
-            if (CheckBlogModel.UserId != userId)
-            {
-                return Forbid("Bạn không có quyền chỉnh xóa bài viết này.");
-            }
+            // if (User?.Identity?.IsAuthenticated != true)
+            // {
+            //     return Unauthorized("Bạn Cần đăng nhập.");
+            // }
+            // string? userId = User.GetUserId();
+            // var CheckBlogModel = await _BlogRepo.GetByIDAsync(id);
+            // if (CheckBlogModel == null)
+            // {
+            //     return NotFound("Không tìm thấy bài viết.");
+            // }
+            // if (CheckBlogModel.UserId != userId)
+            // {
+            //     return Forbid("Bạn không có quyền chỉnh xóa bài viết này.");
+            // }
+
             var stockModel = await _BlogRepo.DeleteAync(id);
 
             if (stockModel == null)

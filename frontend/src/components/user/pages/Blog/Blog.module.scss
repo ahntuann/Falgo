@@ -14,7 +14,6 @@
     display: flex;
     justify-content: center;
     margin-bottom: 16px;
-
     input {
         width: 50%;
         padding: 8px;
@@ -30,19 +29,6 @@
     flex-wrap: wrap;
 }
 
-.category-item {
-    background-color: #f0f0f0;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s ease-in-out;
-}
-
-.category-item:hover {
-    background-color: #dcdcdc;
-}
 
 .blog {
     display: flex;
@@ -59,15 +45,33 @@
             background-color: #0056b3;
         }
     }
+    
 }
-
+.btn-read-more {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+  
 .sidebar {
-    width: 30%;
     border: 1px solid #ddd;
     padding: 16px;
     border-radius: 8px;
     background: #f9f9f9;
+    position: fixed;
+    top: 172px;
+    right: 148px;
+
 }
+
 
 .category-list button, .reset-button {
     display: block;
@@ -79,9 +83,10 @@
     border-radius: 4px;
     cursor: pointer;
     transition: 0.3s;
-
+    color: black;
     &:hover, &.active {
-        background: #ddd;
+        background-color: #007bff;
+        color: white;
     }
 }
 
@@ -90,20 +95,20 @@
 .date-filter,.DateInput {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap; /* Xuống dòng khi không đủ chỗ */
-    max-width: 100%; /* Đảm bảo không tràn sidebar */
-    overflow: hidden; /* Tránh bị tràn */
+    flex-wrap: nowrap; 
+    max-width: 100%; 
+    overflow: hidden; 
     margin: auto;
     gap: 10px;  
     select,
     input,
     button {
-        height: 35px; /* Chiều cao đồng nhất */
-        width: 70px; /* Đảm bảo cùng kích thước */
+        height: 35px; 
+        width: 70px; 
         border: 1px solid #ccc;
         border-radius: 4px;
         text-align: center;
-        box-sizing: border-box; /* Đảm bảo padding không làm thay đổi kích thước */
+        box-sizing: border-box; 
         font-size: 14px;
         padding: auto;
     }
@@ -145,20 +150,75 @@
 .sort-controls{
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Căn đều các phần tử */
+    justify-content: space-between; 
     gap: 10px;
     select{
         flex: 1 1 auto;
         text-align: center;
-        padding: 8px 12px; /* Đảm bảo cùng padding */
+        padding: 8px 12px; 
         border-radius: 4px;
         font-size: 14px;
     }
     button{
         text-align: center;
-        padding: 8px 12px; /* Đảm bảo cùng padding */
+        padding: 8px 12px; 
         border-radius: 4px;
         font-size: 14px;
+    }
+}
+
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.userPart {
+    display: flex;
+    gap: 10px;
+}
+
+.edit, .delete, .btn-read-more {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.edit {
+    background-color: #ffc107;
+    color: #333;
+    
+    &:hover {
+        background-color: #e0a800;
+        transform: scale(1.05);
+    }
+}
+
+.delete {
+    background-color: #dc3545;
+    color: white;
+
+    &:hover {
+        background-color: #c82333;
+        transform: scale(1.05);
+    }
+}
+
+.btn-read-more {
+    background-color: #007bff;
+    color: white;
+
+    &:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
     }
 }
 
@@ -166,12 +226,12 @@
 .actions,.userPart {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Căn đều các phần tử */
-    gap: 10px; /* Khoảng cách giữa các nút */
+    justify-content: space-between;
+    gap: 10px;
     
     button {
         text-align: center;
-        padding: 8px 12px; /* Đảm bảo cùng padding */
+        padding: 8px 12px; 
         border-radius: 4px;
         font-size: 14px;
     }
@@ -202,21 +262,47 @@
 
 .pagination {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 16px;
     gap: 8px;
-    button {
-        padding: 0.5rem 1rem;
-        border: none;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+
+    .paginationnumber button{
+
+        padding: 8px;
+        background: white;
+        border: 1px solid #ccc;
         border-radius: 4px;
-        background-color: #007bff;
-        color: #fff;
-        font-size: 1.6rem;
         cursor: pointer;
-        transition: background-color 0.3s ease;
-        &:hover {
-            background-color: #0056b3;
+        transition: 0.3s;
+        
+        &:hover,&:active {
+            background-color: #007bff;
+        }
+        &.active {
+            background-color: #007bff;
+            display: none;
         }
     }
+
+    button {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        background-color: #007bff;
+        cursor: pointer;
+        transition: background 0.3s, color 0.3s;
+        font-size: 14px;
+
+        &:hover, &.active {
+            background-color: #0056b3;
+        }
+        &:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+    }
+
 }
+
+
+

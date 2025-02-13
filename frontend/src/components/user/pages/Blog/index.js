@@ -1,20 +1,26 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+
 import classNames from "classnames/bind";
 import styles from "./Blog.module.scss";
 import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
 
 import { useContext } from 'react';
 import AuthContext from '~/context/AuthContext';
+import { Link } from "react-router-dom";
 
 const cs = classNames.bind(styles);
 
 const Blog = () => {
 
     const { userRole } = useContext(AuthContext);
+    const userNow = localStorage.getItem('user');
+    const userObject = userNow ? JSON.parse(userNow) : null;
 
+    const [originalBlogs, setOriginalBlogs] = useState([]); // Lưu dữ liệu gốc
+    const [filteredBlogs, setFilteredBlogs] = useState([]); // Lưu danh sách đã lọc
+    
 
-    const [blogs, setBlogs] = useState([]);
     const [categories] = useState([
         "Mẹo lập trình", "Hướng dẫn", "Xu hướng lập trình", "Kinh Nghiệm", "Thử thách", "Câu Hỏi"
     ]);
@@ -27,6 +33,14 @@ const Blog = () => {
         postsPerPage: 10,
         dateFilter: ""
     });
+
+    const totalPages = Math.ceil(filteredBlogs.length / query.postsPerPage);
+
+    const startIndex = (query.page - 1) * query.postsPerPage;
+    const endIndex = startIndex + query.postsPerPage;
+    const paginatedBlogs = filteredBlogs.slice(startIndex, endIndex);
+    const debounceRef = useRef(null);
+
     const [dateFilter, setDateFilter] = useState({
         day: "",
         month: "",
@@ -34,7 +48,6 @@ const Blog = () => {
     });
     
 
-    const debounceRef = useRef(null);
 
     useEffect(() => {
         if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -43,45 +56,73 @@ const Blog = () => {
         }, 1000);
         return () => clearTimeout(debounceRef.current);
     }, [query]);
-
-    useEffect(() => {
-        console.log("Dữ liệu blog nhận được:", blogs);
-        console.log("Blog UserId:", blogs.userId);
-    }, [blogs]);
-    
+ 
     useEffect(() => {
         handleFilterByDate();
-    }, [dateFilter]);
+    }, [dateFilter, originalBlogs]); 
+    
+    useEffect(() => {
+        setFilteredBlogs(prevBlogs => [...prevBlogs].sort((a, b) => {
+            if (query.sortBy === "createOn") {
+                return query.IsDescending
+                    ? new Date(b.createOn) - new Date(a.createOn)
+                    : new Date(a.createOn) - new Date(b.createOn);
+            } else if (query.sortBy === "title") {
+                return query.IsDescending
+                    ? b.title.localeCompare(a.title)
+                    : a.title.localeCompare(b.title);
+            }
+            return 0;
+        }));
+    }, [query.sortBy, query.IsDescending]);
     
     const fetchBlogs = async () => {
         try {
             const params = Object.fromEntries(
                 Object.entries(query).filter(([_, value]) => value !== "")
             );
-            console.log("Fetching blogs with:", params);
             const response = await axios.get("http://localhost:5180/api/BlogController", { params });
-            console.log("Response data:", response.data);
-            setBlogs(response.data || []);
+    
+            let fetchedBlogs = response.data || [];
+    
+            if (query.category) {
+                fetchedBlogs = fetchedBlogs.filter(blog => {
+                    if (!blog.categoryBlog) return false; 
+                    const categoriesArray = blog.categoryBlog.split(",").map(cat => cat.trim());
+                    return categoriesArray.includes(query.category);
+                });
+            }
+    
+            if (query.search) {
+                const searchLower = query.search.toLowerCase();
+                fetchedBlogs = fetchedBlogs.filter(blog => 
+                    blog.title.toLowerCase().includes(searchLower) || 
+                    blog.description.toLowerCase().includes(searchLower)
+                );
+            }
+    
+            fetchedBlogs = fetchedBlogs.sort((a, b) => {
+                if (query.sortBy === "createOn") {
+                    return query.IsDescending
+                        ? new Date(b.createOn) - new Date(a.createOn)
+                        : new Date(a.createOn) - new Date(b.createOn);
+                } else if (query.sortBy === "title") {
+                    return query.IsDescending
+                        ? b.title.localeCompare(a.title)
+                        : a.title.localeCompare(b.title);
+                }
+                return 0;
+            });
+    
+            setOriginalBlogs(fetchedBlogs);
+            setFilteredBlogs(fetchedBlogs);
         } catch (error) {
             console.error("Lỗi khi lấy dữ liệu blog:", error);
-            setBlogs([]);
+            setOriginalBlogs([]);
+            setFilteredBlogs([]);
         }
     };
-
-    const sortedBlogs = [...blogs].sort((a, b) => {
-        if (query.sortBy === "createOn") {
-            return query.IsDescending
-                ? new Date(b.createOn) - new Date(a.createOn)
-                : new Date(a.createOn) - new Date(b.createOn);
-        } else if (query.sortBy === "title") {
-            return query.IsDescending
-                ? b.title.localeCompare(a.title)
-                : a.title.localeCompare(b.title);
-        }
-        return 0;
-    });
-
-    
+      
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setQuery((prev) => ({
@@ -89,53 +130,97 @@ const Blog = () => {
             [name]: type === "checkbox" ? checked : value
         }));
     };
+    
 
     const handleCategoryChange = (category) => {
-        setQuery(prev => ({ ...prev, category: prev.category === category ? "" : category }));
+        setQuery(prev => ({
+            ...prev,
+            category: prev.category === category ? "" : category
+        }));
     };
+    
+
 
     const handleReset = () => {
         setQuery({
             search: "",
             category: "",
-            sortBy: "createOn", // Đổi thành đúng tên trường JSON
+            sortBy: "createOn",
             IsDescending: false,
             page: 1,
             postsPerPage: 10,
-            dateFilter: ""
+            dateFilter: ""  
         });
+    
+        setDateFilter({ day: "", month: "", year: "" }); 
+        setFilteredBlogs(originalBlogs); 
     };
+    
+    
+
     const handleDateChange = (e) => {
         const { name, value } = e.target;
-        setDateFilter((prev) => ({ ...prev, [name]: value }));
+        setDateFilter((prev) => ({
+            ...prev,
+            [name]: value  
+        }));
     };
+    
     const handleFilterByDate = () => {
-        let filterString = "";
-        if (dateFilter.year) {
-            filterString = dateFilter.year;
-            if (dateFilter.month) {
-                filterString += `-${dateFilter.month.padStart(2, "0")}`;
-                if (dateFilter.day) {
-                    filterString += `-${dateFilter.day.padStart(2, "0")}`;
-                }
-            }
-        }
-        setQuery((prev) => ({ ...prev, dateFilter: filterString }));
+        const { day, month, year } = dateFilter;
+    
+        const filtered = originalBlogs.filter(blog => {
+            const blogDate = new Date(blog.createOn); 
+            const blogDay = blogDate.getDate();
+            const blogMonth = blogDate.getMonth() + 1; 
+            const blogYear = blogDate.getFullYear();
+    
+            return (
+                (year ? blogYear === Number(year) : true) &&
+                (month ? blogMonth === Number(month) : true) &&
+                (day ? blogDay === Number(day) : true)
+            );
+        });
+    
+        setFilteredBlogs(filtered); 
     };
-    const filteredBlogs = sortedBlogs.filter(blog => {
-        if (!query.dateFilter) return true; // Nếu không chọn ngày thì hiển thị tất cả
+
+    const handleDelete = async (blogId) => {
+        if (!window.confirm("Bạn có chắc chắn muốn xóa bài viết này không?")) return;
+        console.log("ID nhận được trong handleDelete:", blogId);
+        
+        try {
+            const token = localStorage.getItem("accessToken");
+            const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "*/*",
+                    "Authorization": `Bearer ${token}`
+                },
+                credentials: "include"
+            });
     
-        const blogDate = new Date(blog.createOn);
-        const blogYear = blogDate.getFullYear();
-        const blogMonth = blogDate.getMonth() + 1;
-        const blogDay = blogDate.getDate();
+            if (response.status === 401) {
+                alert("Bạn cần đăng nhập để xóa bài viết!");
+                return;
+            }
     
-        if (dateFilter.year && blogYear !== Number(dateFilter.year)) return false;
-        if (dateFilter.month && blogMonth !== Number(dateFilter.month)) return false;
-        if (dateFilter.day && blogDay !== Number(dateFilter.day)) return false;
+            const text = await response.text(); 
     
-        return true;
-    });
+            if (response.ok) {
+                alert("Xóa bài viết thành công!");
+                setFilteredBlogs(prevBlogs => prevBlogs.filter(blog => blog.id !== blogId));
+            } else {
+                alert(`Xóa thất bại! Server trả về: ${text}`);
+            }
+        } catch (error) {
+            console.error("Lỗi khi xóa bài viết:", error);
+            alert("Có lỗi xảy ra!");
+        }
+    };
+    
+    
     return (
         <div className={cs("container")}> 
             <h2 className={cs("title")}>Danh sách bài viết</h2>
@@ -151,6 +236,52 @@ const Blog = () => {
 
             {/* DataBase */}
             <div className={cs("blog")}> 
+
+                {/* Bloglist */}
+                <div className={cs("blog-list")}> 
+                    {paginatedBlogs.map((blog) => (
+                        <div key={blog.id} className={cs("blog-item")}>
+                        <img 
+                            src={blog.thumbnail && blog.thumbnail.startsWith("http") ? blog.thumbnail : NoImage}
+                            alt={blog.title} 
+                            className={cs("thumbnail")} 
+                        />
+
+                            <div className={cs("content")}>
+                                <h2>{blog.title}</h2>
+                                <p>{blog.description}</p>
+                                {blog.categoryBlog && blog.categoryBlog.trim() !== "" && blog.categoryBlog.trim() !== "," && (
+                                    <div className={cs("category-tags")}>
+                                        {blog.categoryBlog.split(",").map((category, index) => (
+                                            <button
+                                                key={index}
+                                                className={cs("category-item")}
+                                                onClick={() => handleCategoryChange(category.trim())}
+                                            >
+                                                {category.trim()}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                                <p>Ngày đăng: {blog.createOn ? new Date(blog.createOn + "Z").toLocaleDateString("vi-VN") : "Không có dữ liệu"}</p>
+
+                                <div className={cs("actions")}>
+                                    <div className={cs('userPart')}>
+                                        {userRole !== 'guest' && userObject && userObject.id === blog.userId && (
+                                            <>
+                                                <Link to={'/BlogUpdate'} state={{blog}} className={cs("edit")}>Chỉnh sửa</Link>
+                                                <button className={cs("delete")} onClick={() => handleDelete(blog.id)}> Xóa </button>
+                                            </>
+                                        )}
+                                    </div>
+                                    <Link to={'/DetailBlog'} state={{blog}} className={cs("btn-read-more")}>Đọc thêm</Link>
+                                </div>
+
+                            </div>
+                        </div>
+                    ))} 
+                </div>
+                {/* End Bloglist */}
 
                 {/* sidebar */}
                 <div className={cs("sidebar")}> 
@@ -219,52 +350,7 @@ const Blog = () => {
                 
                 </div>
                 {/* End sidebar */}
-
-                {/* BBloglist */}
-                <div className={cs("blog-list")}> 
-                    {sortedBlogs.map((blog) => (
-                        <div key={blog.id} className={cs("blog-item")}>
-                        <img 
-                            src={blog.thumbnail && blog.thumbnail.startsWith("http") ? blog.thumbnail : NoImage}
-                            alt={blog.title} 
-                            className={cs("thumbnail")} 
-                        />
-
-                            <div className={cs("content")}>
-                                <h2>{blog.title}</h2>
-                                <p>{blog.description}</p>
-                                {blog.categoryBlog && blog.categoryBlog.trim() !== "" && (
-                                    <div className={cs("category-tags")}>
-                                        {blog.categoryBlog.split(",").map((category, index) => (
-                                            <button
-                                                key={index}
-                                                className={cs("category-item")}
-                                                onClick={() => handleCategoryChange(category.trim())}
-                                            >
-                                                {category.trim()}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                                <p>Ngày đăng: {blog.createOn ? new Date(blog.createOn + "Z").toLocaleDateString("vi-VN") : "Không có dữ liệu"}</p>
-
-                                <div className={cs("actions")}>
-                                    <div className={cs('userPart')}>
-                                        {userRole !== 'guest' && (
-                                            <>
-                                                <button className={cs("edit")}>Chỉnh sửa</button>
-                                                <button className={cs("delete")}>Xóa</button>
-                                            </>
-                                        )}
-                                    </div>
-                                    <button>Đọc thêm</button>
-                                </div>
-
-                            </div>
-                        </div>
-                    ))} 
-                </div>
-                {/* End Bloglist */}
+                
             </div>
             {/* End DataBase */}
 
@@ -272,15 +358,42 @@ const Blog = () => {
             <div className={cs("pagination")}>
                 <button
                     disabled={query.page === 1}
+                    onClick={() => setQuery(prev => ({ ...prev, page: 1 }))}
+                >
+                    Đầu
+                </button>
+
+                <button
+                    disabled={query.page === 1}
                     onClick={() => setQuery(prev => ({ ...prev, page: prev.page - 1 }))}
                 >
                     Trước
                 </button>
-                <span>Trang {query.page}</span>
+
+                <div className={cs("paginationnumber")}>
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <button
+                            key={index + 1}
+                            onClick={() => setQuery({ ...query, page: index + 1 })}
+                            className={query.page === index + 1 ? "active" : ""}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+                </div>
+
                 <button
+                    disabled={query.page >= totalPages}
                     onClick={() => setQuery(prev => ({ ...prev, page: prev.page + 1 }))}
                 >
                     Sau
+                </button>
+
+                <button
+                    disabled={query.page === totalPages}
+                    onClick={() => setQuery(prev => ({ ...prev, page: totalPages }))}
+                >
+                    Cuối
                 </button>
             </div>
             {/* End pagination */}
