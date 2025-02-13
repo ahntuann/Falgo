@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+
 import classNames from "classnames/bind";
 import styles from "./Blog.module.scss";
 import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
 
 import { useContext } from 'react';
 import AuthContext from '~/context/AuthContext';
+import { Link } from "react-router-dom";
 
 const cs = classNames.bind(styles);
 
@@ -193,7 +195,7 @@ const Blog = () => {
     
         setFilteredBlogs(filtered); // Cập nhật danh sách hiển thị
     };
-    
+
     const handleDelete = async (blogId) => {
         if (!window.confirm("Bạn có chắc chắn muốn xóa bài viết này không?")) return;
         console.log("ID nhận được trong handleDelete:", blogId);
@@ -280,13 +282,12 @@ const Blog = () => {
                                         {userRole !== 'guest' && userObject && userObject.id === blog.userId && (
                                             <>
                                                 <button className={cs("edit")}>Chỉnh sửa</button>
-                                                <button className={cs("delete")} onClick={() => handleDelete(blog.id)}>
-                                                    Xóa
-                                                </button>
+                                                <button className={cs("delete")} onClick={() => handleDelete(blog.id)}> Xóa </button>
                                             </>
                                         )}
                                     </div>
                                     <button>Đọc thêm</button>
+                                    <Link to={'/DetailBlog'} state={{blog}}>Đọc thêm</Link>
                                 </div>
 
                             </div>

@@ -1,4 +1,4 @@
-import { Home, ProblemList, Profile,Blog } from '~/components/user/pages';
+import { Home, ProblemList, Profile, Blog, DetailBlog } from '~/components/user/pages';
 import { DefaultLayout } from '~/layouts';
 
 const routes = [
@@ -23,6 +23,12 @@ const routes = [
     {
         component: Blog,
         path: '/Blog',
+        layout: DefaultLayout,
+        role: ['user', 'guest'],
+    },
+    {
+        component: DetailBlog,
+        path: '/DetailBlog',
         layout: DefaultLayout,
         role: ['user', 'guest'],
     },
