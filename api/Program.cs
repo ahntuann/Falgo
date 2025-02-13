@@ -152,13 +152,12 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProgramingLanguageService, ProgramingLanguageService>();
 builder.Services.AddScoped<IProgramingLanguageRepository, ProgramingLanguageRepository>();
+builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+
 
 // Logging
 builder.Logging.AddConsole();
 
-//
-builder.Services.AddScoped<IBlogRepository, BlogRepository>();
-//
 
 var app = builder.Build();
 
