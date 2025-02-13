@@ -12,9 +12,7 @@ const cs = classNames.bind(styles);
 const BlogUpdate = () => {
     const navigate = useNavigate();
     const { userRole } = useContext(AuthContext);
-    const userNow = localStorage.getItem("user");
-    const userObject = userNow ? JSON.parse(userNow) : null;
-
+    
     const location = useLocation();
     const blog = location.state?.blog;
 
@@ -29,10 +27,10 @@ const BlogUpdate = () => {
     useEffect(() => {
         if (blog) {
             setFormData({
-                title: blog.title,
-                description: blog.description,
-                content: blog.content,
-                categoryBlog: blog.categoryBlog,
+                title: blog.title || "",
+                description: blog.description || "",
+                content: blog.content || "",
+                categoryBlog: blog.categoryBlog || "",
                 thumbnail: blog.thumbnail || NoImage,
             });
         }
@@ -41,24 +39,35 @@ const BlogUpdate = () => {
     const handleChange = (e) => {
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value,
+            [e.target.name]: e.target.value.trim(),
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("Dữ liệu trước khi gửi:", formData); // Kiểm tra dữ liệu
+    
+        if (!blog) {
+            alert("Bài viết không tồn tại!");
+            return;
+        }
+    
         try {
             const token = localStorage.getItem("accessToken");
-            const response = await axios.put(`http://localhost:5180/api/BlogController/${blog.id}`, formData, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-            });
-
+            const response = await axios.put(
+                `http://localhost:5180/api/BlogController/${blog.id}`,
+                { ...formData, categoryBlog: formData.categoryBlog.trim() }, // Trim ở đây trước khi gửi
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                }
+            );
+    
             if (response.status === 200) {
                 alert("Cập nhật bài viết thành công!");
-                navigate("/blog"); // Chuyển hướng về trang blog
+                navigate("/blog");
             } else {
                 alert("Cập nhật thất bại!");
             }
@@ -74,8 +83,10 @@ const BlogUpdate = () => {
         <div>
             <h2>Chỉnh sửa bài viết</h2>
             <form onSubmit={handleSubmit}>
-            
-                <img src={formData.thumbnail && formData.thumbnail.startsWith("http") ? formData.thumbnail : NoImage} alt={blog.title} />
+                <img 
+                    src={formData.thumbnail && formData.thumbnail.startsWith("http") ? formData.thumbnail : NoImage} 
+                    alt={formData.title} 
+                />
                 <div>
                     <label>
                         Thumbnail URL:
@@ -95,7 +106,7 @@ const BlogUpdate = () => {
                     </label>
                     <label>
                         Phân loại:
-                        <input type="text" name="categoryBlog" value={formData.categoryBlog} onChange={handleChange} required />
+                        <textarea name="categoryBlog" value={formData.categoryBlog} onChange={handleChange} required />
                     </label>
                     <button type="submit">Lưu</button>
                 </div>

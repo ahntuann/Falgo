@@ -250,7 +250,7 @@ const Blog = () => {
                             <div className={cs("content")}>
                                 <h2>{blog.title}</h2>
                                 <p>{blog.description}</p>
-                                {blog.categoryBlog && blog.categoryBlog.trim() !== "" && (
+                                {blog.categoryBlog && blog.categoryBlog.trim() !== "" && blog.categoryBlog.trim() !== "," && (
                                     <div className={cs("category-tags")}>
                                         {blog.categoryBlog.split(",").map((category, index) => (
                                             <button
