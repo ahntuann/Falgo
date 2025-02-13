@@ -54,5 +54,9 @@ namespace api.Repository
                         .Where(s => s.Problem.ProblemId == problemId)
                         .ToListAsync();
         }
+        public async Task<List<Submission>> GetAllSubmissionsAsync()
+        {
+            return await _context.Submissions.ToListAsync();
+        }
     }
 }

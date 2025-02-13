@@ -17,7 +17,7 @@ namespace api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -51,19 +51,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fb25f9aa-218b-496b-9217-2aedb9bc8904",
+                            Id = "a8c9e34b-51e2-4f3c-aecd-49c5ee04764c",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "ac56008f-2070-4160-9b0f-93767e3606ab",
+                            Id = "2fa6e8ee-639c-4fce-8eaa-06a50d54903a",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         },
                         new
                         {
-                            Id = "b009e43d-cfc1-429e-8d2f-cd3872189665",
+                            Id = "a25dd78f-b754-4fee-af64-7914d60de173",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -516,6 +516,7 @@ namespace api.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProgrammingLanguageId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SourceCode")
@@ -724,7 +725,9 @@ namespace api.Migrations
 
                     b.HasOne("api.Model.ProgrammingLanguage", "ProgrammingLanguage")
                         .WithMany()
-                        .HasForeignKey("ProgrammingLanguageId");
+                        .HasForeignKey("ProgrammingLanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AppUser");
 

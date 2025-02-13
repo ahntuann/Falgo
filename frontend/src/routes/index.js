@@ -1,6 +1,6 @@
-import { Home, ProblemList, Profile,Blog } from '~/components/user/pages';
-import { DefaultLayout } from '~/layouts';
-
+import { AdminLogin, Dashboard } from '~/components/admin/pages';
+import { Home, ProblemList, Profile, Blog } from '~/components/user/pages';
+import { DefaultLayout, AdminLayout, AdminLoginLayout } from '~/layouts';
 const routes = [
     {
         component: Home,
@@ -25,6 +25,13 @@ const routes = [
         path: '/Blog',
         layout: DefaultLayout,
         role: ['user', 'guest'],
+    },
+
+    {
+        component: AdminLogin,
+        path: '/adminLogin',
+        layout: AdminLoginLayout,
+        role: ['admin', 'guest'],
     },
 ];
 

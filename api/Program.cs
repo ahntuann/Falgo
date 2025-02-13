@@ -150,12 +150,15 @@ builder.Services.AddScoped<IContestRegistationRepository, ContestRegistationRepo
 builder.Services.AddScoped<IContestRegistationService, ContestRegistationService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserAdminRepository, UserAdminRepository>();
 builder.Services.AddScoped<IProgramingLanguageService, ProgramingLanguageService>();
 builder.Services.AddScoped<IProgramingLanguageRepository, ProgramingLanguageRepository>();
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+builder.Services.AddScoped<IProblemAdminRepository, ProblemAdminRepository>();
+builder.Services.AddScoped<IProblemAdminService, ProblemAdminService>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 
-
+builder.Services.AddScoped<ISubmissionsAdminRepository, SubmissionsAdminRepository>();
 // Logging
 builder.Logging.AddConsole();
 
