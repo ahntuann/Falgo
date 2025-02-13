@@ -21,5 +21,10 @@ namespace api.Repository
             .Where(u => u.SubmittedAt >= startDate && u.SubmittedAt <= endDate).CountAsync();
     
          }
+         public async Task<int>TotalOfSubmissions()
+         {
+        return await _context.Submissions.CountAsync();
+    
+         }
     }
 }

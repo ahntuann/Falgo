@@ -25,5 +25,11 @@ namespace api.Controllers
         int count = await _SubmissionsAdminRepository.CountNumberOfSubmissionsWithTime(datetimeFilterDto.startDate,datetimeFilterDto.endDate);
         return Ok(count);
     }
+    [HttpGet("totalSub")]
+    public async Task<IActionResult>TotalOfSubnissions()
+    {
+        int count = await _SubmissionsAdminRepository.TotalOfSubmissions();
+        return Ok(count); 
+    }
     }
 }

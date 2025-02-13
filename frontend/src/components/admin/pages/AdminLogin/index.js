@@ -3,12 +3,12 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './AdminLogin.css';
+import './AdminLogin.Module.scss';
 import AuthContext from '~/context/AuthContext';
 
 const AdminLogin = () => {
     const navigate = useNavigate();
-    const { logInAsAdmin } = useContext(AuthContext);
+    const { logInAsAdmin, userRole } = useContext(AuthContext);
 
     const formik = useFormik({
         initialValues: {
@@ -24,20 +24,25 @@ const AdminLogin = () => {
                 const response = await axios.post('http://localhost:5180/api/AdminLogin', values);
 
                 console.log('API Response:', response.data);
-                logInAsAdmin();
-                navigate('/dashboard');
+                if (response.data == true) {
+                    logInAsAdmin();
+                    const role = 'admin1';
+                    sessionStorage.setItem('admin', JSON.stringify(role));
+                    navigate('/Dashboard');
+                }
             } catch (error) {
                 console.error('Login failed:', error.response?.data || error.message);
                 alert(`Login failed! ${error.response?.data || error.message}`);
             }
         },
     });
+
     return (
-        <div className="login-container">
-            <div className="login-box">
-                <h2>Sign in</h2>
+        <div className="admin-login-container">
+            <div className="admin-login-box">
+                <h2>Admin Sign In</h2>
                 <form onSubmit={formik.handleSubmit}>
-                    <div className="input-group">
+                    <div className="admin-input-group">
                         <label htmlFor="username">Username</label>
                         <input
                             type="text"
@@ -48,10 +53,10 @@ const AdminLogin = () => {
                             required
                         />
                         {formik.errors.username && (
-                            <div className="error-message">{formik.errors.username}</div>
+                            <div className="admin-error-message">{formik.errors.username}</div>
                         )}
                     </div>
-                    <div className="input-group">
+                    <div className="admin-input-group">
                         <label htmlFor="password">Password</label>
                         <input
                             type="password"
@@ -62,11 +67,11 @@ const AdminLogin = () => {
                             required
                         />
                         {formik.errors.password && (
-                            <div className="error-message">{formik.errors.password}</div>
+                            <div className="admin-error-message">{formik.errors.password}</div>
                         )}
                     </div>
 
-                    <button type="submit" className="login-button">
+                    <button type="submit" className="admin-login-button">
                         Sign in
                     </button>
                 </form>

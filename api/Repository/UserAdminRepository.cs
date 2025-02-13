@@ -24,5 +24,9 @@ namespace api.Repository
             .CountAsync();
     
          }
+         public async Task<int>TotalOfUser()
+         {
+            return await _context.AppUsers.CountAsync();
+         }
     }
 }

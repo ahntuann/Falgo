@@ -1,44 +1,30 @@
 .container {
     display: flex;
     height: 100vh;
-  }
-  
-  .sidebar {
-    background-color: #2d2d2d;
-    color: white;
-    padding: 1rem;
-    width: 250px;
-    min-height: 100vh;
-  }
-  
-  .sidebarTitle {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
-  
-  .menuList {
+}
+
+.menuList {
     list-style: none;
     padding: 0;
-  }
-  
-  .menuItem {
+}
+
+.menuItem {
     padding: 0.75rem;
     cursor: pointer;
     transition: background 0.3s;
-  }
-  
-  .menuItem:hover {
+}
+
+.menuItem:hover {
     background-color: #444;
-  }
-  
-  .mainContent {
+}
+
+.mainContent {
     flex: 1;
     padding: 1.5rem;
     background-color: #f4f4f4;
-  }
-  
-  .topNav {
+}
+
+.topNav {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -46,14 +32,14 @@
     padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .pageTitle {
+}
+
+.pageTitle {
     font-size: 1.75rem;
     font-weight: bold;
-  }
-  
-  .logoutButton {
+}
+
+.logoutButton {
     background: #e63946;
     color: white;
     padding: 0.5rem 1rem;
@@ -61,30 +47,29 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background 0.3s;
-  }
-  
-  .logoutButton:hover {
+}
+
+.logoutButton:hover {
     background: #d62839;
-  }
-  
-  .statsGrid {
+}
+
+.statsGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
     margin-top: 1rem;
-  }
-  
-  .statsCard {
+}
+
+.statsCard {
     background: white;
     padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
-  }
-  
-  .cardTitle {
+}
+
+.cardTitle {
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
-  }
-  
+}

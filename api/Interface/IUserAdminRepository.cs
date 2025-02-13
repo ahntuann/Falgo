@@ -8,7 +8,7 @@ namespace api.Interface
     public interface IUserAdminRepository
     {
         public Task<int>CountNumberOfUsersWithTime(DateTime? startDate,DateTime? endDate);
-        
+        public Task<int>TotalOfUser();
           
     }
 }

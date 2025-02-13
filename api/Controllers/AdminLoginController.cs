@@ -28,7 +28,7 @@ namespace api.Controllers
              return Unauthorized("Username not found or password incorrect");
 
             else
-            return  Ok();
+            return  Ok(true);
         }
     }
 

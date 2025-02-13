@@ -8,5 +8,6 @@ namespace api.Interface
     public interface ISubmissionsAdminRepository
     {
         public Task<int>CountNumberOfSubmissionsWithTime(DateTime? startDate,DateTime? endDate);
+        public Task<int>TotalOfSubmissions();
     }
 }

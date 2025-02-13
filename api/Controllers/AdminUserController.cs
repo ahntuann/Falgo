@@ -25,5 +25,11 @@ namespace api.Controllers
         int count = await _userAdminRepository.CountNumberOfUsersWithTime(datetimeFilterDto.startDate,datetimeFilterDto.endDate);
         return Ok(count);
     }
+    [HttpGet("TotalUser")]
+    public async Task<IActionResult> TotalOfUser()
+    {
+        int count= await _userAdminRepository.TotalOfUser();
+        return Ok(count);
+    }
     }
 }
