@@ -6,6 +6,8 @@ import { useCallback, useEffect, useState } from 'react';
 const cs = classNames.bind(style);
 
 function CountDown({ classNames, endDate }) {
+    const [isCounting, setIsCounting] = useState(true);
+
     const countDown = useCallback(() => {
         let difference = new Date(endDate) - new Date();
 
@@ -29,7 +31,10 @@ function CountDown({ classNames, endDate }) {
         const interval = setInterval(() => {
             const newTimeLeft = countDown();
 
-            if (newTimeLeft === null) clearInterval(interval);
+            if (newTimeLeft === null) {
+                setIsCounting(false);
+                clearInterval(interval);
+            }
 
             setTimeLeft(newTimeLeft);
         }, 1000);
@@ -41,11 +46,17 @@ function CountDown({ classNames, endDate }) {
 
     return (
         <div className={cs('wrapper', classNames)}>
-            Kết thúc sau
-            <span className={cs('endDateNum')}>{timeLeft?.day}</span>ngày :
-            <span className={cs('endDateNum')}>{timeLeft?.hour}</span>giờ :
-            <span className={cs('endDateNum')}>{timeLeft?.minute}</span>phút :
-            <span className={cs('endDateNum')}>{timeLeft?.second}</span>giây
+            {isCounting ? (
+                <div className="counting">
+                    Kết thúc sau
+                    <span className={cs('endDateNum')}>{timeLeft?.day}</span>ngày :
+                    <span className={cs('endDateNum')}>{timeLeft?.hour}</span>giờ :
+                    <span className={cs('endDateNum')}>{timeLeft?.minute}</span>phút :
+                    <span className={cs('endDateNum')}>{timeLeft?.second}</span>giây
+                </div>
+            ) : (
+                <div className={cs('overTime')}>Đã kết thúc</div>
+            )}
         </div>
     );
 }

@@ -22,10 +22,10 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        
+
         public async Task<IActionResult> GetAllProblemsForUserAsync([FromQuery] QueryObject query)
         {
-            var userId = HttpContext.User?.Claims.FirstOrDefault(c => c.Type == "userId")?.Value;
+            var userId = query.UserId;
             if (string.IsNullOrEmpty(userId))
             {
                 userId = string.Empty;
