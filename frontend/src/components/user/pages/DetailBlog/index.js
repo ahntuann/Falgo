@@ -80,15 +80,14 @@ const DetailBlog = () => {
 
     return (
         <div className={cs("show-container")}>
-            {/* Hiển thị nội dung bài viết */}
             <div className={cs("show-Conent")}>
                 <div className={cs("show-content-informationinformation")}>
                     <div>
                         <h2>{blog.title}</h2>
-                        <p><strong>Danh mục:</strong> {blog.categoryBlog}</p>
                         <p><strong>Tác giả:</strong> {blog.guestName}</p>
+                        <p>{blog.description}</p>
+                        <p><strong>Danh mục:</strong> {blog.categoryBlog}</p>
                         <p><strong>Ngày đăng:</strong> {new Date(blog.createOn).toLocaleDateString("vi-VN")}</p>                
-                        {/* Nút chỉnh sửa/xóa */}
                         {userRole !== "guest" && userObject?.id === blog.userId && (
                             <div className={cs("action-buttons")}>
                                 <Link to={'/BlogUpdate'} state={{blog}} className={cs("edit")}>Chỉnh sửa</Link>
@@ -100,13 +99,10 @@ const DetailBlog = () => {
                     alt={blog.title} className={cs("thumbnail")} />
                 </div>
                 <div className={cs("show-content")}> 
-                    <p>{blog.description}</p>
                     <div dangerouslySetInnerHTML={{ __html: blog.content }} />
                 </div>
             </div>
-            {/* Thanh gợi ý */}
             <div className={cs("suggest-bar")}>
-                {/* Kiểm tra nếu có bài viết cùng tác giả mới hiển thị */}
                 {suggestByAuthor.length > 0 && (
                     <div>
                         <h3>Bài viết cùng tác giả</h3>
@@ -121,7 +117,6 @@ const DetailBlog = () => {
                     </div>
                 )}
 
-                {/* Gợi ý bài viết khác */}
                 <div>
                 <h3>Gợi ý bài viết khác</h3>
                     <div className={cs("suggest")}>
