@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import AuthContext from '~/context/AuthContext';
 import axios from 'axios';
+import { Link, useLocation } from 'react-router-dom';
 import './Problems.module.scss';
 
 import classNames from 'classnames/bind';
 
 import style from './Problems.module.scss';
+import { Navigate } from 'react-router-dom';
 
 const cs = classNames.bind(style);
 
@@ -129,7 +131,9 @@ const ProblemList = () => {
                     {problems.map((problem, i) => (
                         <tr key={i}>
                             <td>{problem.problemId}</td>
-                            <td>{problem.title}</td>
+                            <td>
+                                <Link to="/NotFound">{problem.title}</Link>
+                            </td>
                             <td>{problem.category}</td>
                             <td>{problem.acceptanceRate}%</td>
                             <td>{problem.acceptedCount}</td>
