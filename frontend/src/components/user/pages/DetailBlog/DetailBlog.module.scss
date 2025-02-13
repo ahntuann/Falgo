@@ -5,6 +5,17 @@
     padding: 20px;
 }
 
+.show-Conent{
+    width: 60%;
+}
+.show-content-informationinformation{
+    display: flex;
+    justify-content: space-between;
+    img{
+        width: 20%;
+    }
+}
+
 .show-content {
     flex: 2;
     background: #fff;
@@ -74,10 +85,37 @@
     background: #f1f1f1;
 }
 
-.suggest-img {
-    width: 100%;
-    max-width: 150px;
-    height: auto;
-    object-fit: cover;
-    border-radius: 4px;
+.action-buttons{
+    button {
+        text-align: center;
+        padding: 8px 12px; 
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    .suggest-img {
+        max-width: 150px;
+        height: auto;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+    
+    .edit-btn {
+        background-color: #ffc107;
+        color: black;
+        border: none;
+    }
+    
+    .delete-btn {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+    }
+    
+    .edit:hover {
+        background-color: #e0a800;
+    }
+    
+    .delete:hover {
+        background-color: #c82333;
+    }
 }

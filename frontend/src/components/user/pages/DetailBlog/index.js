@@ -5,6 +5,9 @@ import AuthContext from "~/context/AuthContext";
 
 import classNames from "classnames/bind";
 import styles from "./DetailBlog.module.scss";
+import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
+import { locale } from "moment";
+
 
 const cs = classNames.bind(styles);
 
@@ -31,65 +34,104 @@ const DetailBlog = () => {
         fetchBlogs();
     }, []);
 
-    // Gợi ý bài viết cùng tác giả
     const suggestByAuthor = useMemo(() => {
         return allBlogs.filter(b => b.userId === blog?.userId && b.id !== blog?.id).slice(0, 3);
     }, [allBlogs, blog]);
 
-    // Gợi ý bài viết ngẫu nhiên
     const suggestBlogs = useMemo(() => {
         return allBlogs.filter(b => b.id !== blog?.id).sort(() => 0.5 - Math.random()).slice(0, 3);
     }, [allBlogs, blog]);
 
     if (!blog) return <div className={cs("error-message")}>Không tìm thấy bài viết!</div>;
 
+    const handleDelete = async (blogId) => {
+        if (!window.confirm("Bạn có chắc chắn muốn xóa bài viết này không?")) return;
+        console.log("ID nhận được trong handleDelete:", blogId);
+        
+        try {
+            const token = localStorage.getItem("accessToken");
+            const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "*/*",
+                    "Authorization": `Bearer ${token}`
+                },
+                credentials: "include"
+            });
+    
+            if (response.status === 401) {
+                alert("Bạn cần đăng nhập để xóa bài viết!");
+                return;
+            }
+    
+            const text = await response.text(); 
+            window.location.href= "/blog";
+            if (response.ok) {
+                alert("Xóa bài viết thành công!");
+                allBlogs(prevBlogs => prevBlogs.filter(blog => blog.id !== blogId));
+            } else {
+                alert(`Xóa thất bại! Server trả về: ${text}`);
+            }
+        } catch (error) {
+
+        }
+    };
+
     return (
         <div className={cs("show-container")}>
             {/* Hiển thị nội dung bài viết */}
-            <div className={cs("show-content")}>
-                <h2>{blog.title}</h2>
-                <p><strong>Danh mục:</strong> {blog.categoryBlog}</p>
-                <p><strong>Tác giả:</strong> {blog.guestName}</p>
-                <p><strong>Ngày đăng:</strong> {blog.createOn}</p>
-    
-                <img src={blog.thumbnail} alt={blog.title} className={cs("thumbnail")} />
-    
-                <p>{blog.description}</p>
-                <div dangerouslySetInnerHTML={{ __html: blog.content }} />
-    
-                {/* Nút chỉnh sửa/xóa */}
-                {userRole !== "guest" && userObject?.id === blog.userId && (
-                    <div className={cs("action-buttons")}>
-                        <button className={cs("edit-btn")}>Chỉnh sửa</button>
-                        <button className={cs("delete-btn")}>Xóa</button>
+            <div className={cs("show-Conent")}>
+                <div className={cs("show-content-informationinformation")}>
+                    <div>
+                        <h2>{blog.title}</h2>
+                        <p><strong>Danh mục:</strong> {blog.categoryBlog}</p>
+                        <p><strong>Tác giả:</strong> {blog.guestName}</p>
+                        <p><strong>Ngày đăng:</strong> {blog.createOn}</p>                  
+                        {/* Nút chỉnh sửa/xóa */}
+                        {userRole !== "guest" && userObject?.id === blog.userId && (
+                            <div className={cs("action-buttons")}>
+                                <button className={cs("edit-btn")}>Chỉnh sửa</button>
+                                <button className={cs("delete-btn")} onClick={() => handleDelete(blog.id)} > Xóa</button>
+                            </div>
+                        )}
                     </div>
-                )}
+                    <img src={ blog.thumbnail && blog.thumbnail.startsWith("http") ? blog.thumbnail : NoImage} 
+                    alt={blog.title} className={cs("thumbnail")} />
+                </div>
+                <div className={cs("show-content")}> 
+                    <p>{blog.description}</p>
+                    <div dangerouslySetInnerHTML={{ __html: blog.content }} />
+                </div>
             </div>
-    
             {/* Thanh gợi ý */}
             <div className={cs("suggest-bar")}>
                 {/* Kiểm tra nếu có bài viết cùng tác giả mới hiển thị */}
                 {suggestByAuthor.length > 0 && (
-                    <div className={cs("suggest-by-author")}>
+                    <div>
                         <h3>Bài viết cùng tác giả</h3>
-                        {suggestByAuthor.map(b => (
+                        <div className={cs("suggest-by-author")}>
+                            {suggestByAuthor.map(b => (
+                                <div key={b.id} className={cs("suggest-item")}>
+                                    <img src={b.thumbnail} alt={b.title} className={cs("suggest-img")} />
+                                    <h4>{b.title}</h4>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Gợi ý bài viết khác */}
+                <div>
+                <h3>Gợi ý bài viết khác</h3>
+                    <div className={cs("suggest")}>
+                        {suggestBlogs.map(b => (
                             <div key={b.id} className={cs("suggest-item")}>
                                 <img src={b.thumbnail} alt={b.title} className={cs("suggest-img")} />
                                 <h4>{b.title}</h4>
                             </div>
                         ))}
                     </div>
-                )}
-
-                {/* Gợi ý bài viết khác */}
-                <div className={cs("suggest")}>
-                    <h3>Gợi ý bài viết khác</h3>
-                    {suggestBlogs.map(b => (
-                        <div key={b.id} className={cs("suggest-item")}>
-                            <img src={b.thumbnail} alt={b.title} className={cs("suggest-img")} />
-                            <h4>{b.title}</h4>
-                        </div>
-                    ))}
                 </div>
             </div>
 
