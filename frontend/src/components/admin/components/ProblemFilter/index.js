@@ -6,7 +6,7 @@ const cx = classNames.bind(styles);
 
 const ProblemFilter = () => {
     const [numProblems, setNumProblems] = useState(10);
-    const [isAscending, setIsAscending] = useState(true);
+    const [Asc, setIsAsc] = useState(true);
     const [problems, setProblems] = useState([]);
     const [error, setError] = useState(null);
 
@@ -15,7 +15,7 @@ const ProblemFilter = () => {
         setError(null);
 
         try {
-            const url = `http://localhost:5180/api/AdminDashboard/problem?NumberOfProb=${numProblems}&IsAscending=${isAscending}`;
+            const url = `http://localhost:5180/api/AdminDashboard/problem?NumberOfProb=${numProblems}&Asc=${Asc}`;
             console.log('Sending Request to:', url);
 
             const response = await fetch(url, {
@@ -54,8 +54,8 @@ const ProblemFilter = () => {
                 <label className={cx('label')}>
                     sắp xếp theo:
                     <select
-                        value={isAscending}
-                        onChange={(e) => setIsAscending(e.target.value === 'true')}
+                        value={Asc}
+                        onChange={(e) => setIsAsc(e.target.value === 'true')}
                         className={cx('select')}
                     >
                         <option value="true">tăng dần</option>
