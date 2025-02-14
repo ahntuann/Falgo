@@ -95,7 +95,7 @@ const DetailBlog = () => {
                             </div>
                         )}
                     </div>
-                    <img src={ blog.thumbnail && blog.thumbnail.startsWith("http") ? blog.thumbnail : NoImage} 
+                    <img src={ blog.thumbnail ? blog.thumbnail : NoImage} 
                     alt={blog.title} className={cs("thumbnail")} />
                 </div>
                 <div className={cs("show-content")}> 
@@ -110,7 +110,7 @@ const DetailBlog = () => {
                             {suggestByAuthor.map(b => (
                                 <div key={b.id} className={cs("suggest-item")}>
                                     <img src={b.thumbnail} alt={b.title} className={cs("suggest-img")} />
-                                    <h4>{b.title}</h4>
+                                    <Link to={'/DetailBlog'} state={{blog: b}} className={cs("btn-read-more")}>{b.title}</Link>
                                 </div>
                             ))}
                         </div>
@@ -123,7 +123,7 @@ const DetailBlog = () => {
                         {suggestBlogs.map(b => (
                             <div key={b.id} className={cs("suggest-item")}>
                                 <img src={b.thumbnail} alt={b.title} className={cs("suggest-img")} />
-                                <h4>{b.title}</h4>
+                                <Link to={'/DetailBlog'} state={{blog: b}} className={cs("btn-read-more")}>{b.title}</Link>
                             </div>
                         ))}
                     </div>

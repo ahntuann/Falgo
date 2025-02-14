@@ -241,11 +241,8 @@ const Blog = () => {
                 <div className={cs("blog-list")}> 
                     {paginatedBlogs.map((blog) => (
                         <div key={blog.id} className={cs("blog-item")}>
-                        <img 
-                            src={blog.thumbnail && blog.thumbnail.startsWith("http") ? blog.thumbnail : NoImage}
-                            alt={blog.title} 
-                            className={cs("thumbnail")} 
-                        />
+                        <img src={ blog.thumbnail ? blog.thumbnail : NoImage} 
+                        alt={blog.title} className={cs("thumbnail")} />
 
                             <div className={cs("content")}>
                                 <h2>{blog.title}</h2>
@@ -369,18 +366,22 @@ const Blog = () => {
                 >
                     Trước
                 </button>
-
+                
                 <div className={cs("paginationnumber")}>
-                    {Array.from({ length: totalPages }, (_, index) => (
-                        <button
-                            key={index + 1}
-                            onClick={() => setQuery({ ...query, page: index + 1 })}
-                            className={query.page === index + 1 ? "active" : ""}
-                        >
-                            {index + 1}
-                        </button>
-                    ))}
+                    {Array.from({ length: totalPages }, (_, index) => index + 1).map(page =>
+                        page === query.page ? (
+                            <span key={page} className={cs("current-page")}>{page}</span> // Hiển thị số trang hiện tại
+                        ) : (
+                            <button
+                                key={page}
+                                onClick={() => setQuery({ ...query, page })}
+                            >
+                                {page}
+                            </button>
+                        )
+                    )}
                 </div>
+
 
                 <button
                     disabled={query.page >= totalPages}

@@ -80,14 +80,12 @@ const BlogUpdate = () => {
     if (!blog) return <div>Không tìm thấy bài viết!</div>;
 
     return (
-        <div>
+        <div className={cs("container")}>
             <h2>Chỉnh sửa bài viết</h2>
             <form onSubmit={handleSubmit}>
-                <img 
-                    src={formData.thumbnail && formData.thumbnail.startsWith("http") ? formData.thumbnail : NoImage} 
-                    alt={formData.title} 
-                />
-                <div>
+                <img src={ formData.thumbnail ? formData.thumbnail : NoImage} 
+                    alt={formData.title} className={cs("thumbnail")} />
+                <div className={cs("EditBlog")}>
                     <label>
                         Thumbnail URL:
                         <input type="text" name="thumbnail" value={formData.thumbnail} onChange={handleChange} />
