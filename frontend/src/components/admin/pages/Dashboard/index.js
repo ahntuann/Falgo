@@ -13,6 +13,8 @@ function Dashboard() {
     const [totalUser, setTotalUser] = useState();
     const [totalSubmissions, setTotalSubmissions] = useState();
     const [totalProblems, setTotalProblems] = useState();
+    const [filteredDataUser, setFilteredData] = useState(null);
+    const [filteredDataSubmissions, setFilteredDataSubmissions] = useState(null);
     const [contest, setContest] = useState([]);
     useEffect(() => {
         fetchContests();
@@ -20,7 +22,9 @@ function Dashboard() {
         fetchTotalSubmissions();
         fetchTotalProblems();
     }, []);
-
+    const handleFilterData = (data) => {
+        setFilteredData(data);
+    };
     const role = JSON.parse(sessionStorage.getItem('admin'));
     useEffect(() => {
         if (!role) {
@@ -77,11 +81,23 @@ function Dashboard() {
             <div className={cx('dashboardContainer')}>
                 <div className={cx('statCard')}>
                     <h3>Tống số người dùng: {totalUser}</h3>
-                    <DateFilterUser />
+                    <DateFilterUser onFilterData={handleFilterData} />
+                    {filteredDataUser && (
+                        <div>
+                            <h2>Số người dùng đã lọc:</h2>
+                            <pre>{JSON.stringify(filteredDataUser, null, 2)}</pre>
+                        </div>
+                    )}
                 </div>
                 <div className={cx('statCard')}>
                     <h3>Tổng số bài nộp: {totalSubmissions}</h3>
-                    <DateFilterSubmissions />
+                    <DateFilterSubmissions onFilterSubmissions={setFilteredDataSubmissions} />
+                    {filteredDataSubmissions && (
+                        <div>
+                            <h2>Bài nộp đã lọc:</h2>
+                            <pre>{JSON.stringify(filteredDataSubmissions, null, 2)}</pre>
+                        </div>
+                    )}
                 </div>
                 <div className={cx('statCard')}>
                     <h3>TỔng số bài tập: {totalProblems}</h3>
