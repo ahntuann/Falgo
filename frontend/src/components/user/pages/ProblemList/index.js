@@ -7,7 +7,6 @@ import './Problems.module.scss';
 import classNames from 'classnames/bind';
 
 import style from './Problems.module.scss';
-import { Navigate } from 'react-router-dom';
 
 const cs = classNames.bind(style);
 
