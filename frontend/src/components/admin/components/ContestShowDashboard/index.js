@@ -16,12 +16,12 @@ function ContestDashboard({ contest }) {
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Title</th>
-                                <th>Due Time</th>
-                                <th>Points</th>
-                                <th>Level</th>
-                                <th>End Date</th>
-                                <th>Registrations</th>
+                                <th>Tên cuộc thi</th>
+                                <th>thời gian thi</th>
+                                <th>điểm</th>
+                                <th>độ khó</th>
+                                <th>ngày kết thúc</th>
+                                <th>đăng ký</th>
                             </tr>
                         </thead>
                         <tbody>

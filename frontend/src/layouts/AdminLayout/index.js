@@ -12,7 +12,7 @@ function AdminLayout({ children }) {
 
             {/* Main Content */}
             <div className={cx('mainContent')}>
-                <div className={cx('topNav')}>Welcome Admin</div>
+                <div className={cx('topNav')}>Chào mừng Quản Trị Viên</div>
                 <div className={cx('contentContainer')}>{children}</div>
             </div>
         </div>

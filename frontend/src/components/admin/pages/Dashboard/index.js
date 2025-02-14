@@ -76,19 +76,19 @@ function Dashboard() {
         <AdminLayout sidebar="active">
             <div className={cx('dashboardContainer')}>
                 <div className={cx('statCard')}>
-                    <h3>Total Users: {totalUser}</h3>
+                    <h3>Tống số người dùng: {totalUser}</h3>
                     <DateFilterUser />
                 </div>
                 <div className={cx('statCard')}>
-                    <h3>Total Submissions: {totalSubmissions}</h3>
+                    <h3>Tổng số bài nộp: {totalSubmissions}</h3>
                     <DateFilterSubmissions />
                 </div>
                 <div className={cx('statCard')}>
-                    <h3>Total Problems: {totalProblems}</h3>
+                    <h3>TỔng số bài tập: {totalProblems}</h3>
                     <ProblemFilter />
                 </div>
 
-                <h3>Latest Contests</h3>
+                <h3>Cuộc thi mới nhất</h3>
                 {contest !== undefined &&
                     contest.map((contest, i) => <ContestDashboard key={i} contest={contest} />)}
             </div>

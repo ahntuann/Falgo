@@ -27,7 +27,7 @@ function DateFilterUser({ onFilterData }) {
     return (
         <form className="date-filter-form" onSubmit={handleSubmit}>
             <div className="form-group">
-                <label className="form-label">Start Date:</label>
+                <label className="form-label">bắt đầu:</label>
                 <input
                     type="date"
                     value={startDate}
@@ -38,7 +38,7 @@ function DateFilterUser({ onFilterData }) {
             </div>
 
             <div className="form-group">
-                <label className="form-label">End Date:</label>
+                <label className="form-label">kết thúc:</label>
                 <input
                     type="date"
                     value={endDate}

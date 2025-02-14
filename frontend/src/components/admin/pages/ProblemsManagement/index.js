@@ -3,7 +3,7 @@ function ProblemsManagement() {
     return (
         <AdminLayout>
             <div>
-                <h2>ProblemsManagement</h2>
+                <h2>Quản lý bài tập</h2>
             </div>
         </AdminLayout>
     );

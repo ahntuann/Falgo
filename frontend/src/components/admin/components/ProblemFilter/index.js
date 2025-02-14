@@ -38,10 +38,10 @@ const ProblemFilter = () => {
 
     return (
         <div className={cx('container')}>
-            <h2 className={cx('title')}>Filter Problems</h2>
+            <h2 className={cx('title')}>Bài tập được lọc</h2>
             <form onSubmit={handleSubmit} className={cx('form')}>
                 <label className={cx('label')}>
-                    Number of Problems:
+                    số lượng bài tập:
                     <input
                         type="number"
                         value={numProblems}
@@ -52,19 +52,19 @@ const ProblemFilter = () => {
                 </label>
 
                 <label className={cx('label')}>
-                    Sort Order:
+                    sắp xếp theo:
                     <select
                         value={isAscending}
                         onChange={(e) => setIsAscending(e.target.value === 'true')}
                         className={cx('select')}
                     >
-                        <option value="true">Ascending</option>
-                        <option value="false">Descending</option>
+                        <option value="true">tăng dần</option>
+                        <option value="false">giảm dần</option>
                     </select>
                 </label>
 
                 <button type="submit" className={cx('button')}>
-                    Filter
+                    Lọc
                 </button>
             </form>
 
@@ -75,10 +75,10 @@ const ProblemFilter = () => {
                     <table className={cx('table')}>
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Category</th>
-                                <th>Score</th>
-                                <th>Submissions</th>
+                                <th>tên bài</th>
+                                <th>thể loại</th>
+                                <th>điểm</th>
+                                <th>số lượt bài nộp</th>
                             </tr>
                         </thead>
                         <tbody>

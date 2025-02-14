@@ -16,8 +16,8 @@ const AdminLogin = () => {
             password: '',
         },
         validationSchema: Yup.object({
-            username: Yup.string().required('Required'),
-            password: Yup.string().required('Required'),
+            username: Yup.string().required('Không được bỏ trống'),
+            password: Yup.string().required('Không được bỏ trống'),
         }),
         onSubmit: async (values) => {
             try {
@@ -40,10 +40,10 @@ const AdminLogin = () => {
     return (
         <div className="admin-login-container">
             <div className="admin-login-box">
-                <h2>Admin Sign In</h2>
+                <h2>Đăng nhập</h2>
                 <form onSubmit={formik.handleSubmit}>
                     <div className="admin-input-group">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">Tên người dùng</label>
                         <input
                             type="text"
                             id="username"
@@ -57,7 +57,7 @@ const AdminLogin = () => {
                         )}
                     </div>
                     <div className="admin-input-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">Mật khẩu</label>
                         <input
                             type="password"
                             id="password"
@@ -72,7 +72,7 @@ const AdminLogin = () => {
                     </div>
 
                     <button type="submit" className="admin-login-button">
-                        Sign in
+                        Đăng nhập
                     </button>
                 </form>
             </div>

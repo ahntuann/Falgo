@@ -13,14 +13,14 @@ function Sidebar() {
             <button className={cx('toggleButton')} onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
                 {isSidebarOpen ? '<<' : '>>'}
             </button>
-            <h2 className={cx('sidebarTitle')}>Admin Panel</h2>
+            <h2 className={cx('sidebarTitle')}>Bảng điều khiển</h2>
             <ul className={cx('menuList')}>
                 <li>
                     <NavLink
                         to="/Dashboard"
                         className={({ isActive }) => cx('menuItem', { active: isActive })}
                     >
-                        Dashboard
+                        Bảng thống kê
                     </NavLink>
                 </li>
                 <li>
@@ -28,7 +28,7 @@ function Sidebar() {
                         to="/ProblemsManagement"
                         className={({ isActive }) => cx('menuItem', { active: isActive })}
                     >
-                        Problems Management
+                        Quản lý bài tập
                     </NavLink>
                 </li>
                 <li>
@@ -36,7 +36,7 @@ function Sidebar() {
                         to="/UserManagement"
                         className={({ isActive }) => cx('menuItem', { active: isActive })}
                     >
-                        Users Management
+                        Quản lý người dùng
                     </NavLink>
                 </li>
                 <li>
@@ -44,7 +44,7 @@ function Sidebar() {
                         to="/BlogManagement"
                         className={({ isActive }) => cx('menuItem', { active: isActive })}
                     >
-                        BlogManagement
+                        Quản lý bài đăng
                     </NavLink>
                 </li>
             </ul>
