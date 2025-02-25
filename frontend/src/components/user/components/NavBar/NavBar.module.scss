@@ -17,7 +17,7 @@
 }
 
 .logo-img {
-    height: var(--logo-navbar-height);
+    height: calc(var(--logo-navbar-height));
 }
 
 .navBarItem {

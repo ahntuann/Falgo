@@ -1,10 +1,15 @@
-
 import { AdminLogin, Dashboard } from '~/components/admin/pages';
-import { DefaultLayout, AdminLayout, AdminLoginLayout } from '~/layouts';
+import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
 
-import { Home, ProblemList, Profile, Blog, DetailBlog, BlogUpdate } from '~/components/user/pages';
-
-
+import {
+    Home,
+    ProblemList,
+    Profile,
+    Blog,
+    DetailBlog,
+    BlogUpdate,
+    CodeEditing,
+} from '~/components/user/pages';
 
 const routes = [
     {
@@ -32,7 +37,6 @@ const routes = [
         role: ['user', 'guest'],
     },
 
-
     {
         component: AdminLogin,
         path: '/adminLogin',
@@ -44,12 +48,17 @@ const routes = [
         path: '/DetailBlog',
         layout: DefaultLayout,
         role: ['user', 'guest'],
-
     },
     {
         component: BlogUpdate,
         path: '/BlogUpdate',
         layout: DefaultLayout,
+        role: ['user'],
+    },
+    {
+        component: CodeEditing,
+        path: '/practice',
+        layout: CodeEditingLayout,
         role: ['user'],
     },
 ];

@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import { Link, useLocation } from 'react-router-dom';
 
 import style from './NavBar.module.scss';
-import logo from '~/assets/images/logo/logo.jpg';
+import logo from '~/assets/images/logo/logo.png';
 import { useContext, useEffect, useState } from 'react';
 import AuthContext from '~/context/AuthContext';
 import { LoginRegisterPart, UserPart } from '~/components/user/components';
@@ -10,7 +10,7 @@ import TippyHeadless from '~/components/user/components/TippyHeadless';
 
 const cs = classNames.bind(style);
 
-function NavBar() {
+function NavBar({ classNames }) {
     const navBarList = [
         { title: 'Bài tập', path: '/problems' },
         { title: 'Cuộc thi', path: '/contest' },
@@ -32,7 +32,7 @@ function NavBar() {
     const { userRole } = useContext(AuthContext);
 
     return (
-        <div className={cs('wrapper')}>
+        <div className={cs('wrapper', classNames)}>
             <Link to="/" className={cs('logo')}>
                 <img className={cs('logo-img')} src={logo} alt="Logo"></img>
             </Link>
