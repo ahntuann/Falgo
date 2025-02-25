@@ -21,7 +21,7 @@ function ProblemItem({
     classNames,
     itemNumber,
 }) {
-    const errorLog = ['Runtime Error', 'Wrong Answer'];
+    const errorLog = ['Runtime Error', 'Wrong Answer', 'Compilation Error'];
     const warningLog = ['Time Limit Exceeded', 'Partial Correct'];
     const successLog = ['Accepted'];
 

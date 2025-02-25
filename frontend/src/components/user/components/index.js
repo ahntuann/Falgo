@@ -4,3 +4,4 @@ export { default as UserPart } from './UserPart';
 export { default as LoginRegisterPart } from './LoginRegisterPart';
 export { default as ProblemItem } from './ProblemItem';
 export { default as ContestBrief } from './ContestBrief';
+export { default as Footer } from './Footer';

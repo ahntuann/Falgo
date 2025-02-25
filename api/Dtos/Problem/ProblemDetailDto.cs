@@ -12,7 +12,6 @@ namespace api.Dtos.Problem
         public string Detail { get; set; } = string.Empty;
         public string Input { get; set; } = string.Empty;
         public string Output { get; set; } = string.Empty;
-        [Range(0, 100)]
         public int TotalPoint { get; set; } = 0;
         public int TimeLimit { get; set; }
         public int MemoryLimit { get; set; }

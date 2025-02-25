@@ -1,7 +1,7 @@
 .wrapper {
     width: 18%;
     aspect-ratio: 1 / 1;
-    border: 1px solid #000;
+    border: 1px solid #ccc;
     border-radius: 20px;
     padding: 10px;
     display: flex;
@@ -9,7 +9,14 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    background-color: #fff;
+    background: var(--background-component-color);
+    color: var(--text-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 6px 20px rgba(32, 56, 128, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        transform: scale(1.05);
+    }
 }
 
 .name,
@@ -35,6 +42,7 @@
 .getInProblem {
     font-size: 6.5rem;
     cursor: pointer;
+    color: var(--primary-text-color);
 }
 
 .author {
@@ -74,13 +82,13 @@
 }
 
 .status.error {
-    color: rgb(194, 7, 7);
+    color: rgb(255, 36, 36);
 }
 
 .status.warning {
-    color: rgb(185, 185, 3);
+    color: rgb(252, 252, 13);
 }
 
 .status.success {
-    color: green;
+    color: rgb(7, 226, 7);
 }

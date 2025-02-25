@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 
 import style from './DefaultLayout.module.scss';
-import { NavBar } from '~/components/user/components';
+import { Footer, NavBar } from '~/components/user/components';
 
 const cs = classNames.bind(style);
 
@@ -11,6 +11,8 @@ function DefaultLayout({ children }) {
             <NavBar />
 
             <div className={cs('children')}>{children}</div>
+
+            <Footer />
         </div>
     );
 }
