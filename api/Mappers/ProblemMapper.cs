@@ -10,7 +10,7 @@ namespace api.Mappers
 {
     public static class ProblemMapper
     {
-        public static ViewAllProblemDto ToViewAllProblemDto(Problem problem, List<Submission> submissions, string userId)
+        public static ViewAllProblemDto ToViewAllProblemDto(this Problem problem, List<Submission> submissions, string userId)
         {
 
             int totalSubmissions = submissions.Count;
@@ -26,10 +26,28 @@ namespace api.Mappers
                 ? Math.Round((double)acceptedSubmissions / totalSubmissions * 100, 2)
             : 0,
                 AcceptedCount = acceptedSubmissions,
+                //dang bi loi doan s => s.AppUser.Id.Equals(userId) ra ket qua la false
                 SolvedStatus = submissions.Any(s => s.AppUser.Id.Equals(userId) && s.Status == "Accepted") ? "Passed" : "Not passed"
             };
 
             return problemDto;
+        }
+
+        public static ProblemDetailDto ToProblemDetailDto(this Problem problem)
+        {
+            var problemDetail = new ProblemDetailDto
+            {
+                ProblemId = problem.ProblemId,
+                Title = problem.Title,
+                Detail = problem.Detail,
+                Input = problem.Input,
+                Output = problem.Output,
+                TotalPoint = problem.TotalPoint,
+                TimeLimit = problem.TimeLimit,
+                Author = problem.Author,
+                MemoryLimit = problem.MemoryLimit
+            };
+            return problemDetail;
         }
     }
 }

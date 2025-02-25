@@ -7,6 +7,7 @@ using api.Helpers;
 using api.Interface;
 using api.Mappers;
 using api.Model;
+using api.Repository;
 
 namespace api.Services
 {
@@ -32,25 +33,16 @@ namespace api.Services
 
         public async Task<PageResult<ViewAllProblemDto>> GetAllProblemsWithStatsAsync(string userId, QueryObject query)
         {
-            var problemsQuery = (await _problemRepository.GetAllProblemAsync()).AsQueryable();
-            //Search theo title cua problem
-            if (!string.IsNullOrWhiteSpace(query.ProblemTitle))
+            var problemsQuery = await _problemRepository.GetFilteredProblemsAsync(query, userId);
+            var problemIds = problemsQuery.Select(p => p.ProblemId).ToList();
+            var allSubmissions = await _submissionRepository.GetSubmissionsByProblemIdsAsync(problemIds);
+            //Toi uu voi duoi 1tr ban ghi toc do su ly 490milis/1 ban ghi
+            var submissionsLookup = allSubmissions.ToLookup(s => s.Problem.ProblemId);
+            var problems = problemsQuery.Select(problem =>
             {
-                problemsQuery = problemsQuery.Where(p => p.Title.Contains(query.ProblemTitle, StringComparison.OrdinalIgnoreCase));
-            }
-            //Search theo category cua problem
-            if (!string.IsNullOrWhiteSpace(query.ProblemCategory))
-            {
-                problemsQuery = problemsQuery.Where(p => p.Category.Equals(query.ProblemCategory, StringComparison.OrdinalIgnoreCase));
-            }
-            var problems = new List<ViewAllProblemDto>();
-            foreach (var problem in problemsQuery)
-            {
-                var submissions = await _submissionRepository.GetSubmissionsByProblemIdAsync(problem.ProblemId);
-                var problemDto = ProblemMapper.ToViewAllProblemDto(problem, submissions, userId);
-                problems.Add(problemDto);
-            }
-            //Sorting
+                var submissions = submissionsLookup[problem.ProblemId].ToList();
+                return problem.ToViewAllProblemDto(submissions, userId);
+            }).ToList();
             if (!string.IsNullOrWhiteSpace(query.SortBy))
             {
                 problems = query.SortBy switch
@@ -60,28 +52,13 @@ namespace api.Services
                     "ac" => query.IsDescending.Equals("true") ? problems.OrderByDescending(p => p.AcceptedCount).ToList()
                                                             : problems.OrderBy(p => p.AcceptedCount).ToList(),
                     "p" => query.IsDescending.Equals("true") ? problems.OrderByDescending(p => p.Score).ToList()
-                                        : problems.OrderBy(p => p.Score).ToList(),
+                                                            : problems.OrderBy(p => p.Score).ToList(),
                     _ => problems
                 };
             }
-            var result = new List<ViewAllProblemDto>();
-            //Tinh toan de phan trang
-            int totalItems = problems.Count();
-            //Lay ket qua problem tu db
-            foreach (var problem in problems.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize))
-            {
-                //Filter loc problem da hoan thanh
-                bool hidePassed = false;
-                if (!string.IsNullOrWhiteSpace(query.HidePassed))
-                {
-                    bool.TryParse(query.HidePassed, out hidePassed);
-                }
-                if (hidePassed && problem.SolvedStatus.Equals("Passed"))
-                {
-                    continue;
-                }
-                result.Add(problem);
-            }
+            int totalItems = problems.Count;
+            var result = problems.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToList();
+
             return new PageResult<ViewAllProblemDto>
             {
                 Items = result,
@@ -91,9 +68,15 @@ namespace api.Services
             };
         }
 
-        public async Task<Problem> GetProblemByIdAsync(string problemId)
+        public async Task<ProblemDetailDto?> GetProblemDetailByIdAsync(string problemId)
         {
-            return await _problemRepository.GetProblemByIdAsync(problemId);
+            var problem = await _problemRepository.GetProblemByIdAsync(problemId);
+            if (problem == null)
+            {
+                return null;
+            }
+            var problemDetail = problem.ToProblemDetailDto();
+            return problemDetail;
         }
     }
 }

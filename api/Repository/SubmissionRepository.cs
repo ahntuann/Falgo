@@ -17,7 +17,6 @@ namespace api.Repository
         {
             _context = context;
         }
-
         public async Task<List<Submission>> GetAllSubmissionAtMonthAsync(int month, int year)
         {
             return await _context.Submissions.Where(x => x.SubmittedAt.Year == year && x.SubmittedAt.Month == month).Include(x => x.Problem).Include(x => x.AppUser).ToListAsync();
@@ -53,6 +52,12 @@ namespace api.Repository
                         .Include(s => s.AppUser)
                         .Where(s => s.Problem.ProblemId == problemId)
                         .ToListAsync();
+        }
+        public async Task<List<Submission>> GetSubmissionsByProblemIdsAsync(List<string> problemIds)
+        {
+            return await _context.Submissions.Include(s => s.AppUser)
+                .Where(s => problemIds.Contains(s.Problem.ProblemId))
+                .ToListAsync();
         }
         public async Task<List<Submission>> GetAllSubmissionsAsync()
         {

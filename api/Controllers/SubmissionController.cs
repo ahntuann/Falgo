@@ -11,10 +11,12 @@ namespace api.Controllers
     [ApiController]
     public class SubmissionController : ControllerBase
     {
-        private readonly ISubmissionService _subService;
+        private readonly ISubmissionService _submissionService;
         public SubmissionController(ISubmissionService subService)
         {
-            _subService = subService;
+            _submissionService = subService;
         }
+
+
     }
 }
