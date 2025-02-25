@@ -17,14 +17,14 @@ import SkillItem from '~/components/user/components/SkillItem';
 const cs = classNames.bind(style);
 
 function Home() {
-    const sliders = [slider1, slider2, slider3];
     const problemDailyNames = ['Bài tập nổi bật', 'Bạn đang làm dở', 'Đã hoàn thành'];
-    const { appUser, userRole, logout } = useContext(AuthContext);
+    const { appUser, userRole } = useContext(AuthContext);
 
     const [problemDailyFocus, setProblemDailyFocus] = useState(0);
     const [problems, setProblems] = useState([]);
     const [contests, setContests] = useState([]);
     const [skills, setSkills] = useState([]);
+    const [slider, setSlider] = useState([]);
 
     // fetch Problem HomePage daily
     useEffect(() => {
@@ -42,9 +42,11 @@ function Home() {
 
     // fetch Contest Brief
     useEffect(() => {
-        fetchContestBriefAPI({ isNewest: true, pageSize: 2 }).then((newContests) =>
-            setContests(newContests),
-        );
+        fetchContestBriefAPI({ isNewest: true, pageSize: 2 }).then((newContests) => {
+            setContests(newContests);
+
+            setSlider(newContests);
+        });
     }, []);
 
     // fetch all programming language
@@ -54,9 +56,11 @@ function Home() {
 
     return (
         <div className={cs('wrapper')}>
-            <div className={cs('slider')}>
-                <SliderBanner sliders={sliders} />
-            </div>
+            {slider.length > 0 && (
+                <div className={cs('slider')}>
+                    <SliderBanner sliders={slider} />
+                </div>
+            )}
 
             {userRole === 'user' ? (
                 <div className={cs('problemDaily', 'homeComponents')}>
@@ -79,6 +83,8 @@ function Home() {
                             {problems.map((problem, i) => (
                                 <ProblemItem
                                     key={i}
+                                    detail={problem.detail}
+                                    itemNumber={i}
                                     isMostAttempted={problemDailyFocus === 0}
                                     isDoned={problemDailyFocus === 2}
                                     classNames={i !== 0 && cs('notFirst')}
@@ -97,10 +103,12 @@ function Home() {
                     )}
                 </div>
             ) : null}
-            <div onClick={() => logout()}>logout</div>
 
             <div className={cs('contestBrief', 'homeComponents')}>
-                <div className={cs('category', 'contestBriefCategory')}>Cuộc thi lập trình</div>
+                <div className={cs('category', 'contestBriefCategory')}>
+                    <div className={cs('contestBriefCategoryName')}>Cuộc thi lập trình</div>
+                    {/* <div className={cs('contestBriefCategoryMore')}>Xem thêm</div> */}
+                </div>
                 <div className={cs('contests')}>
                     {contests !== undefined &&
                         contests.map((contest, i) => <ContestBrief key={i} contest={contest} />)}

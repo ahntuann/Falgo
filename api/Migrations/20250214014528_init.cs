@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace api.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -219,6 +219,36 @@ namespace api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Blogs",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    GuestName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GuestEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Thumbnail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageBlog = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoryBlog = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreateOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DatePublic = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    TagBlog = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Blogs", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Blogs_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ContestRegistions",
                 columns: table => new
                 {
@@ -328,6 +358,27 @@ namespace api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CommentBlog",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreateOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BlogId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CommentBlog", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_CommentBlog_Blogs_BlogId",
+                        column: x => x.BlogId,
+                        principalTable: "Blogs",
+                        principalColumn: "ID");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TestCaseStatuses",
                 columns: table => new
                 {
@@ -354,9 +405,9 @@ namespace api.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "08ce2e43-b59f-41e0-a2c7-94b53fb4a93e", null, "Guest", "GUEST" },
-                    { "20d6b2d8-8a70-442c-8dff-9bd718409164", null, "Admin", "ADMIN" },
-                    { "99b0b4bd-5892-431a-8253-7e1cc80d27b4", null, "User", "USER" }
+                    { "336503e6-3dd5-410d-9533-26f09e6b0cb1", null, "Guest", "GUEST" },
+                    { "5feebd43-96d7-4b4d-bdf5-ee8e0277db6b", null, "User", "USER" },
+                    { "8117d1c6-7746-451a-a6d9-3007fe4b8eaa", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -397,6 +448,16 @@ namespace api.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Blogs_UserId",
+                table: "Blogs",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommentBlog_BlogId",
+                table: "CommentBlog",
+                column: "BlogId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContestProblems_ProblemId",
@@ -458,6 +519,9 @@ namespace api.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CommentBlog");
+
+            migrationBuilder.DropTable(
                 name: "ContestProblems");
 
             migrationBuilder.DropTable(
@@ -471,6 +535,9 @@ namespace api.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Blogs");
 
             migrationBuilder.DropTable(
                 name: "Contests");

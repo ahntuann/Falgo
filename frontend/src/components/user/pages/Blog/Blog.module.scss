@@ -136,6 +136,14 @@
         flex: 1;
     }
 
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
 
     .sort-controls{
         display: flex;

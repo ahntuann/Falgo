@@ -30,7 +30,6 @@ namespace api.Controllers
             {
                 userId = string.Empty;
             }
-            var categories = await _problemService.GetAllCategoriesAsync();
             var result = await _problemService.GetAllProblemsWithStatsAsync(userId, query);
             if (query.PageNumber > result.TotalPages)
             {
@@ -41,10 +40,6 @@ namespace api.Controllers
             {
                 return NotFound();
             }
-            if (!categories.Contains(query.ProblemCategory))
-            {
-                return Ok(result);
-            }
             return Ok(result);
         }
 
@@ -53,6 +48,17 @@ namespace api.Controllers
         {
             var categories = await _problemService.GetAllCategoriesAsync();
             return Ok(categories);
+        }
+        [HttpGet("problemDetail")]
+        public async Task<IActionResult> GetProblemDetailById(string problemId)
+        {
+            if (problemId.IsNullOrEmpty()) return NotFound();
+            var problemDetail = await _problemService.GetProblemDetailByIdAsync(problemId);
+            if (problemDetail == null)
+            {
+                return NotFound();
+            }
+            return Ok(problemDetail);
         }
     }
 }

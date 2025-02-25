@@ -13,5 +13,6 @@ namespace api.Interface
     {
         Task<PageResult<ViewAllProblemDto>> GetAllProblemsWithStatsAsync(string userId, QueryObject query);
         Task<List<string>> GetAllCategoriesAsync();
+        Task<ProblemDetailDto?> GetProblemDetailByIdAsync(string problemId);
     }
 }

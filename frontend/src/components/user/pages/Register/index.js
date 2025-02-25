@@ -25,19 +25,19 @@ const Register = () => {
             dob: '',
         },
         validationSchema: Yup.object({
-            fullName: Yup.string().required('Full name is required'),
-            username: Yup.string().required('Username is required'),
+            fullName: Yup.string().required('Họ và tên được yêu cầu'),
+            username: Yup.string().required('Tên đăng nhập được yêu cầu'),
             password: Yup.string()
-                .min(12, 'At least 12 characters')
-                .matches(/[0-9]/, 'Must contain at least one number')
-                .matches(/[a-z]/, 'Must contain at least one lowercase letter')
-                .matches(/[A-Z]/, 'Must contain at least one uppercase letter')
-                .matches(/[^a-zA-Z0-9]/, 'Must contain at least one special character')
-                .required('Password is required'),
-            email: Yup.string().email('Invalid email').required('Email is required'),
-            phoneNumber: Yup.string().required('Phone number is required'),
-            address: Yup.string().required('Address is required'),
-            dob: Yup.date().required('Date of birth is required').nullable(),
+                .min(12, 'Phải có ít nhất 12 ký tự')
+                .matches(/[0-9]/, 'Phải có ít nhất một số')
+                .matches(/[a-z]/, 'Phải có ít nhất một ký tự viết thường')
+                .matches(/[A-Z]/, 'Phải có ít nhất một ký tự viết hoa')
+                .matches(/[^a-zA-Z0-9]/, 'Phải có ít nhất một ký tự đặc biệt')
+                .required('Mật khẩu được yêu cầu'),
+            email: Yup.string().email('Invalid email').required('Phải nhập Email'),
+            phoneNumber: Yup.string().required('Phải nhập'),
+            address: Yup.string().required('Phải nhập'),
+            dob: Yup.date().required('Phải nhập').nullable(),
         }),
         onSubmit: async (values) => {
             const formattedDateOfBirth = moment(values.dob).toISOString();
@@ -53,18 +53,18 @@ const Register = () => {
 
             try {
                 await axios.post('http://localhost:5180/api/account/register', requestData);
-                alert('Registration successful!');
+                alert('Đăng ký thành công.');
                 navigate('/login');
             } catch (error) {
                 console.log('Error response:', error.response);
                 if (error.response && error.response.data) {
                     if (error.response.data === 'Username/Email is already in use.') {
-                        alert('Username or Email is already in use. Please choose another.');
+                        alert('Tên đăng nhập hoặc mật khẩu đã được sử dụng. Hãy nhập lại.');
                     } else {
-                        alert(`Registration failed: ${error.response.data}`);
+                        alert(`Đăng ký không thành công: ${error.response.data}`);
                     }
                 } else {
-                    alert('Registration failed! Please try again.');
+                    alert('Đăng ký không thành công! Hãy nhập lại.');
                 }
             }
         },
@@ -73,13 +73,13 @@ const Register = () => {
     return (
         <div className="register-container">
             <div className="register-box">
-                <h2 className="register-title">Create new account</h2>
+                <h2 className="register-title">Tạo tài khoản mới</h2>
                 <form onSubmit={formik.handleSubmit}>
                     <div className="input-group">
                         <input
                             type="text"
                             name="fullName"
-                            placeholder="Full name"
+                            placeholder="Họ và tên"
                             onChange={formik.handleChange}
                             value={formik.values.fullName}
                         />
@@ -88,7 +88,7 @@ const Register = () => {
                         <input
                             type="text"
                             name="username"
-                            placeholder="User name"
+                            placeholder="Tên đăng nhập"
                             onChange={formik.handleChange}
                             value={formik.values.username}
                         />
@@ -97,7 +97,7 @@ const Register = () => {
                         <input
                             type={showPassword ? 'text' : 'password'}
                             name="password"
-                            placeholder="Password"
+                            placeholder="Mật khẩu"
                             onChange={formik.handleChange}
                             value={formik.values.password}
                         />
@@ -123,7 +123,7 @@ const Register = () => {
                         <input
                             type="text"
                             name="phoneNumber"
-                            placeholder="Phone number"
+                            placeholder="Số điện thoại"
                             onChange={formik.handleChange}
                             value={formik.values.phoneNumber}
                         />
@@ -132,7 +132,7 @@ const Register = () => {
                         <input
                             type="text"
                             name="address"
-                            placeholder="Address"
+                            placeholder="Địa chỉ"
                             onChange={formik.handleChange}
                             value={formik.values.address}
                         />
@@ -146,7 +146,7 @@ const Register = () => {
                         />
                     </div>
                     <button type="submit" className="register-button">
-                        Register
+                        Đăng ký
                     </button>
                 </form>
             </div>

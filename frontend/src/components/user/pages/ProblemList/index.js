@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import AuthContext from '~/context/AuthContext';
 import axios from 'axios';
+import { Link, useLocation } from 'react-router-dom';
 import './Problems.module.scss';
 
 import classNames from 'classnames/bind';
@@ -126,10 +127,12 @@ const ProblemList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {problems.map((problem) => (
-                        <tr key={problem.id}>
+                    {problems.map((problem, i) => (
+                        <tr key={i}>
                             <td>{problem.problemId}</td>
-                            <td>{problem.title}</td>
+                            <td>
+                                <Link to="/NotFound">{problem.title}</Link>
+                            </td>
                             <td>{problem.category}</td>
                             <td>{problem.acceptanceRate}%</td>
                             <td>{problem.acceptedCount}</td>
