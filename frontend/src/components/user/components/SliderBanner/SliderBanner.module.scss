@@ -1,11 +1,18 @@
 .wrapper {
     width: 100%;
+    overflow: hidden;
+    // margin-top: 40px;
 }
 
 .sliderContainer {
     width: 100%;
     transition: transform 0.5s ease-in-out;
     display: flex;
+}
+
+.linkSlider {
+    width: 100%;
+    display: block;
 }
 
 .sliderImg {

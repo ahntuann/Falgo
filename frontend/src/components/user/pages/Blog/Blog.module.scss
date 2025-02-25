@@ -29,7 +29,6 @@
     flex-wrap: wrap;
 }
 
-
 .blog {
     display: flex;
     gap: 16px;
@@ -45,7 +44,6 @@
             background-color: #0056b3;
         }
     }
-    
 }
 .btn-read-more {
     display: inline-block;
@@ -55,12 +53,12 @@
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s ease;
-  
+
     &:hover {
-      background-color: #0056b3;
+        background-color: #0056b3;
     }
-  }
-  
+}
+
 .sidebar {
     border: 1px solid #ddd;
     padding: 16px;
@@ -69,11 +67,10 @@
     position: fixed;
     top: 172px;
     right: 148px;
-
 }
 
-
-.category-list button, .reset-button {
+.category-list button,
+.reset-button {
     display: block;
     width: 100%;
     padding: 8px;
@@ -84,41 +81,35 @@
     cursor: pointer;
     transition: 0.3s;
     color: black;
-    &:hover, &.active {
+    &:hover,
+    &.active {
         background-color: #007bff;
         color: white;
     }
 }
 
-
-
-.date-filter,.DateInput {
+.date-filter,
+.DateInput {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap; 
-    max-width: 100%; 
-    overflow: hidden; 
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow: hidden;
     margin: auto;
-    gap: 10px;  
+    gap: 10px;
     select,
     input,
     button {
-        height: 35px; 
-        width: 70px; 
+        height: 35px;
+        width: 70px;
         border: 1px solid #ccc;
         border-radius: 4px;
         text-align: center;
-        box-sizing: border-box; 
+        box-sizing: border-box;
         font-size: 14px;
         padding: auto;
     }
 }
-
-
-
-
-
-
 
 .blog-list {
     width: 70%;
@@ -146,27 +137,25 @@
     flex: 1;
 }
 
-
-.sort-controls{
+.sort-controls {
     display: flex;
     align-items: center;
-    justify-content: space-between; 
+    justify-content: space-between;
     gap: 10px;
-    select{
+    select {
         flex: 1 1 auto;
         text-align: center;
-        padding: 8px 12px; 
+        padding: 8px 12px;
         border-radius: 4px;
         font-size: 14px;
     }
-    button{
+    button {
         text-align: center;
-        padding: 8px 12px; 
+        padding: 8px 12px;
         border-radius: 4px;
         font-size: 14px;
     }
 }
-
 
 .actions {
     display: flex;
@@ -182,7 +171,9 @@
     gap: 10px;
 }
 
-.edit, .delete, .btn-read-more {
+.edit,
+.delete,
+.btn-read-more {
     padding: 8px 12px;
     font-size: 14px;
     border: none;
@@ -195,7 +186,7 @@
 .edit {
     background-color: #ffc107;
     color: #333;
-    
+
     &:hover {
         background-color: #e0a800;
         transform: scale(1.05);
@@ -222,16 +213,16 @@
     }
 }
 
-
-.actions,.userPart {
+.actions,
+.userPart {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    
+
     button {
         text-align: center;
-        padding: 8px 12px; 
+        padding: 8px 12px;
         border-radius: 4px;
         font-size: 14px;
     }
@@ -257,9 +248,6 @@
     }
 }
 
-
-
-
 .pagination {
     display: flex;
     gap: 8px;
@@ -267,16 +255,16 @@
     justify-content: center;
     margin-top: 20px;
 
-    .paginationnumber button{
-
+    .paginationnumber button {
         padding: 8px;
         background: white;
         border: 1px solid #ccc;
         border-radius: 4px;
         cursor: pointer;
         transition: 0.3s;
-        
-        &:hover,&:active {
+
+        &:hover,
+        &:active {
             background-color: #007bff;
         }
         &.active {
@@ -293,7 +281,8 @@
         transition: background 0.3s, color 0.3s;
         font-size: 14px;
 
-        &:hover, &.active {
+        &:hover,
+        &.active {
             background-color: #0056b3;
         }
         &:disabled {
@@ -301,8 +290,4 @@
             opacity: 0.5;
         }
     }
-
 }
-
-
-

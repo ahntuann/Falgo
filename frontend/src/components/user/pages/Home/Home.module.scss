@@ -36,7 +36,7 @@
     font-size: 2rem;
     font-weight: 600;
     margin-right: 50px;
-    color: #65656c;
+    color: #9d9da3;
     background-color: var(--background-color);
     border: none;
     cursor: pointer;
@@ -44,6 +44,7 @@
     position: relative;
     display: inline-block;
     margin-top: 30px;
+    margin-bottom: 10px;
 }
 
 .category::after {
@@ -104,8 +105,9 @@
     flex-wrap: wrap;
     display: flex;
     align-items: center;
-    background-color: #fff;
+    background: var(--background-component-color);
     border-radius: 10px;
+    border: 1px solid #ccc;
 }
 
 //
