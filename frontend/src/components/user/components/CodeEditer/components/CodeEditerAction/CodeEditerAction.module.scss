@@ -5,6 +5,8 @@
     height: 40px;
 }
 
+//
+
 .programmingLanguage {
     display: flex;
     align-items: center;
@@ -18,7 +20,52 @@
     --tw-bg-opacity: 1;
     background-color: rgb(14 38 110 / var(--tw-bg-opacity));
     cursor: pointer;
+    position: relative;
 }
+
+.programmingLanguageList {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 100%;
+    background-color: rgb(14 38 110);
+    z-index: 1000;
+    height: 100px;
+    overflow-y: scroll;
+    display: none;
+}
+
+.programmingLanguageList.active {
+    display: block;
+}
+
+.programmingLanguageList::-webkit-scrollbar {
+    width: 4px;
+}
+
+.programmingLanguageList::-webkit-scrollbar-track {
+    background: #0e266e;
+}
+
+.programmingLanguageList::-webkit-scrollbar-thumb {
+    background: #306eb4;
+    border-radius: 4px;
+}
+
+.programmingLanguageList::-webkit-scrollbar-thumb:hover {
+    background: #357ae8;
+}
+
+.programmingLanguageItem {
+    opacity: 0.8;
+    padding: 5px 8px;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+//
 
 .moreAction {
     display: flex;
@@ -56,4 +103,11 @@
     color: #373636;
     opacity: 0.6;
     cursor: default;
+}
+
+.submitBtn.active {
+    cursor: pointer;
+    background-color: #f84f3a;
+    color: #fff;
+    opacity: 1;
 }

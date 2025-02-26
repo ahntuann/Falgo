@@ -8,22 +8,63 @@ import {
     faCirclePlay,
     faHandPointer,
 } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
+import defaultCodes from '~/ultils/codeDefault';
 
 const cs = classNames.bind(style);
 
-function CodeEditerAction({ programmingLanguages }) {
+function CodeEditerAction({
+    programmingLanguages,
+    isSubmitable,
+    codeText,
+    setCodeText,
+    languageFocus,
+    setLanguageFocus,
+}) {
+    const [isShowProLangList, setIsShowProLangList] = useState(false);
+
+    const handleSetBack = () => {
+        const userConfirmed = window.confirm('Bạn có chắc muốn reset code không?');
+
+        if (!userConfirmed) return;
+
+        setCodeText(defaultCodes[programmingLanguages.at(languageFocus).language]);
+    };
+
+    const toggleProLangList = () => {
+        setIsShowProLangList((prev) => !prev);
+    };
+
+    const handleChangeLanguage = (language, i) => {
+        setLanguageFocus(i);
+        setCodeText(defaultCodes[language.language]);
+    };
+
     return (
         <div className={cs('wrapper')}>
-            <div className={cs('programmingLanguage')}>
+            <div className={cs('programmingLanguage')} onClick={toggleProLangList}>
                 <div className={cs('programmingLanguageName')}>
-                    {programmingLanguages.length > 0 && programmingLanguages.at(4).language}
+                    {programmingLanguages.length > 0 &&
+                        programmingLanguages.at(languageFocus).language}
                 </div>
 
                 <FontAwesomeIcon className={cs('languageMoreIcon')} icon={faCaretDown} />
+
+                <div className={cs('programmingLanguageList', { active: isShowProLangList })}>
+                    {programmingLanguages.map((language, i) => (
+                        <div
+                            key={i}
+                            className={cs('programmingLanguageItem')}
+                            onClick={() => handleChangeLanguage(language, i)}
+                        >
+                            {language.language}
+                        </div>
+                    ))}
+                </div>
             </div>
 
             <div className={cs('moreAction')}>
-                <div className={cs('setBackBtn')}>
+                <div className={cs('setBackBtn')} onClick={handleSetBack}>
                     <FontAwesomeIcon className={cs('moreActionIcon')} icon={faArrowsRotate} />
                     Cài đặt lại
                 </div>
@@ -31,7 +72,11 @@ function CodeEditerAction({ programmingLanguages }) {
                     <FontAwesomeIcon className={cs('moreActionIcon')} icon={faCirclePlay} />
                     Chạy thử
                 </div>
-                <div className={cs('submitBtn')}>
+                <div
+                    className={cs('submitBtn', {
+                        active: isSubmitable,
+                    })}
+                >
                     <FontAwesomeIcon className={cs('moreActionIcon')} icon={faHandPointer} />
                     Nộp bài
                 </div>

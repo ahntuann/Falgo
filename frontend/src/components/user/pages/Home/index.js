@@ -35,7 +35,7 @@ function Home() {
         };
 
         fetchProblemHomePageAPI(kindOfProblem).then((newProblems) => setProblems(newProblems));
-    }, [userRole, problemDailyFocus]);
+    }, [appUser, problemDailyFocus]);
 
     // fetch Contest Brief
     useEffect(() => {
@@ -112,7 +112,7 @@ function Home() {
                 </div>
             </div>
 
-            {userRole === 'user' && (
+            {appUser !== null && (
                 <div className={cs('yourSkill', 'homeComponents')}>
                     <div className={cs('category', 'yourSkillCategory')}>Kỹ năng của bạn</div>
 
