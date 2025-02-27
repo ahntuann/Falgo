@@ -6,6 +6,7 @@ import style from './ResizablePanels.module.scss';
 import CodeEditerSection from '~/components/user/components/CodeEditer/components/CodeEditerSection';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import TestCaseSection from '~/components/user/components/CodeEditer/components/TestCaseSection';
 
 const cs = classNames.bind(style);
 
@@ -68,7 +69,7 @@ const ResizablePanels = ({ codeText, setCodeText, language }) => {
                 className={cs('bottomPanel')}
                 style={{ height: `${getContainerHeight() - topHeight}px` }}
             >
-                Phần dưới
+                <TestCaseSection />
             </div>
         </div>
     );
