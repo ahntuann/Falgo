@@ -11,16 +11,14 @@ import {
 import { useState } from 'react';
 import defaultCodes from '~/ultils/codeDefault';
 
+import useCodeEditing from '~/hooks/useCodeEditing';
+
 const cs = classNames.bind(style);
 
-function CodeEditerAction({
-    programmingLanguages,
-    isSubmitable,
-    codeText,
-    setCodeText,
-    languageFocus,
-    setLanguageFocus,
-}) {
+function CodeEditerAction() {
+    const { isSubmitable, setCodeText, programmingLanguages, languageId, setLanguageId } =
+        useCodeEditing();
+
     const [isShowProLangList, setIsShowProLangList] = useState(false);
 
     const handleSetBack = () => {
@@ -28,7 +26,7 @@ function CodeEditerAction({
 
         if (!userConfirmed) return;
 
-        setCodeText(defaultCodes[programmingLanguages.at(languageFocus).language]);
+        setCodeText(defaultCodes[programmingLanguages.at(languageId).language]);
     };
 
     const toggleProLangList = () => {
@@ -36,7 +34,7 @@ function CodeEditerAction({
     };
 
     const handleChangeLanguage = (language, i) => {
-        setLanguageFocus(i);
+        setLanguageId(i);
         setCodeText(defaultCodes[language.language]);
     };
 
@@ -45,7 +43,7 @@ function CodeEditerAction({
             <div className={cs('programmingLanguage')} onClick={toggleProLangList}>
                 <div className={cs('programmingLanguageName')}>
                     {programmingLanguages.length > 0 &&
-                        programmingLanguages.at(languageFocus).language}
+                        programmingLanguages.at(languageId).language}
                 </div>
 
                 <FontAwesomeIcon className={cs('languageMoreIcon')} icon={faCaretDown} />
