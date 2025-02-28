@@ -31,7 +31,7 @@ namespace api.Services
             return categories;
         }
 
-        public async Task<PageResult<ViewAllProblemDto>> GetAllProblemsWithStatsAsync(string userId, QueryObject query)
+        public async Task<PageResult<ViewAllProblemDto>> GetAllProblemsWithStatsAsync(string userId, ProblemListQueryObject query)
         {
             var problemsQuery = await _problemRepository.GetFilteredProblemsAsync(query, userId);
             var problemIds = problemsQuery.Select(p => p.ProblemId).ToList();

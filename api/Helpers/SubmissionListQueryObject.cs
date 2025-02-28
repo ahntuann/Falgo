@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 
 namespace api.Helpers
 {
-    public class QueryObject
+    public class SubmissionListQueryObject
     {
         public string? UserId { get; set; }
-        public string ProblemTitle { get; set; } = string.Empty;
-        public string ProblemCategory { get; set; } = string.Empty;
-        public string HidePassed { get; set; } = string.Empty;
+        public string? ProblemId { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public string? ProgrammingLanguage { get; set; }
         public string SortBy { get; set; } = string.Empty;
         public string IsDescending { get; set; } = "false";
         public int PageNumber { get; set; } = 1;

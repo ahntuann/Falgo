@@ -11,7 +11,7 @@ namespace api.Interface
 {
     public interface IProblemService
     {
-        Task<PageResult<ViewAllProblemDto>> GetAllProblemsWithStatsAsync(string userId, QueryObject query);
+        Task<PageResult<ViewAllProblemDto>> GetAllProblemsWithStatsAsync(string userId, ProblemListQueryObject query);
         Task<List<string>> GetAllCategoriesAsync();
         Task<ProblemDetailDto?> GetProblemDetailByIdAsync(string problemId);
     }

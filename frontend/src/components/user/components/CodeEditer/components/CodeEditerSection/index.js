@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/theme/midnight.css';
 import 'codemirror/lib/codemirror.css';
@@ -13,10 +13,13 @@ import classNames from 'classnames/bind';
 
 import style from './CodeEditerSection.module.scss';
 import languageMode from '~/ultils/languageMode';
+import useCodeEditing from '~/hooks/useCodeEditing';
 
 const cs = classNames.bind(style);
 
-const CodeEditerSection = ({ language, codeText, setCodeText }) => {
+const CodeEditerSection = () => {
+    const { codeText, setCodeText, language } = useCodeEditing();
+
     return (
         <div className={cs('wrapper')}>
             <CodeMirror
