@@ -17,5 +17,20 @@ namespace api.Mappers
                 ProLanguage = submission.ProgrammingLanguage
             };
         }
+
+        public static SubmissionListDto ToSubmissionListDto(this Submission submission)
+        {
+            return new SubmissionListDto
+            {
+                SubmitterName = submission.AppUser.FullName,
+                ProgrammingLanguage = submission.ProgrammingLanguage.Language,
+                Score = submission.Point,
+                Status = submission.Status,
+                ExecuteTime = submission.ExecuteTime,
+                MemoryUsed = submission.MemoryUsed,
+                SubmittedAt = submission.SubmittedAt,
+                SourceCode = submission.SourceCode
+            };
+        }
     }
 }

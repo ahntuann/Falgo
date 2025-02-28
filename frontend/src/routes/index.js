@@ -9,6 +9,7 @@ import {
     DetailBlog,
     BlogUpdate,
     CodeEditing,
+    ProblemDetail,
 } from '~/components/user/pages';
 
 const routes = [
@@ -27,6 +28,12 @@ const routes = [
     {
         component: ProblemList,
         path: '/problems',
+        layout: DefaultLayout,
+        role: ['user', 'guest'],
+    },
+    {
+        component: ProblemDetail,
+        path: '/problems/:problemId',
         layout: DefaultLayout,
         role: ['user', 'guest'],
     },
