@@ -3,8 +3,7 @@ import GoogleCallback from '~/components/user/pages/Login/GoogleCallback';
 import routes from '~/routes/index.js';
 import useAuth from '~/hooks/useAuth.js';
 import NotFound from '~/components/shared/NotFound';
-import { Login } from '~/components/user/pages';
-import { Register } from '~/components/user/pages';
+import { Login, ResetPassword, Register } from '~/components/user/pages';
 import {
     Dashboard,
     ProblemsManagement,
@@ -25,6 +24,7 @@ function App() {
                     <Route path="/google-callback" element={<GoogleCallback />} />
                     <Route path="/github-callback" element={<GithubCallback />} />
                     <Route path="/Dashboard" element={<Dashboard />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
                     <Route path="/ProblemsManagement" element={<ProblemsManagement />} />
                     <Route path="/UserManagement" element={<UserManagement />} />
                     <Route path="/BlogManagement" element={<BlogManagement />} />

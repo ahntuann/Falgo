@@ -10,6 +10,7 @@ import {
     BlogUpdate,
     CodeEditing,
 } from '~/components/user/pages';
+import ResetPassword from 'components/user/pages';
 
 const routes = [
     {
