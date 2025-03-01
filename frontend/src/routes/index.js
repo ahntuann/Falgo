@@ -10,8 +10,8 @@ import {
     BlogUpdate,
     CodeEditing,
     ProblemDetail,
+    ResetPassword,
 } from '~/components/user/pages';
-import ResetPassword from 'components/user/pages';
 
 const routes = [
     {
@@ -68,6 +68,12 @@ const routes = [
         path: '/practice',
         layout: CodeEditingLayout,
         role: ['user'],
+    },
+    {
+        component: ResetPassword,
+        path: '/reset-password',
+        layout: DefaultLayout,
+        role: ['user', 'guest'],
     },
 ];
 

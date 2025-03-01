@@ -26,17 +26,18 @@ namespace api.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly ITokenService _tokenService;
-        private readonly EmailService _emailService;
-        private readonly RedisService _redisService;
+        private readonly IUserService _userService;
+        private readonly OtpService _otpService;
+        
         public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, 
-                                IConfiguration configuration,EmailService emailService, RedisService redisService)
+                                IConfiguration configuration, OtpService otpService, IUserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _tokenService = tokenService;
-            _emailService = emailService;
-            _redisService = redisService;
+            _userService = userService;
+            _otpService = otpService;
         }
 
 
@@ -245,27 +246,34 @@ public async Task<IActionResult> GitHubLoginCallback()
                 return BadRequest("Username hoặc email không đúng!");
 
             string otp = new Random().Next(100000, 999999).ToString();
-            await _redisService.SetOtpAsync(verifyUserDto.Email, otp);
-            await _emailService.SendEmailAsync(verifyUserDto.Email, "Mã xác nhận", $"Mã OTP của bạn: {otp}");
+            _otpService.SetOtp(verifyUserDto.Email, otp);
+            await _userService.SendEmailAsync(verifyUserDto.Email, "Mã xác nhận", $"Mã OTP của bạn: {otp}");
 
             return Ok("Mã xác nhận đã được gửi!");
         }
 
-     [HttpPost("change-password")]
+    [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
         {
             var user = await _userManager.FindByNameAsync(changePasswordDto.Username);
             if (user == null || user.Email != changePasswordDto.Email)
-                return BadRequest("Thông tin không đúng!");
+            return BadRequest("Thông tin không đúng!");
 
-            bool isOtpValid = await _redisService.VerifyOtpAsync(changePasswordDto.Email, changePasswordDto.OtpCode);
-            if (!isOtpValid) return BadRequest("Mã xác nhận không hợp lệ hoặc đã hết hạn!");
+            // Kiểm tra OTP trong MemoryCache
+            string savedOtp = _otpService.GetOtp(changePasswordDto.Email);
+            if (string.IsNullOrEmpty(savedOtp) || savedOtp != changePasswordDto.OtpCode)
+            return BadRequest("Mã xác nhận không hợp lệ hoặc đã hết hạn!");
 
+            // Đổi mật khẩu
             var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
             if (!result.Succeeded) return BadRequest("Mật khẩu cũ không đúng!");
+
+            // Xóa OTP sau khi dùng
+            _otpService.DeleteOtp(changePasswordDto.Email);
 
             return Ok("Đổi mật khẩu thành công!");
         }
 
-}
+
+    }
 }

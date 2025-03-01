@@ -98,7 +98,7 @@ const Login = () => {
                             value={formik.values.password}
                             required
                         />
-                        <span className="eye-icon" onClick={togglePasswordVisibility}>
+                        <span className="eye-icon1" onClick={togglePasswordVisibility}>
                             {showPassword ? '🙈' : '👁'}
                         </span>
                         {formik.errors.password && (
