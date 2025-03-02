@@ -44,7 +44,8 @@
 
 .password-group input {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
+    margin-right: 10px;
     padding-right: 40px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -61,7 +62,7 @@
 }
 
 .register-button {
-    width: 100%;
+    width: 450px;
     align-items: center;
     padding: 12px;
     background-color: #38bdf8;

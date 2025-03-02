@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ResetPassword.module.scss';
 
+import classNames from 'classnames/bind';
+import style from './ResetPassword.module.scss';
+const cs = classNames.bind(style);
 function ForgotPassword() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -71,77 +74,99 @@ function ForgotPassword() {
             alert('OTP không hợp lệ hoặc đã hết hạn!');
         }
     };
-
     return (
-        <div>
+        <div className={cs('resetpassword')}>
             {step === 1 ? (
-                <div>
-                    <h3>Xác minh tài khoản</h3>
+                <div className={cs('resetpassword-verify')}>
+                    <h3 className={cs('resetpassword-title')}>Xác minh tài khoản</h3>
                     <input
+                        className={cs('resetpassword-input')}
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder="Nhập Username"
                     />
                     <input
+                        className={cs('resetpassword-input')}
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Nhập Email"
                     />
-                    <button onClick={verifyUser}>Tiếp tục</button>
+                    <button className={cs('resetpassword-button', 'primary')} onClick={verifyUser}>
+                        Tiếp tục
+                    </button>
                 </div>
             ) : (
-                <div>
-                    <h3>Đổi mật khẩu</h3>
-                    <div className="password-group">
+                <div className={cs('resetpassword-change')}>
+                    <h3 className={cs('resetpassword-title')}>Đổi mật khẩu</h3>
+                    <div className={cs('resetpassword-group')}>
                         <input
+                            className={cs('resetpassword-input')}
                             type={showPasswords.old ? 'text' : 'password'}
                             value={oldPassword}
                             onChange={(e) => setOldPassword(e.target.value)}
                             placeholder="Mật khẩu cũ"
                         />
-                        <span className="eye-icon" onClick={() => togglePasswordVisibility('old')}>
+                        <span
+                            className={cs('resetpassword-eye')}
+                            onClick={() => togglePasswordVisibility('old')}
+                        >
                             {showPasswords.old ? '🙈' : '👁'}
                         </span>
                     </div>
-                    <div className="password-group">
+                    <div className={cs('resetpassword-group')}>
                         <input
+                            className={cs('resetpassword-input')}
                             type={showPasswords.new ? 'text' : 'password'}
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             placeholder="Mật khẩu mới"
                         />
-                        <span className="eye-icon" onClick={() => togglePasswordVisibility('new')}>
+                        <span
+                            className={cs('resetpassword-eye')}
+                            onClick={() => togglePasswordVisibility('new')}
+                        >
                             {showPasswords.new ? '🙈' : '👁'}
                         </span>
                     </div>
-                    <div className="password-group">
+                    <div className={cs('resetpassword-group')}>
                         <input
+                            className={cs('resetpassword-input')}
                             type={showPasswords.confirm ? 'text' : 'password'}
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             placeholder="Xác nhận mật khẩu mới"
                         />
                         <span
-                            className="eye-icon"
+                            className={cs('resetpassword-eye')}
                             onClick={() => togglePasswordVisibility('confirm')}
                         >
                             {showPasswords.confirm ? '🙈' : '👁'}
                         </span>
                     </div>
-                    <div>
+                    <div className={cs('resetpassword-otp')}>
                         <input
+                            className={cs('resetpassword-input')}
                             type="text"
                             value={otp}
                             onChange={(e) => setOtp(e.target.value)}
                             placeholder="Nhập OTP"
                         />
-                        <button onClick={sendOtp} disabled={timeLeft > 0}>
+                        <button
+                            className={cs('resetpassword-button', 'secondary')}
+                            onClick={sendOtp}
+                            disabled={timeLeft > 0}
+                        >
                             {timeLeft > 0 ? `Gửi lại (${timeLeft}s)` : 'Gửi mã'}
                         </button>
                     </div>
-                    <button onClick={changePassword}>Đổi mật khẩu</button>
+                    <button
+                        className={cs('resetpassword-button', 'primary')}
+                        onClick={changePassword}
+                    >
+                        Đổi mật khẩu
+                    </button>
                 </div>
             )}
         </div>
