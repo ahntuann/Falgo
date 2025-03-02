@@ -34,8 +34,11 @@ function Home() {
             userId: appUser.id,
         };
 
-        fetchProblemHomePageAPI(kindOfProblem).then((newProblems) => setProblems(newProblems));
-    }, [appUser, problemDailyFocus]);
+        fetchProblemHomePageAPI(kindOfProblem).then((newProblems) => {
+            console.log(newProblems);
+            setProblems(newProblems);
+        });
+    }, [userRole, problemDailyFocus]);
 
     // fetch Contest Brief
     useEffect(() => {

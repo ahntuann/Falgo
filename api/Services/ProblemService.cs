@@ -78,5 +78,14 @@ namespace api.Services
             var problemDetail = problem.ToProblemDetailDto();
             return problemDetail;
         }
+
+        public async Task<ProblemSolvingDto?> GetProblemSolvingByIdAsync(string problemId)
+        {
+            var problem = await _problemRepository.GetProblemByIdAsync(problemId);
+            if (problem == null)
+                return null;
+
+            return problem.ToProblemSolvingDtoFromProblem();
+        }
     }
 }

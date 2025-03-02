@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Helpers;
@@ -49,6 +50,7 @@ namespace api.Controllers
             var categories = await _problemService.GetAllCategoriesAsync();
             return Ok(categories);
         }
+
         [HttpGet("problemDetail")]
         public async Task<IActionResult> GetProblemDetailById([FromQuery] ProblemDetailQueryObject query)
         {
@@ -56,6 +58,16 @@ namespace api.Controllers
             {
                 return NotFound();
             }
+
+            if (query.Solving == true)
+            {
+                var problemSolving = await _problemService.GetProblemSolvingByIdAsync(query.ProblemId);
+                if (problemSolving == null)
+                    return NotFound();
+
+                return Ok(problemSolving);
+            }
+
             var problemDetail = await _problemService.GetProblemDetailByIdAsync(query.ProblemId);
             if (problemDetail == null)
             {

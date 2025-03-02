@@ -49,5 +49,15 @@ namespace api.Mappers
             };
             return problemDetail;
         }
+
+        public static ProblemSolvingDto ToProblemSolvingDtoFromProblem(this Problem problem)
+        {
+            return new ProblemSolvingDto
+            {
+                ProblemId = problem.ProblemId,
+                Title = problem.Title,
+                TimeLimit = problem.TimeLimit
+            };
+        }
     }
 }

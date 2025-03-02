@@ -31,7 +31,7 @@ export const CodeEditingProvider = ({ children, briefInfoProblem }) => {
 
     useEffect(() => {
         setIsSubmitable(false);
-    }, [briefInfoProblem.id]);
+    }, [briefInfoProblem.problemId]);
 
     return (
         <CodeEditingContext.Provider

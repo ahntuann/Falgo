@@ -84,3 +84,15 @@ export const fetchNumberNotAcceptedSubmissionByLanguageAPI = async (userId, lang
         console.log(error);
     }
 };
+
+export const fetchProblemSolvingByIdAPI = async (problemId) => {
+    try {
+        const response = await axios.get(
+            `${API_ROOT}/api/problem/problemDetail?ProblemId=${problemId}&Solving=${true}`,
+        );
+
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
