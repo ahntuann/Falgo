@@ -12,5 +12,8 @@ namespace api.Interface
     {
         public Task<List<SubmissionSkillDto?>> GetAllSubmissionByUserAndProLanguageAsync(string userId, string proLang, bool isAccepted);
         public Task<PageResult<SubmissionListDto>> GetAllSubmissionByProblem(SubmissionListQueryObject query, string problemId);
+        public Task<List<string>> GetAllSubmitterUsernameAsync(string problemId);
+        public Task<List<string>> GetAllSubmissionStatusAsync(string problemId);
+        public Task<List<string>> GetAllSubmissionLanguageAsync(string problemId);
     }
 }

@@ -74,7 +74,7 @@ const ProblemList = () => {
 
     return (
         <div className={cs('problemList')}>
-            <h2>Danh sách câu hỏi</h2>
+            <h2>Danh sách bài tập</h2>
             <div className={cs('filters')}>
                 <input
                     type="text"

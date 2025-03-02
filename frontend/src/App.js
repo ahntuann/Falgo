@@ -3,8 +3,7 @@ import GoogleCallback from '~/components/user/pages/Login/GoogleCallback';
 import routes from '~/routes/index.js';
 import useAuth from '~/hooks/useAuth.js';
 import NotFound from '~/components/shared/NotFound';
-import { Login } from '~/components/user/pages';
-import { Register } from '~/components/user/pages';
+import { Login, Register } from '~/components/user/pages';
 import {
     Dashboard,
     ProblemsManagement,

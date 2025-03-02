@@ -8,5 +8,6 @@ namespace api.Interface
     public interface IUserService
     {
         public Task<bool?> IsUserRegisContest(string userId, string contestId);
+        public Task SendEmailAsync(string toEmail, string subject, string body);
     }
 }

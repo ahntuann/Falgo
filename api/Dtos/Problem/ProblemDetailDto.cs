@@ -15,6 +15,7 @@ namespace api.Dtos.Problem
         public int TotalPoint { get; set; } = 0;
         public int TimeLimit { get; set; }
         public int MemoryLimit { get; set; }
+        public string Category { get; set; } = string.Empty;
         public string? Author { get; set; }
     }
 }

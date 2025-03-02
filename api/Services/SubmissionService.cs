@@ -55,5 +55,33 @@ namespace api.Services
                                                         .Select(x => x.ToSubmissionSkillDtoFromSubmission())
                                                         .ToList();
         }
+
+        public async Task<List<string>> GetAllSubmitterUsernameAsync(string problemId)
+        {
+            var submissions = await _subRepo.GetSubmissionsByProblemIdAsync(problemId);
+            var usernames = submissions
+                .Select(p => p.AppUser.FullName)
+                .Where(c => !string.IsNullOrWhiteSpace(c)).Distinct()
+                .ToList();
+            return usernames;
+        }
+        public async Task<List<string>> GetAllSubmissionStatusAsync(string problemId)
+        {
+            var submissions = await _subRepo.GetSubmissionsByProblemIdAsync(problemId);
+            var status = submissions
+                .Select(p => p.Status)
+                .Where(c => !string.IsNullOrWhiteSpace(c)).Distinct()
+                .ToList();
+            return status;
+        }
+        public async Task<List<string>> GetAllSubmissionLanguageAsync(string problemId)
+        {
+            var submissions = await _subRepo.GetSubmissionsByProblemIdAsync(problemId);
+            var languages = submissions
+                .Select(p => p.ProgrammingLanguage.Language)
+                .Where(c => !string.IsNullOrWhiteSpace(c)).Distinct()
+                .ToList();
+            return languages;
+        }
     }
 }

@@ -45,6 +45,7 @@ namespace api.Mappers
                 TotalPoint = problem.TotalPoint,
                 TimeLimit = problem.TimeLimit,
                 Author = problem.Author,
+                Category = problem.Category,
                 MemoryLimit = problem.MemoryLimit
             };
             return problemDetail;
