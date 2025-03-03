@@ -5,8 +5,10 @@ using System.Text;
 using System.Text.Json;
 using api.Dto.Account;
 using api.Dtos.Account;
+using api.Extensions;
 using api.Interface;
 using api.Model;
+using api.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
@@ -24,13 +26,18 @@ namespace api.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly ITokenService _tokenService;
-
-        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, IConfiguration configuration)
+        private readonly IUserService _userService;
+        private readonly OtpService _otpService;
+        
+        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, 
+                                IConfiguration configuration, OtpService otpService, IUserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _tokenService = tokenService;
+            _userService = userService;
+            _otpService = otpService;
         }
 
 
@@ -230,6 +237,43 @@ public async Task<IActionResult> GitHubLoginCallback()
         return primaryEmail ?? emails?.FirstOrDefault()?.Email;
     }
 }
+
+    [HttpPost("send-verification-code")]
+        public async Task<IActionResult> SendVerificationCode([FromBody] VerifyUserDto verifyUserDto)
+        {
+            var user = await _userManager.FindByNameAsync(verifyUserDto.Username);
+            if (user == null || user.Email != verifyUserDto.Email)
+                return BadRequest("Username hoặc email không đúng!");
+
+            string otp = new Random().Next(100000, 999999).ToString();
+            _otpService.SetOtp(verifyUserDto.Email, otp);
+            await _userService.SendEmailAsync(verifyUserDto.Email, "Mã xác nhận", $"Mã OTP của bạn: {otp}");
+
+            return Ok("Mã xác nhận đã được gửi!");
+        }
+
+    [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+        {
+            var user = await _userManager.FindByNameAsync(changePasswordDto.Username);
+            if (user == null || user.Email != changePasswordDto.Email)
+            return BadRequest("Thông tin không đúng!");
+
+            // Kiểm tra OTP trong MemoryCache
+            string savedOtp = _otpService.GetOtp(changePasswordDto.Email);
+            if (string.IsNullOrEmpty(savedOtp) || savedOtp != changePasswordDto.OtpCode)
+            return BadRequest("Mã xác nhận không hợp lệ hoặc đã hết hạn!");
+
+            // Đổi mật khẩu
+            var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
+            if (!result.Succeeded) return BadRequest("Mật khẩu cũ không đúng!");
+
+            // Xóa OTP sau khi dùng
+            _otpService.DeleteOtp(changePasswordDto.Email);
+
+            return Ok("Đổi mật khẩu thành công!");
+        }
+
 
     }
 }

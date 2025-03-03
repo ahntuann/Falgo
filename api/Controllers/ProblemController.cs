@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Helpers;
@@ -23,7 +24,7 @@ namespace api.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> GetAllProblemsForUserAsync([FromQuery] QueryObject query)
+        public async Task<IActionResult> GetAllProblemsForUserAsync([FromQuery] ProblemListQueryObject query)
         {
             var userId = query.UserId;
             if (string.IsNullOrEmpty(userId))
@@ -49,11 +50,25 @@ namespace api.Controllers
             var categories = await _problemService.GetAllCategoriesAsync();
             return Ok(categories);
         }
+
         [HttpGet("problemDetail")]
-        public async Task<IActionResult> GetProblemDetailById(string problemId)
+        public async Task<IActionResult> GetProblemDetailById([FromQuery] ProblemDetailQueryObject query)
         {
-            if (problemId.IsNullOrEmpty()) return NotFound();
-            var problemDetail = await _problemService.GetProblemDetailByIdAsync(problemId);
+            if (query.ProblemId.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+
+            if (query.Solving == true)
+            {
+                var problemSolving = await _problemService.GetProblemSolvingByIdAsync(query.ProblemId);
+                if (problemSolving == null)
+                    return NotFound();
+
+                return Ok(problemSolving);
+            }
+
+            var problemDetail = await _problemService.GetProblemDetailByIdAsync(query.ProblemId);
             if (problemDetail == null)
             {
                 return NotFound();

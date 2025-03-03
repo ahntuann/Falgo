@@ -1,9 +1,6 @@
 import classNames from 'classnames/bind';
 
 import style from './Home.module.scss';
-import slider1 from '~/assets/images/slider/slider1.jpg';
-import slider2 from '~/assets/images/slider/slider2.png';
-import slider3 from '~/assets/images/slider/slider3.png';
 import { ContestBrief, ProblemItem, SliderBanner } from '~/components/user/components';
 import { useContext, useEffect, useState } from 'react';
 import AuthContext from '~/context/AuthContext';
@@ -37,7 +34,10 @@ function Home() {
             userId: appUser.id,
         };
 
-        fetchProblemHomePageAPI(kindOfProblem).then((newProblems) => setProblems(newProblems));
+        fetchProblemHomePageAPI(kindOfProblem).then((newProblems) => {
+            console.log(newProblems);
+            setProblems(newProblems);
+        });
     }, [userRole, problemDailyFocus]);
 
     // fetch Contest Brief
@@ -115,7 +115,7 @@ function Home() {
                 </div>
             </div>
 
-            {userRole === 'user' && (
+            {appUser !== null && (
                 <div className={cs('yourSkill', 'homeComponents')}>
                     <div className={cs('category', 'yourSkillCategory')}>Kỹ năng của bạn</div>
 

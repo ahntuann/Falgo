@@ -1,9 +1,6 @@
-import { Home, ProblemList, Profile, Blog, DetailBlog, BlogUpdate, UserBlog, CreateBlog } from '~/components/user/pages';
-
+import { Home, ProblemList, Profile, Blog, DetailBlog, BlogUpdate, UserBlog, CreateBlog, CodeEditing, ProblemDetail, ResetPassword} from '~/components/user/pages';
 import { AdminLogin, Dashboard, BlogManagement } from '~/components/admin/pages';
-import { DefaultLayout, AdminLayout, AdminLoginLayout } from '~/layouts';
-
-
+import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
 
 
 const routes = [
@@ -26,11 +23,18 @@ const routes = [
         role: ['user', 'guest'],
     },
     {
+        component: ProblemDetail,
+        path: '/problems/:problemId',
+        layout: DefaultLayout,
+        role: ['user', 'guest'],
+    },
+    {
         component: Blog,
         path: '/Blog',
         layout: DefaultLayout,
         role: ['user', 'guest'],
     },
+
     {
         component: AdminLogin,
         path: '/adminLogin',
@@ -42,7 +46,6 @@ const routes = [
         path: '/DetailBlog',
         layout: DefaultLayout,
         role: ['user', 'guest'],
-
     },
     {
         component: UserBlog,
@@ -67,6 +70,18 @@ const routes = [
         path: '/BlogManagement',
         layout: DefaultLayout,
         role: ['admin'],
+    },
+    {
+        component: CodeEditing,
+        path: '/practice',
+        layout: CodeEditingLayout,
+        role: ['user'],
+    },
+    {
+        component: ResetPassword,
+        path: '/reset-password',
+        layout: DefaultLayout,
+        role: ['user', 'guest'],
     },
 ];
 

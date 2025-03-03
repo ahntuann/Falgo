@@ -3,14 +3,16 @@
 
 :root {
     --nav-bar-height: 60px;
-    --logo-navbar-height: 40px;
+    --logo-navbar-height: 50px;
     --text-color: #000;
     --primary-color: #b7d0fd;
     --primary-text-color: #ccceff;
     --text-color: #ededed;
     --background-color: #1a1a2e;
+    --background-code-editer-color: #1d1428;
     --background-component-color: linear-gradient(to bottom, #20348a, #320a57);
     --background-problem-item-color: #fff;
+    --code-editing-padding: 30px;
 }
 
 * {
@@ -22,6 +24,16 @@
 html {
     font-size: 62.5%;
 }
+
+//
+.CodeMirror {
+    height: 100%;
+}
+
+.CodeMirror-scroll {
+    height: 100% !important;
+}
+//
 
 body {
     background-color: var(--background-color);

@@ -31,7 +31,7 @@ namespace api.Services
             return categories;
         }
 
-        public async Task<PageResult<ViewAllProblemDto>> GetAllProblemsWithStatsAsync(string userId, QueryObject query)
+        public async Task<PageResult<ViewAllProblemDto>> GetAllProblemsWithStatsAsync(string userId, ProblemListQueryObject query)
         {
             var problemsQuery = await _problemRepository.GetFilteredProblemsAsync(query, userId);
             var problemIds = problemsQuery.Select(p => p.ProblemId).ToList();
@@ -77,6 +77,15 @@ namespace api.Services
             }
             var problemDetail = problem.ToProblemDetailDto();
             return problemDetail;
+        }
+
+        public async Task<ProblemSolvingDto?> GetProblemSolvingByIdAsync(string problemId)
+        {
+            var problem = await _problemRepository.GetProblemByIdAsync(problemId);
+            if (problem == null)
+                return null;
+
+            return problem.ToProblemSolvingDtoFromProblem();
         }
     }
 }

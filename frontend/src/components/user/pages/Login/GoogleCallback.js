@@ -17,8 +17,8 @@ const GoogleCallback = () => {
 
         if (token) {
             const userData = { id: userId, userName, email, token };
-            logInAsUser();
             localStorage.setItem('user', JSON.stringify(userData));
+            logInAsUser();
             console.log('User stored:', userData);
 
             navigate('/');

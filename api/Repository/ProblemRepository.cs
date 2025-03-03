@@ -29,7 +29,7 @@ namespace api.Repository
             return await _context.Problems.FirstOrDefaultAsync(p => p.ProblemId == problemId);
         }
 
-        public async Task<List<Problem>> GetFilteredProblemsAsync(QueryObject query, string userId)
+        public async Task<List<Problem>> GetFilteredProblemsAsync(ProblemListQueryObject query, string userId)
         {
             var problemsQuery = _context.Problems.AsQueryable();
             if (!string.IsNullOrWhiteSpace(query.ProblemCategory))

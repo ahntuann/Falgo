@@ -16,6 +16,9 @@ using System.Text;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using System.Text.Json;
+using api.Extensions;
+using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -126,7 +129,6 @@ builder.Services.AddAuthentication(options =>
 })
 .AddCookie();
 
-
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.SameSite = SameSiteMode.None;
@@ -136,6 +138,7 @@ builder.Services.AddAuthorization();
 // Add Sessions
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
+builder.Services.AddMemoryCache();
 
 // Dependency Injection
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -158,8 +161,9 @@ builder.Services.AddScoped<IProblemAdminRepository, ProblemAdminRepository>();
 builder.Services.AddScoped<IProblemAdminService, ProblemAdminService>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
-
 builder.Services.AddScoped<ISubmissionsAdminRepository, SubmissionsAdminRepository>();
+builder.Services.AddScoped<OtpService>();
+
 // Logging
 builder.Logging.AddConsole();
 

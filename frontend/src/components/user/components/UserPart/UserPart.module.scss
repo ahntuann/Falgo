@@ -1,6 +1,6 @@
 .wrapper {
-    height: var(--logo-navbar-height);
-    width: var(--logo-navbar-height);
+    height: calc(0.7 * var(--logo-navbar-height));
+    width: calc(0.7 * var(--logo-navbar-height));
     border: 1px solid #ccc;
     border-radius: 50%;
 }
