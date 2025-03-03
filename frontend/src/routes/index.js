@@ -1,7 +1,19 @@
-import { Home, ProblemList, Profile, Blog, DetailBlog, BlogUpdate, UserBlog, CreateBlog, CodeEditing, ProblemDetail, ResetPassword} from '~/components/user/pages';
-import { AdminLogin, Dashboard, BlogManagement } from '~/components/admin/pages';
+import { AdminLogin, Dashboard } from '~/components/admin/pages';
 import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
 
+import {
+    Home,
+    ProblemList,
+    Profile,
+    Blog,
+    DetailBlog,
+    BlogUpdate,
+    CodeEditing,
+    ProblemDetail,
+    ResetPassword,
+    UserBlog,
+    SubmissionList,
+} from '~/components/user/pages';
 
 const routes = [
     {
@@ -25,6 +37,12 @@ const routes = [
     {
         component: ProblemDetail,
         path: '/problems/:problemId',
+        layout: DefaultLayout,
+        role: ['user', 'guest'],
+    },
+    {
+        component: SubmissionList,
+        path: '/submissions/:problemId',
         layout: DefaultLayout,
         role: ['user', 'guest'],
     },

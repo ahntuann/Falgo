@@ -67,14 +67,14 @@ namespace api.Repository
 
         public async Task<List<Submission>> GetFilteredSubmissionsAsync(SubmissionListQueryObject query, string userId)
         {
-            var submissionQuery = _context.Submissions.Include(s => s.AppUser).Include(s => s.ProgrammingLanguage).OrderByDescending(s => s.Point).AsQueryable();
+            var submissionQuery = _context.Submissions.Include(s => s.AppUser).Include(s => s.ProgrammingLanguage).OrderByDescending(s => s.Point).OrderByDescending(s => s.SubmittedAt).AsQueryable();
             if (!string.IsNullOrWhiteSpace(query.ProblemId))
             {
                 submissionQuery = submissionQuery.Where(s => s.Problem.ProblemId == query.ProblemId);
             }
             if (!string.IsNullOrWhiteSpace(query.UserName))
             {
-                submissionQuery = submissionQuery.Where(s => s.AppUser.UserName.Equals(query.UserName));
+                submissionQuery = submissionQuery.Where(s => s.AppUser.FullName.Equals(query.UserName));
             }
             if (!string.IsNullOrWhiteSpace(query.ProgrammingLanguage))
             {
