@@ -10,7 +10,7 @@ import {
     BlogUpdate,
     CodeEditing,
     ProblemDetail,
-    ResetPassword,
+    ForgotPassword,
 } from '~/components/user/pages';
 
 const routes = [
@@ -70,8 +70,8 @@ const routes = [
         role: ['user'],
     },
     {
-        component: ResetPassword,
-        path: '/reset-password',
+        component: ForgotPassword,
+        path: '/forgot-password',
         layout: DefaultLayout,
         role: ['user', 'guest'],
     },

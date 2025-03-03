@@ -8,4 +8,4 @@ export { default as Blog } from './Blog';
 export { default as DetailBlog } from './DetailBlog';
 export { default as BlogUpdate } from './BlogUpdate';
 export { default as CodeEditing } from './CodeEditing';
-export { default as ResetPassword } from './ResetPassword';
+export { default as ForgotPassword } from './ForgotPassword';

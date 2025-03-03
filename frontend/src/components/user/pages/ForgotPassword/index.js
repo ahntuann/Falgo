@@ -9,13 +9,11 @@ function ForgotPassword() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
-    const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [step, setStep] = useState(1);
     const [timeLeft, setTimeLeft] = useState(0);
     const [showPasswords, setShowPasswords] = useState({
-        old: false,
         new: false,
         confirm: false,
     });
@@ -44,7 +42,7 @@ function ForgotPassword() {
         if (response.ok) {
             alert('Mã xác nhận đã được gửi!');
             setStep(2);
-            setTimeLeft(180);
+            setTimeLeft(30);
         } else {
             alert('Username hoặc Email không đúng!');
         }
@@ -52,7 +50,9 @@ function ForgotPassword() {
 
     const sendOtp = async () => {
         if (timeLeft > 0) return;
+        console.log('Gửi yêu cầu lấy OTP mới...');
         await verifyUser();
+        setOtp('');
     };
 
     const changePassword = async () => {
@@ -61,19 +61,28 @@ function ForgotPassword() {
             return;
         }
 
-        const response = await fetch('http://localhost:5180/api/account/change-password', {
+        const response = await fetch('http://localhost:5180/api/account/forgot-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, email, otpCode: otp, oldPassword, newPassword }),
+            body: JSON.stringify({ username, email, otpCode: otp, newPassword }),
         });
+
+        let data;
+        try {
+            data = await response.clone().json();
+        } catch (error) {
+            data = await response.text();
+        }
 
         if (response.ok) {
             alert('Đổi mật khẩu thành công!');
             navigate('/login');
         } else {
-            alert('OTP không hợp lệ hoặc đã hết hạn!');
+            alert(data.message || data);
+            console.error('Lỗi đổi mật khẩu:', data);
         }
     };
+
     return (
         <div className={cs('resetpassword')}>
             {step === 1 ? (
@@ -100,21 +109,6 @@ function ForgotPassword() {
             ) : (
                 <div className={cs('resetpassword-change')}>
                     <h3 className={cs('resetpassword-title')}>Đổi mật khẩu</h3>
-                    <div className={cs('resetpassword-group')}>
-                        <input
-                            className={cs('resetpassword-input')}
-                            type={showPasswords.old ? 'text' : 'password'}
-                            value={oldPassword}
-                            onChange={(e) => setOldPassword(e.target.value)}
-                            placeholder="Mật khẩu cũ"
-                        />
-                        <span
-                            className={cs('resetpassword-eye')}
-                            onClick={() => togglePasswordVisibility('old')}
-                        >
-                            {showPasswords.old ? '🙈' : '👁'}
-                        </span>
-                    </div>
                     <div className={cs('resetpassword-group')}>
                         <input
                             className={cs('resetpassword-input')}
