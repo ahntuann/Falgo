@@ -65,6 +65,8 @@ namespace api.Repository
             existingBlog.title = BlogDto.title;
             existingBlog.description = BlogDto.description;
             existingBlog.Content = BlogDto.Content;
+            existingBlog.ImageBlog = BlogDto.ImageBlog;
+            existingBlog.CategoryBlog = BlogDto.CategoryBlog;
             existingBlog.Status = BlogDto.Status;
 
 

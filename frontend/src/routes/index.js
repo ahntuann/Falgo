@@ -1,6 +1,6 @@
-import { Home, ProblemList, Profile, Blog, DetailBlog, BlogUpdate } from '~/components/user/pages';
+import { Home, ProblemList, Profile, Blog, DetailBlog, BlogUpdate, UserBlog, CreateBlog } from '~/components/user/pages';
 
-import { AdminLogin, Dashboard } from '~/components/admin/pages';
+import { AdminLogin, Dashboard, BlogManagement } from '~/components/admin/pages';
 import { DefaultLayout, AdminLayout, AdminLoginLayout } from '~/layouts';
 
 
@@ -31,8 +31,6 @@ const routes = [
         layout: DefaultLayout,
         role: ['user', 'guest'],
     },
-
-
     {
         component: AdminLogin,
         path: '/adminLogin',
@@ -47,10 +45,28 @@ const routes = [
 
     },
     {
+        component: UserBlog,
+        path: '/UserBlog',
+        layout: DefaultLayout,
+        role: ['user'],
+    },
+    {
         component: BlogUpdate,
         path: '/BlogUpdate',
         layout: DefaultLayout,
         role: ['user'],
+    },
+    {
+        component: CreateBlog,
+        path: '/CreateBlog',
+        layout: DefaultLayout,
+        role: ['user'],
+    },
+    {
+        component: BlogManagement,
+        path: '/BlogManagement',
+        layout: DefaultLayout,
+        role: ['admin'],
     },
 ];
 

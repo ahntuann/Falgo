@@ -2,28 +2,22 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
 import classNames from 'classnames/bind';
-import styles from './Blog.module.scss';
+import styles from './UserBlog.module.scss';
 import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
 
 import { useContext } from 'react';
 import AuthContext from '~/context/AuthContext';
 import { Link } from 'react-router-dom';
-import { use } from 'react';
-import { date } from 'yup';
 
 const cs = classNames.bind(styles);
 
-const Blog = () => {
+const UserBlog = () => {
     const { userRole } = useContext(AuthContext);
     const userNow = localStorage.getItem('user');
     const userObject = userNow ? JSON.parse(userNow) : null;
 
     const [originalBlogs, setOriginalBlogs] = useState([]);
     const [filteredBlogs, setFilteredBlogs] = useState([]);
-
-    useEffect(() => {
-        console.log(filteredBlogs);
-    }, [filteredBlogs]);
 
     const [categories] = useState([
         'Mẹo lập trình',
@@ -33,9 +27,11 @@ const Blog = () => {
         'Thử thách',
         'Câu Hỏi',
     ]);
+    const StatusOptions = ['Chờ duyệt', 'Duyệt Lại', 'Thông qua', 'Từ chối', 'Báo cáo'];
     const [query, setQuery] = useState({
         search: '',
         category: '',
+        status: '',
         sortBy: 'createOn',
         IsDescending: true,
         page: 1,
@@ -45,13 +41,9 @@ const Blog = () => {
 
     const startIndex = (query.page - 1) * query.postsPerPage;
     const endIndex = startIndex + query.postsPerPage;
-    const availableblog = filteredBlogs.filter(
-        (blog) =>
-            (blog.status === 'Thông qua' || blog.status === 'Báo cáo') &&
-            new Date(blog.datePublic) < new Date(),
-    );
-    const totalPages = Math.ceil(availableblog.length / query.postsPerPage);
-    const paginatedBlogs = availableblog.slice(startIndex, endIndex);
+    const userBlogs = filteredBlogs.filter((blog) => blog.userId === userObject.id);
+    const totalPages = Math.ceil(userBlogs.length / query.postsPerPage);
+    const paginatedBlogs = userBlogs.slice(startIndex, endIndex);
     const debounceRef = useRef(null);
 
     const [dateFilter, setDateFilter] = useState({
@@ -83,6 +75,10 @@ const Blog = () => {
                     return query.IsDescending
                         ? b.title.localeCompare(a.title)
                         : a.title.localeCompare(b.title);
+                } else if (query.sortBy === 'status') {
+                    return query.IsDescending
+                        ? b.status.localeCompare(a.status)
+                        : a.status.localeCompare(b.status);
                 }
                 return 0;
             }),
@@ -99,6 +95,7 @@ const Blog = () => {
             });
 
             let fetchedBlogs = response.data || [];
+
             if (query.category) {
                 fetchedBlogs = fetchedBlogs.filter((blog) => {
                     if (!blog.categoryBlog) return false;
@@ -112,9 +109,13 @@ const Blog = () => {
                 fetchedBlogs = fetchedBlogs.filter(
                     (blog) =>
                         blog.title.toLowerCase().includes(searchLower) ||
-                        blog.description.toLowerCase().includes(searchLower)||
+                        blog.description.toLowerCase().includes(searchLower) ||
                         blog.categoryBlog.toLowerCase().includes(searchLower),
                 );
+            }
+
+            if (query.status) {
+                fetchedBlogs = fetchedBlogs.filter((blog) => blog.status === query.status);
             }
 
             fetchedBlogs = fetchedBlogs.sort((a, b) => {
@@ -126,6 +127,10 @@ const Blog = () => {
                     return query.IsDescending
                         ? b.title.localeCompare(a.title)
                         : a.title.localeCompare(b.title);
+                } else if (query.sortBy === 'status') {
+                    return query.IsDescending
+                        ? b.status.localeCompare(a.status)
+                        : a.status.localeCompare(b.status);
                 }
                 return 0;
             });
@@ -234,10 +239,11 @@ const Blog = () => {
     return (
         <div className={cs('container')}>
             {/* DataBase */}
+
             <div className={cs('blog')}>
                 <div>
                     <div className={cs('blog_title_search')}>
-                        <h2 className={cs('title')}>Danh sách bài viết</h2>
+                        <h2 className={cs('title')}>Danh sách bài viết đã tạo</h2>
                         <div className={cs('search-bar')}>
                             <input
                                 type="text"
@@ -247,7 +253,6 @@ const Blog = () => {
                                 onChange={handleChange}
                             />
                         </div>
-
                         {/* Bloglist */}
                         <div className={cs('blog-list')}>
                             {paginatedBlogs.length > 0 ? (
@@ -257,10 +262,7 @@ const Blog = () => {
                                             src={blog.thumbnail ? blog.thumbnail : NoImage}
                                             alt={blog.title}
                                             className={cs('thumbnail')}
-                                            onError={(e) => {
-                                                e.target.onerror = null;
-                                                e.target.src = NoImage;
-                                            }}
+                                            onError={(e) => { e.target.onerror = null; e.target.src = NoImage; }}
                                         />
 
                                         <div className={cs('content')}>
@@ -287,6 +289,7 @@ const Blog = () => {
                                                             ))}
                                                     </div>
                                                 )}
+
                                             <p>
                                                 Ngày đăng:{' '}
                                                 {blog.createOn
@@ -320,6 +323,19 @@ const Blog = () => {
                                                             </>
                                                         )}
                                                 </div>
+                                                <p
+                                                    className={cs('status', {
+                                                        approved: blog.status === 'Thông qua',
+                                                        rejected: blog.status === 'Từ chối',
+                                                        report: blog.status === 'Báo cáo',
+                                                        pending:
+                                                            blog.status !== 'Thông qua' &&
+                                                            blog.status !== 'Từ chối' &&
+                                                            blog.status !== 'Báo cáo',
+                                                    })}
+                                                >
+                                                    {blog.status}
+                                                </p>
                                                 <Link
                                                     to={'/DetailBlog'}
                                                     state={{ blog }}
@@ -392,6 +408,7 @@ const Blog = () => {
                         {/* End pagination */}
                     </div>
                 </div>
+
                 <div className={cs('Create_UBlog_sidebar')}>
                     <div className={cs('Create_UBlog')}>
                         <Link to={'/CreateBlog'} className={cs('Create')}>
@@ -424,6 +441,7 @@ const Blog = () => {
                             <select name="sortBy" value={query.sortBy} onChange={handleChange}>
                                 <option value="createOn">Ngày đăng</option>
                                 <option value="title">Tiêu đề</option>
+                                <option value="status">Trạng thái</option>
                             </select>
                             <button
                                 onClick={() =>
@@ -439,7 +457,10 @@ const Blog = () => {
                         {/* End sortBy */}
 
                         {/* date-filter */}
-                        <h3>Lọc theo ngày</h3>
+                        <div className={cs('filter-name')}>
+                            <h3>Lọc theo ngày</h3>
+                            <h3>Trạng thái</h3>
+                        </div>
                         <div className={cs('date-filter')}>
                             <div className={cs('DateInput')}>
                                 <select
@@ -475,6 +496,14 @@ const Blog = () => {
                                     onChange={handleDateChange}
                                 />
                             </div>
+                            <select name="status" value={query.status} onChange={handleChange}>
+                                <option value="">Tất cả</option>
+                                {StatusOptions.map((status, index) => (
+                                    <option key={index} value={status}>
+                                        {status}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         {/* End date-filter */}
 
@@ -492,4 +521,4 @@ const Blog = () => {
     );
 };
 
-export default Blog;
+export default UserBlog;

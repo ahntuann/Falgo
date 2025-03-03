@@ -61,11 +61,14 @@
         top: 60px;
         right: 148px;
         .sidebar {
-            width: 343.6px;
             border: 1px solid #ddd;
             padding: 16px;
             border-radius: 8px;
             background: #3d3248;
+            .filter-name{
+                display: flex;
+                justify-content: space-between;
+            }
         }
         .Create_UBlog {
             display: flex;
@@ -97,6 +100,7 @@
         background: #646683;
         border: 1px solid #ccc;
         border-radius: 4px;
+        
         cursor: pointer;
         transition: 0.3s;
         color: black;
@@ -106,7 +110,10 @@
             color: white;
         }
     }
-
+    .reset-button{
+        margin-top: 13px;
+        margin-bottom: -4px;
+    }
     .date-filter,
     .DateInput {
         display: flex;
@@ -148,6 +155,7 @@
         margin-bottom: 16px;
         border-radius: 8px;
         background: #3d3248;
+        
         .category-item {
             font-size: 13.5px;
         }
@@ -155,6 +163,7 @@
         .category-item:hover {
             background-color: #0056b3;
         }
+        
     }
 
     .thumbnail {
@@ -242,6 +251,25 @@
         .delete:hover {
             background-color: #c82333;
             transform: scale(1.05);
+        }
+        .status{
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;    
+        }
+        .approved {
+            color: green;
+        }
+        
+        .rejected {
+            color: red;
+        }
+        .report{
+            color: orange;
+        }
+        .pending {
+            color: yellow;
         }
     }
 

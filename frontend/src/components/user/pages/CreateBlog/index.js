@@ -1,46 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
-import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
-
 import classNames from 'classnames/bind';
-import styles from './BlogUpdate.module.scss';
+import styles from './CreateBlog.module.scss';
+import { useNavigate } from 'react-router-dom';
+import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
 
 const cs = classNames.bind(styles);
 
-const BlogUpdate = () => {
+const CreateBlog = () => {
+    const userNow = localStorage.getItem('user');
+    const userObject = userNow ? JSON.parse(userNow) : null;
+    const userId = userObject?.id || '';
     const navigate = useNavigate();
-
-    const location = useLocation();
-    const blog = location.state?.blog;
-
     const [formData, setFormData] = useState({
+        userid: userId,
+        guestEmail: userObject.guestEmail,
+        guestName: userObject.guestName,
         thumbnail: '',
         title: '',
         description: '',
         content: '',
         imageBlog: '',
         categoryBlog: [],
-        status: 'Duyệt Lại',
+        createon: new Date().toISOString().split('T')[0],
+        DatePublic: new Date().toISOString().split('T')[0],
     });
-
-    useEffect(() => {
-        if (blog) {
-            setFormData({
-                thumbnail: blog.thumbnail || NoImage,
-                title: blog.title || '',
-                description: blog.description || '',
-                content: blog.content || '',
-                status: formData.status,
-                imageBlog: blog.imageBlog || '',
-                categoryBlog: Array.isArray(blog.categoryBlog)
-                    ? blog.categoryBlog
-                    : blog.categoryBlog
-                    ? blog.categoryBlog.split(', ').map((cat) => cat.trim())
-                    : [], 
-            });
-        }
-    }, [blog, formData.status]);
 
     const categoryOptions = [
         'Mẹo lập trình',
@@ -50,13 +34,6 @@ const BlogUpdate = () => {
         'Thử thách',
         'Câu Hỏi',
     ];
-
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value.trim(),
-        });
-    };
 
     const handleCategoryChange = (e) => {
         const { value, checked } = e.target;
@@ -69,21 +46,39 @@ const BlogUpdate = () => {
         }));
     };
 
+    useEffect(() => {
+        setFormData((prevData) => ({
+            ...prevData,
+            userid: userId,
+            guestEmail: userObject.guestEmail,
+            guestName: userObject.guestName,
+        }));
+    }, [userId, userObject]);
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Dữ liệu trước khi gửi:', formData);
 
-        if (!blog) {
-            alert('Bài viết không tồn tại!');
+        if (!userId) {
+            alert('Lỗi: Không tìm thấy User ID. Vui lòng đăng nhập lại!');
             return;
         }
 
         try {
-            const token = localStorage.getItem('accessToken');
-
-            const response = await axios.put(
-                `http://localhost:5180/api/BlogController/${blog.id}`,
-                { ...formData, categoryBlog: formData.categoryBlog.join(', ') },
+            const token = localStorage.getItem('token');
+            await axios.post(
+                'http://localhost:5180/api/BlogController',
+                {
+                    ...formData,
+                    userid: userId,
+                    categoryBlog: formData.categoryBlog.join(', '),
+                },
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -92,19 +87,13 @@ const BlogUpdate = () => {
                 },
             );
 
-            if (response.status === 200) {
-                alert('Cập nhật bài viết thành công!');
-                navigate('/UserBlog');
-            } else {
-                alert('Cập nhật thất bại!');
-            }
+            alert('Tạo blog thành công!');
+            navigate('/UserBlog');
         } catch (error) {
-            console.error('Lỗi khi cập nhật bài viết:', error);
-            alert('Có lỗi xảy ra!');
+            console.error('Lỗi khi tạo blog:', error);
+            alert('Có lỗi xảy ra, vui lòng thử lại!');
         }
     };
-
-    if (!blog) return <div>Không tìm thấy bài viết!</div>;
 
     return (
         <div className={cs('container')}>
@@ -161,7 +150,6 @@ const BlogUpdate = () => {
                             onChange={handleChange}
                         />
                     </label>
-
                     <label>Phân loại:</label>
                     <div className={cs('category_item')}>
                         {categoryOptions.map((category) => (
@@ -176,7 +164,15 @@ const BlogUpdate = () => {
                             </label>
                         ))}
                     </div>
-
+                    <label>
+                        Ngày Công bố:
+                        <input
+                            type="date"
+                            name="DatePublic"
+                            value={formData.DatePublic}
+                            onChange={handleChange}
+                        />
+                    </label>
                     <button type="submit">Lưu</button>
                 </div>
             </form>
@@ -184,4 +180,4 @@ const BlogUpdate = () => {
     );
 };
 
-export default BlogUpdate;
+export default CreateBlog;

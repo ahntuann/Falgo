@@ -8,7 +8,7 @@ namespace api.Dtos
 {
     public class CreateBlogRequestDto
     {
-        // public string? UserId { get; set; }
+        public required string UserId { get; set; }
         
         public string? GuestName { get; set; }
         public string? GuestEmail { get; set; }
@@ -17,6 +17,8 @@ namespace api.Dtos
         public string title { get; set; } = string.Empty;
         public string description { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
+        public string ImageBlog { get; set; } = string.Empty;
+        public string CategoryBlog { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
 
         public DateTime CreateOn { get; set; } = DateTime.Now;
