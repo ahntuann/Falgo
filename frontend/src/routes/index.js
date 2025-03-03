@@ -1,4 +1,4 @@
-import { AdminLogin, Dashboard } from '~/components/admin/pages';
+import { AdminLogin, Dashboard, BlogManagement } from '~/components/admin/pages';
 import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
 
 import {
@@ -12,6 +12,7 @@ import {
     ProblemDetail,
     ResetPassword,
     UserBlog,
+    CreateBlog,
     SubmissionList,
 } from '~/components/user/pages';
 
