@@ -96,7 +96,7 @@ const ProblemDetail = () => {
                 >
                     Lịch sử nộp bài
                 </Link>
-                <Link to="/submissions" className={cs('button', 'secondary')}>
+                <Link to={`/submissions/${problemId}`} className={cs('button', 'secondary')}>
                     Danh sách bài nộp
                 </Link>
                 <Link to="/problems" className={cs('button', 'back')}>

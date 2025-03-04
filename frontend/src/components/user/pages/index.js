@@ -12,3 +12,4 @@ export { default as CreateBlog } from './CreateBlog';
 
 export { default as CodeEditing } from './CodeEditing';
 export { default as ResetPassword } from './ResetPassword';
+export { default as SubmissionList } from './SubmissionList';
