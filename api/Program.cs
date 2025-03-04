@@ -19,6 +19,8 @@ using System.Text.Json;
 using api.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
+using api.Interface.Repository;
+using api.Interface.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -162,6 +164,8 @@ builder.Services.AddScoped<IProblemAdminService, ProblemAdminService>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 builder.Services.AddScoped<ISubmissionsAdminRepository, SubmissionsAdminRepository>();
+builder.Services.AddScoped<ITestCaseRepository, TestCaseRepository>();
+builder.Services.AddScoped<ITestCaseService, TestCaseService>();
 builder.Services.AddScoped<OtpService>();
 
 // Logging

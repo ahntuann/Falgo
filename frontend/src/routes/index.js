@@ -77,18 +77,18 @@ const routes = [
         layout: DefaultLayout,
         role: ['user'],
     },
-    {
-        component: CreateBlog,
-        path: '/CreateBlog',
-        layout: DefaultLayout,
-        role: ['user'],
-    },
-    {
-        component: BlogManagement,
-        path: '/BlogManagement',
-        layout: DefaultLayout,
-        role: ['admin'],
-    },
+    // {
+    //     component: CreateBlog,
+    //     path: '/CreateBlog',
+    //     layout: DefaultLayout,
+    //     role: ['user'],
+    // },
+    // {
+    //     component: BlogManagement,
+    //     path: '/BlogManagement',
+    //     layout: DefaultLayout,
+    //     role: ['admin'],
+    // },
     {
         component: CodeEditing,
         path: '/practice',

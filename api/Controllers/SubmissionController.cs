@@ -1,9 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dtos.ProgramingLanguage;
+using api.Dtos.TestCase;
 using api.Helpers;
 using api.Interface;
+using api.Interface.Services;
+using api.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -13,9 +18,13 @@ namespace api.Controllers
     public class SubmissionController : ControllerBase
     {
         private readonly ISubmissionService _submissionService;
-        public SubmissionController(ISubmissionService subService)
+        private readonly IProgramingLanguageService _proLangService;
+        private readonly ITestCaseService _testCaseService;
+        public SubmissionController(ISubmissionService subService, IProgramingLanguageService proLangService, ITestCaseService testCaseService)
         {
+            _proLangService = proLangService;
             _submissionService = subService;
+            _testCaseService = testCaseService;
         }
 
         [HttpGet("{problemId}")]
@@ -56,6 +65,140 @@ namespace api.Controllers
         {
             var languages = await _submissionService.GetAllSubmissionLanguageAsync(problemId);
             return Ok(languages);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostASubmission([FromBody] SubmissionPostDto submissionPostDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                string baseURL = "/Users/macbook/docker_tmp";
+                Directory.CreateDirectory(baseURL);
+
+                ProgramingLanguageDto proLangDto = await _proLangService.GetProgramingLanguageAsync(submissionPostDto.ProgrammingLanguageId);
+                if (proLangDto == null)
+                    return BadRequest(new { Error = "Not support this programming language" });
+
+                string fileName = GetFileName(proLangDto.Language);
+                string filePath = Path.Combine(baseURL, fileName);
+                await System.IO.File.WriteAllTextAsync(filePath, submissionPostDto.SourceCode);
+
+                string dockerImage = GetDockerImage(proLangDto.Language);
+                string compileCommand = GetCompileCommand(proLangDto.Language, fileName);
+
+                List<TestCase> testCases = await _testCaseService.GetAllTestCaseByProblemIdAsync(submissionPostDto.ProblemID);
+                List<TestCaseStatusDto> testCaseStatuses = new List<TestCaseStatusDto>();
+
+                foreach (var testCase in testCases)
+                {
+                    string inputFileName = "input.txt";
+                    string outputFileName = "output.txt";
+                    string expectedOuputFileName = "expected.txt";
+
+                    string inputPath = Path.Combine(baseURL, inputFileName);
+                    string outputPath = Path.Combine(baseURL, outputFileName);
+                    string expectedPath = Path.Combine(baseURL, expectedOuputFileName);
+
+                    await System.IO.File.WriteAllTextAsync(inputPath, testCase.Input);
+                    await System.IO.File.WriteAllTextAsync(expectedPath, testCase.Output);
+                    await System.IO.File.WriteAllTextAsync(outputPath, "");
+
+                    string runCommand = GetRunCommand(proLangDto.Language, fileName);
+
+                    string fixPermissionCommand = "chmod -R 777 /app";
+                    string dockerCommand = $"docker run --rm -v '{baseURL}:/app' {dockerImage} /bin/bash -c '{fixPermissionCommand} && {compileCommand} && {runCommand}'";
+
+                    var output = await ExecuteCommand(dockerCommand, outputPath, expectedPath, testCase.TestCaseId);
+
+                    testCaseStatuses.Add(output);
+                }
+
+                Directory.Delete(baseURL, true);
+
+                return Ok(new { Output = testCaseStatuses });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Error = ex.Message });
+            }
+        }
+
+        private string GetFileName(string language) => language switch
+        {
+            "Python" => "main.py",
+            "C++" => "main.cpp",
+            "Java" => "Main.java",
+            _ => throw new ArgumentException("Not support this programming language")
+        };
+
+        private string GetDockerImage(string language) => language switch
+        {
+            "Python" => "python:3.10",
+            "C++" => "gcc:latest",
+            "Java" => "openjdk:17",
+            _ => throw new ArgumentException("Not support this programming language")
+        };
+
+        private string GetCompileCommand(string language, string fileName)
+        {
+            return language switch
+            {
+                "Python" => "",
+                "C++" => $"g++ /app/{fileName} -o /app/main",
+                "Java" => $"javac /app/{fileName}",
+                _ => throw new ArgumentException("Not support this programming language")
+            };
+        }
+
+        private string GetRunCommand(string language, string fileName)
+        {
+            return language switch
+            {
+                "Python" => $"python /app/{fileName} < /app/input.txt > /app/output.txt",
+                "C++" => $"/app/main < /app/input.txt > /app/output.txt",
+                "Java" => $"java -cp /app/ Main < /app/input.txt > /app/output.txt",
+                _ => throw new ArgumentException("Not support this programming language")
+            };
+        }
+
+        private async Task<TestCaseStatusDto> ExecuteCommand(string command, string outputPath, string expectedPath, string testCaseId)
+        {
+            var processInfo = new ProcessStartInfo
+            {
+                FileName = "/bin/bash",
+                Arguments = $"-c \"{command}\"",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using var process = new Process { StartInfo = processInfo };
+            process.Start();
+
+            var error = await process.StandardError.ReadToEndAsync();
+
+            if (!String.IsNullOrEmpty(error))
+                return new TestCaseStatusDto
+                {
+                    TestCaseId = testCaseId,
+                    Result = "Error",
+                    Log = error
+                };
+
+            string output = await System.IO.File.ReadAllTextAsync(outputPath);
+            string expected = await System.IO.File.ReadAllTextAsync(expectedPath);
+
+            return new TestCaseStatusDto
+            {
+                TestCaseId = testCaseId,
+                Result = output.Trim().Equals(expected.Trim()) ? "Succes" : "Wrong answer",
+                Output = expected,
+                ActualOuput = output,
+            };
         }
     }
 }

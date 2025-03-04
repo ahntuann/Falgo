@@ -8,7 +8,7 @@ import {
     faCirclePlay,
     faHandPointer,
 } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import defaultCodes from '~/ultils/codeDefault';
 
 import useCodeEditing from '~/hooks/useCodeEditing';
@@ -16,7 +16,7 @@ import useCodeEditing from '~/hooks/useCodeEditing';
 const cs = classNames.bind(style);
 
 function CodeEditerAction() {
-    const { isSubmitable, setCodeText, programmingLanguages, languageId, setLanguageId } =
+    const { isSubmitable, codeText, setCodeText, programmingLanguages, languageId, setLanguageId } =
         useCodeEditing();
 
     const [isShowProLangList, setIsShowProLangList] = useState(false);
