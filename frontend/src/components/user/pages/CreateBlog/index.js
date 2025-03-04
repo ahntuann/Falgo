@@ -11,11 +11,13 @@ const CreateBlog = () => {
     const userNow = localStorage.getItem('user');
     const userObject = userNow ? JSON.parse(userNow) : null;
     const userId = userObject?.id || '';
+    const Email = userObject?.email || '';
+    const Name = userObject?.userName || '';
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         userid: userId,
-        guestEmail: userObject.guestEmail,
-        guestName: userObject.guestName,
+        guestEmail: Email,
+        guestName: Name,
         thumbnail: '',
         title: '',
         description: '',
@@ -50,12 +52,18 @@ const CreateBlog = () => {
         setFormData((prevData) => ({
             ...prevData,
             userid: userId,
-            guestEmail: userObject.guestEmail,
-            guestName: userObject.guestName,
+            guestEmail: Email,
+            guestName: Name,
         }));
-    }, [userId, userObject]);
+    }, [userId, Email, Name]);
 
     const handleChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'DatePublic' && value < formData.createon) {
+            alert('Ngày công bố phải bắt đầu từ hôm nay');
+            setFormData({ ...formData, [name]: formData.createon });
+            return;
+        }
         setFormData({
             ...formData,
             [e.target.name]: e.target.value,
@@ -72,11 +80,14 @@ const CreateBlog = () => {
 
         try {
             const token = localStorage.getItem('token');
+            console.log({ userObject });
             await axios.post(
                 'http://localhost:5180/api/BlogController',
                 {
                     ...formData,
                     userid: userId,
+                    guestEmail: Email,
+                    guestName: Name,
                     categoryBlog: formData.categoryBlog.join(', '),
                 },
                 {
@@ -103,7 +114,10 @@ const CreateBlog = () => {
                     src={formData.thumbnail ? formData.thumbnail : NoImage}
                     alt={formData.title}
                     className={cs('thumbnail')}
-                    onError={(e) => { e.target.onerror = null; e.target.src = NoImage; }}
+                    onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = NoImage;
+                    }}
                 />
                 <div className={cs('EditBlog')}>
                     <label>

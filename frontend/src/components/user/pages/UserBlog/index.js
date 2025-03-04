@@ -262,7 +262,10 @@ const UserBlog = () => {
                                             src={blog.thumbnail ? blog.thumbnail : NoImage}
                                             alt={blog.title}
                                             className={cs('thumbnail')}
-                                            onError={(e) => { e.target.onerror = null; e.target.src = NoImage; }}
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = NoImage;
+                                            }}
                                         />
 
                                         <div className={cs('content')}>
@@ -290,14 +293,24 @@ const UserBlog = () => {
                                                     </div>
                                                 )}
 
-                                            <p>
-                                                Ngày đăng:{' '}
-                                                {blog.createOn
-                                                    ? new Date(
-                                                          blog.createOn + 'Z',
-                                                      ).toLocaleDateString('vi-VN')
-                                                    : 'Không có dữ liệu'}
-                                            </p>
+                                            <div className={cs('Date')}>
+                                                <p>
+                                                    Ngày đăng:{' '}
+                                                    {blog.createOn
+                                                        ? new Date(
+                                                              blog.createOn + 'Z',
+                                                          ).toLocaleDateString('vi-VN')
+                                                        : 'Không có dữ liệu'}
+                                                </p>
+                                                <p>
+                                                    Ngày công bố:{' '}
+                                                    {blog.datePublic
+                                                        ? new Date(
+                                                              blog.datePublic + 'Z',
+                                                          ).toLocaleDateString('vi-VN')
+                                                        : 'Không có dữ liệu'}
+                                                </p>
+                                            </div>
 
                                             <div className={cs('actions')}>
                                                 <div className={cs('userPart')}>

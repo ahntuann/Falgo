@@ -5,10 +5,12 @@ import classNames from 'classnames/bind';
 import styles from './BlogManagement.module.scss';
 import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const cs = classNames.bind(styles);
 
 function BlogManagement() {
+    const navigate = useNavigate();
     const [originalBlogs, setOriginalBlogs] = useState([]);
     const [filteredBlogs, setFilteredBlogs] = useState([]);
     const debounceRef = useRef(null);
@@ -22,11 +24,25 @@ function BlogManagement() {
         postsPerPage: 10,
         dateFilter: '',
     });
-    const StatusOptions = ['Tất cả', 'Duyệt Lại', 'Thông qua', 'Từ chối', 'Báo cáo'];
+    const [categories] = useState([
+        'Mẹo lập trình',
+        'Hướng dẫn',
+        'Xu hướng lập trình',
+        'Kinh Nghiệm',
+        'Thử thách',
+        'Câu Hỏi',
+    ]);
+    const StatusOptions = ['Chờ duyệt', 'Duyệt Lại', 'Thông qua', 'Từ chối', 'Báo cáo'];
     const startIndex = (query.page - 1) * query.postsPerPage;
     const endIndex = startIndex + query.postsPerPage;
     const totalPages = Math.ceil(filteredBlogs.length / query.postsPerPage);
     const paginatedBlogs = filteredBlogs.slice(startIndex, endIndex);
+    const role = JSON.parse(sessionStorage.getItem('admin'));
+    useEffect(() => {
+        if (!role) {
+            navigate('/');
+        }
+    }, [role]);
     const fetchBlogs = async () => {
         try {
             const params = Object.fromEntries(
@@ -56,10 +72,10 @@ function BlogManagement() {
                 );
             }
 
-            if (query.status && query.status !== 'Tất cả') {
+            if (query.status) {
                 fetchedBlogs = fetchedBlogs.filter((blog) => blog.status === query.status);
             }
-            
+
             fetchedBlogs = fetchedBlogs.sort((a, b) => {
                 if (query.sortBy === 'createOn') {
                     return query.IsDescending
@@ -154,13 +170,20 @@ function BlogManagement() {
 
         try {
             const token = localStorage.getItem('accessToken');
+            const blogToUpdate = originalBlogs.find((blog) => blog.id === blogId);
+            if (!blogToUpdate) {
+                alert('Không tìm thấy bài viết để cập nhật!');
+                return;
+            }
+            const updatedBlog = { ...blogToUpdate, status: newStatus };
+            console.log('updatedBlog ', updatedBlog);
             const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ status: newStatus }),
+                body: JSON.stringify(updatedBlog),
             });
 
             if (response.ok) {
@@ -193,6 +216,16 @@ function BlogManagement() {
                             onChange={handleChange}
                         />
                     </div>
+                    <div className={cs('category')}>
+                        <select name="category" value={query.category} onChange={handleChange}>
+                            <option value="">Phân Loại</option>
+                            {categories.map((category, index) => (
+                                <option key={index} value={category}>
+                                    {category}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                     <div className={cs('sort-controls')}>
                         <select name="sortBy" value={query.sortBy} onChange={handleChange}>
                             <option value="createOn">Ngày đăng</option>
@@ -211,9 +244,8 @@ function BlogManagement() {
                         </button>
                     </div>
                     <div className={cs('status')}>
-                        <h3>Trạng Thái</h3>
                         <select name="status" value={query.status} onChange={handleChange}>
-                            <option value="Chờ duyệt">Chờ duyệt</option>
+                            <option value="">Trạng Thái</option>
                             {StatusOptions.map((status, index) => (
                                 <option key={index} value={status}>
                                     {status}
@@ -221,6 +253,23 @@ function BlogManagement() {
                             ))}
                         </select>
                     </div>
+                    <button
+                        className={cs('Reset')}
+                        onClick={() =>
+                            setQuery({
+                                search: '',
+                                category: '',
+                                status: '',
+                                sortBy: 'createOn',
+                                IsDescending: true,
+                                page: 1,
+                                postsPerPage: 10,
+                                dateFilter: '',
+                            })
+                        }
+                    >
+                        Reset
+                    </button>
                 </div>
                 {/* pagination */}
                 <div className={cs('pagination')}>
