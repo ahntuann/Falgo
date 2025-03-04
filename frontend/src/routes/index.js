@@ -1,5 +1,5 @@
 import { Home, ProblemList, Profile, Blog, DetailBlog, BlogUpdate, UserBlog, CreateBlog, CodeEditing, ProblemDetail, ResetPassword} from '~/components/user/pages';
-import { AdminLogin, Dashboard, BlogManagement } from '~/components/admin/pages';
+import { AdminLogin, Dashboard } from '~/components/admin/pages';
 import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
 
 
@@ -64,12 +64,6 @@ const routes = [
         path: '/CreateBlog',
         layout: DefaultLayout,
         role: ['user'],
-    },
-    {
-        component: BlogManagement,
-        path: '/BlogManagement',
-        layout: DefaultLayout,
-        role: ['admin'],
     },
     {
         component: CodeEditing,

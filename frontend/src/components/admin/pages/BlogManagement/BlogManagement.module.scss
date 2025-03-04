@@ -1,4 +1,6 @@
 .container {
+    .Reset,
+    .category,
     .topbar,
     .status,
     .sort-controls {
@@ -10,7 +12,7 @@
             display: flex;
             justify-content: center;
             margin-bottom: 16px;
-            width: 750px;
+            width: 715px;
             height: 37.6px;
             input {
                 width: 100%;
@@ -18,6 +20,9 @@
                 border: 1px solid black;
                 border-radius: 4px;
             }
+        }
+        .Reset {
+            align-items: center;
         }
     }
     .blog-item {
@@ -27,6 +32,10 @@
         margin: 5px;
         padding: 15px;
         gap: 20px;
+        .category-tags {
+            display: flex;
+            gap: 10px;
+        }
         .thumbnail {
             width: 255px;
             height: 255px;
