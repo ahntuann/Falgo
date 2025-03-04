@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dtos.Problem;
 using api.Dtos.ProgramingLanguage;
 using api.Dtos.TestCase;
 using api.Helpers;
@@ -20,11 +21,17 @@ namespace api.Controllers
         private readonly ISubmissionService _submissionService;
         private readonly IProgramingLanguageService _proLangService;
         private readonly ITestCaseService _testCaseService;
-        public SubmissionController(ISubmissionService subService, IProgramingLanguageService proLangService, ITestCaseService testCaseService)
+        private readonly IProblemService _proService;
+        public SubmissionController(
+            ISubmissionService subService,
+            IProgramingLanguageService proLangService,
+            ITestCaseService testCaseService,
+            IProblemService proService)
         {
             _proLangService = proLangService;
             _submissionService = subService;
             _testCaseService = testCaseService;
+            _proService = proService;
         }
 
         [HttpGet("{problemId}")]
@@ -90,20 +97,18 @@ namespace api.Controllers
                 string compileCommand = GetCompileCommand(proLangDto.Language, fileName);
 
                 List<TestCase> testCases = await _testCaseService.GetAllTestCaseByProblemIdAsync(submissionPostDto.ProblemID);
+                ProblemDetailDto problem = await _proService.GetProblemDetailByIdAsync(submissionPostDto.ProblemID);
                 List<TestCaseStatusDto> testCaseStatuses = new List<TestCaseStatusDto>();
 
                 foreach (var testCase in testCases)
                 {
                     string inputFileName = "input.txt";
                     string outputFileName = "output.txt";
-                    string expectedOuputFileName = "expected.txt";
 
                     string inputPath = Path.Combine(baseURL, inputFileName);
                     string outputPath = Path.Combine(baseURL, outputFileName);
-                    string expectedPath = Path.Combine(baseURL, expectedOuputFileName);
 
                     await System.IO.File.WriteAllTextAsync(inputPath, testCase.Input);
-                    await System.IO.File.WriteAllTextAsync(expectedPath, testCase.Output);
                     await System.IO.File.WriteAllTextAsync(outputPath, "");
 
                     string runCommand = GetRunCommand(proLangDto.Language, fileName);
@@ -111,14 +116,14 @@ namespace api.Controllers
                     string fixPermissionCommand = "chmod -R 777 /app";
                     string dockerCommand = $"docker run --rm -v '{baseURL}:/app' {dockerImage} /bin/bash -c '{fixPermissionCommand} && {compileCommand} && {runCommand}'";
 
-                    var output = await ExecuteCommand(dockerCommand, outputPath, expectedPath, testCase.TestCaseId);
+                    var output = await ExecuteCommand(dockerCommand, outputPath, testCase, problem);
 
                     testCaseStatuses.Add(output);
                 }
 
                 Directory.Delete(baseURL, true);
 
-                return Ok(new { Output = testCaseStatuses });
+                return Ok(testCaseStatuses);
             }
             catch (Exception ex)
             {
@@ -164,7 +169,11 @@ namespace api.Controllers
             };
         }
 
-        private async Task<TestCaseStatusDto> ExecuteCommand(string command, string outputPath, string expectedPath, string testCaseId)
+        private async Task<TestCaseStatusDto> ExecuteCommand(
+            string command,
+            string outputPath,
+            TestCase testCase,
+            ProblemDetailDto problemDetailDto)
         {
             var processInfo = new ProcessStartInfo
             {
@@ -177,27 +186,53 @@ namespace api.Controllers
             };
 
             using var process = new Process { StartInfo = processInfo };
+            var stopwatch = Stopwatch.StartNew();
             process.Start();
+
+            bool exited = process.WaitForExit(problemDetailDto.TimeLimit * 1000);
+            stopwatch.Stop();
+
+            if (!exited)
+            {
+                process.Kill();
+                return new TestCaseStatusDto
+                {
+                    TestCaseId = testCase.TestCaseId,
+                    Result = "Time Limit Exceeded",
+                    Log = "Execution took too long.",
+                    TimeLimit = problemDetailDto.TimeLimit,
+                    Input = testCase.Input,
+                    Output = testCase.Output,
+                    ExecutionTime = stopwatch.ElapsedMilliseconds
+                };
+            }
 
             var error = await process.StandardError.ReadToEndAsync();
 
             if (!String.IsNullOrEmpty(error))
                 return new TestCaseStatusDto
                 {
-                    TestCaseId = testCaseId,
+                    TestCaseId = testCase.TestCaseId,
                     Result = "Error",
-                    Log = error
+                    Log = error,
+                    TimeLimit = problemDetailDto.TimeLimit,
+                    Input = testCase.Input,
+                    Output = testCase.Output,
+                    ExecutionTime = stopwatch.ElapsedMilliseconds
                 };
 
             string output = await System.IO.File.ReadAllTextAsync(outputPath);
-            string expected = await System.IO.File.ReadAllTextAsync(expectedPath);
+            string expected = testCase.Output;
 
             return new TestCaseStatusDto
             {
-                TestCaseId = testCaseId,
-                Result = output.Trim().Equals(expected.Trim()) ? "Succes" : "Wrong answer",
+                TestCaseId = testCase.TestCaseId,
+                Result = output.Trim().Equals(expected.Trim()) ? "Success" : "Wrong answer",
+                Input = testCase.Input,
                 Output = expected,
                 ActualOuput = output,
+                TimeLimit = problemDetailDto.TimeLimit,
+                ExecutionTime = stopwatch.ElapsedMilliseconds
             };
         }
     }

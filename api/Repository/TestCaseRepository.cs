@@ -21,6 +21,7 @@ namespace api.Repository
         {
             var testCases = await _context.TestCases
                                 .Where(x => x.ProblemId == problemId)
+                                .Include(x => x.Problem)
                                 .ToListAsync();
 
             return testCases;

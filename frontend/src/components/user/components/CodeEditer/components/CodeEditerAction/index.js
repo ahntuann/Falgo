@@ -8,16 +8,27 @@ import {
     faCirclePlay,
     faHandPointer,
 } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import defaultCodes from '~/ultils/codeDefault';
 
 import useCodeEditing from '~/hooks/useCodeEditing';
+import { submitSolutionForAProblemAPI } from '~/apis';
+import useAuth from '~/hooks/useAuth';
 
 const cs = classNames.bind(style);
 
 function CodeEditerAction() {
-    const { isSubmitable, codeText, setCodeText, programmingLanguages, languageId, setLanguageId } =
-        useCodeEditing();
+    const {
+        isSubmitable,
+        codeText,
+        setCodeText,
+        programmingLanguages,
+        languageId,
+        setLanguageId,
+        briefInfoProblem,
+        setTestCase,
+    } = useCodeEditing();
+    const { appUser } = useAuth();
 
     const [isShowProLangList, setIsShowProLangList] = useState(false);
 
@@ -36,6 +47,17 @@ function CodeEditerAction() {
     const handleChangeLanguage = (language, i) => {
         setLanguageId(i);
         setCodeText(defaultCodes[language.language]);
+    };
+
+    //
+    const handleSubmitSolution = (isTestCode) => {
+        submitSolutionForAProblemAPI(
+            briefInfoProblem.problemId,
+            appUser.id,
+            codeText,
+            programmingLanguages.at(languageId).programmingLanguageId,
+            isTestCode,
+        ).then((newTestCase) => setTestCase(newTestCase));
     };
 
     return (
@@ -66,7 +88,7 @@ function CodeEditerAction() {
                     <FontAwesomeIcon className={cs('moreActionIcon')} icon={faArrowsRotate} />
                     Cài đặt lại
                 </div>
-                <div className={cs('runCodeBtn')}>
+                <div className={cs('runCodeBtn')} onClick={() => handleSubmitSolution(true)}>
                     <FontAwesomeIcon className={cs('moreActionIcon')} icon={faCirclePlay} />
                     Chạy thử
                 </div>
