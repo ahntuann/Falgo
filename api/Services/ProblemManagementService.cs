@@ -19,8 +19,8 @@ namespace api.Services
     {
         private readonly IProblemManagementRepository _ProblemRepo;
         private readonly ISubmissionRepository _submissionRepository;
-        private readonly ITestcaseRepository _testcaseRepository;
-        public ProblemManagementService(IProblemManagementRepository ProblemRepo,ISubmissionRepository submissionRepository,ITestcaseRepository testcaseRepository)
+        private readonly ITestCaseRepository _testcaseRepository;
+        public ProblemManagementService(IProblemManagementRepository ProblemRepo,ISubmissionRepository submissionRepository,ITestCaseRepository testcaseRepository)
         {
             _ProblemRepo = ProblemRepo;
             _submissionRepository = submissionRepository;
