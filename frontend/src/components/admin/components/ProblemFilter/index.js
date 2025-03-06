@@ -41,7 +41,7 @@ const ProblemFilter = () => {
             <h2 className={cx('title')}>Bài tập được lọc</h2>
             <form onSubmit={handleSubmit} className={cx('form')}>
                 <label className={cx('label')}>
-                    số lượng bài tập:
+                    số lượng bài tập muốn lọc:
                     <input
                         type="number"
                         value={numProblems}

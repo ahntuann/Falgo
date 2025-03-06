@@ -23,9 +23,24 @@ namespace api.Repository
         {
             return await _context.Problems.ToListAsync();
         }
-        public async Task DeleteProblem(string ProblemID)
+        public async Task DeleteProblemAsync(string ProblemID)
         {
             await _context.Problems.Where(p => p.ProblemId==ProblemID).ExecuteDeleteAsync();
+        }
+        public async Task CreateProblemAsync(Problem NewProblem)
+        {
+            await _context.Problems.AddAsync(NewProblem);
+        }
+        public async Task<List<Problem>> GetFilteredProblemsAsync(ProblemManagamentQueryObject query)
+        {
+            var problemsQuery = _context.Problems.AsQueryable();
+             if (!string.IsNullOrWhiteSpace(query.ProblemTitle))
+            {
+                var titleLower = query.ProblemTitle.ToLower();
+                problemsQuery = problemsQuery.Where(p => p.Title.ToLower().Contains(titleLower));
+            }
+            Console.WriteLine("ProblemsQuery: " + problemsQuery.Count());
+            return await problemsQuery.ToListAsync();
         }
     }
 }

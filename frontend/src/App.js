@@ -12,6 +12,7 @@ import {
     BlogManagement,
 } from './components/admin/pages';
 import GithubCallback from './components/user/pages/Login/GithubCallback';
+import { ProblemForm } from 'components/admin/components';
 function App() {
     const { userRole } = useAuth();
 
@@ -28,6 +29,7 @@ function App() {
                     <Route path="/ProblemsManagement" element={<ProblemsManagement />} />
                     <Route path="/UserManagement" element={<UserManagement />} />
                     <Route path="/BlogManagement" element={<BlogManagement />} />
+                    <Route path="/ProblemForm" element={<ProblemForm />} />
                     {routes.map((route) => {
                         const Component = route.component;
                         const Layout = route.layout;

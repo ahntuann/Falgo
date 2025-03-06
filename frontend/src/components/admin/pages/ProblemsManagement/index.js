@@ -1,56 +1,82 @@
 import { AdminLayout } from '~/layouts';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ProblemManagement.module.scss';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
 const cx = classNames.bind(styles);
 function ProblemsManagement() {
+    const navigate = useNavigate();
     const [problems, setProblems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const problemsPerPage = 4;
-
+    const [categories, setCategories] = useState([]);
+    const [totalPages, setTotalPages] = useState(1);
+    const [query, setQuery] = useState({
+        ProblemTitle: '',
+        ProblemCategory: '',
+        PageNumber: 1,
+        PageSize: 15,
+    });
+    const debounceRef = useRef(null);
     useEffect(() => {
-        fetchProblems();
+        fetchCategories();
     }, []);
+    useEffect(() => {
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
+        }
+        debounceRef.current = setTimeout(() => {
+            fetchProblems();
+        }, 500);
 
+        return () => clearTimeout(debounceRef.current);
+    }, [query]);
     const fetchProblems = async () => {
         try {
-            const response = await axios.get('https://your-backend-url/api/problems');
-            setProblems(response.data);
+            const filteredQuery = Object.fromEntries(
+                Object.entries(query).filter(([_, value]) => value !== ''),
+            );
+            const response = await axios.get('http://localhost:5180/api/problemManagement', {
+                params: filteredQuery,
+            });
+            setProblems(response.data.items);
+            console.log(problems);
+
+            setTotalPages(response.data.totalPages);
         } catch (error) {
-            console.error('Error fetching problems:', error);
+            console.error('Error fetching problems', error);
         }
     };
 
-    const handleSearch = (e) => {
-        setSearchTerm(e.target.value);
+    const fetchCategories = async () => {
+        try {
+            const response = await axios.get(
+                'http://localhost:5180/api/problemManagement/categories',
+            );
+            setCategories(response.data);
+        } catch (error) {
+            console.error('Error fetching categories', error);
+        }
     };
-
+    const handleChange = (e) => {
+        setQuery({ ...query, [e.target.name]: e.target.value });
+    };
     const handleEdit = (id) => {
         console.log('Edit problem:', id);
         // Implement edit functionality
     };
-
-    const handleDelete = async (id) => {
+    const handleDelete = async (problemId) => {
         try {
-            await axios.delete(`https://your-backend-url/api/problems/${id}`);
-            setProblems(problems.filter((problem) => problem.id !== id));
+            const requestData = { problemId };
+            await axios.delete(
+                `http://localhost:5180/api/problemManagement/delete?problemId=${problemId}`,
+            );
+            fetchProblems();
         } catch (error) {
             console.error('Error deleting problem:', error);
         }
     };
-
-    const filteredProblems = problems.filter((problem) =>
-        problem.name.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-
-    const indexOfLastProblem = currentPage * problemsPerPage;
-    const indexOfFirstProblem = indexOfLastProblem - problemsPerPage;
-    const currentProblems = filteredProblems.slice(indexOfFirstProblem, indexOfLastProblem);
-
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
     return (
         <AdminLayout>
             <div className={cx('content')}>
@@ -58,11 +84,14 @@ function ProblemsManagement() {
                 <div className={cx('top-bar')}>
                     <input
                         type="text"
-                        placeholder="Tìm kiếm"
-                        value={searchTerm}
-                        onChange={handleSearch}
+                        name="ProblemTitle"
+                        placeholder="Tìm kiếm theo tên"
+                        value={query.ProblemTitle}
+                        onChange={handleChange}
                     />
-                    <button className={cx('create-btn')}>Tạo bài tập mới</button>
+                    <button className={cx('create-btn')} onClick={() => navigate('/ProblemForm')}>
+                        Tạo bài tập mới
+                    </button>
                 </div>
                 <table>
                     <thead>
@@ -78,18 +107,18 @@ function ProblemsManagement() {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentProblems.map((problem) => (
-                            <tr key={problem.id}>
-                                <td>{problem.id}</td>
-                                <td>{problem.name}</td>
-                                <td>{problem.status}</td>
-                                <td>{problem.completion}%</td>
-                                <td>{problem.totalCompleted}</td>
+                        {problems.map((problem, i) => (
+                            <tr key={i}>
+                                <td>{problem.problemId}</td>
+                                <td>{problem.title}</td>
+                                <td>{problem.category}</td>
+                                <td>{problem.acceptanceRate}%</td>
+                                <td>{problem.acceptedCount}</td>
                                 <td>{problem.score}</td>
                                 <td>
                                     <button
                                         className={cx('edit-btn')}
-                                        onClick={() => handleEdit(problem.id)}
+                                        onClick={() => handleEdit(problem.problemId)}
                                     >
                                         Edit
                                     </button>
@@ -97,7 +126,7 @@ function ProblemsManagement() {
                                 <td>
                                     <button
                                         className={cx('delete-btn')}
-                                        onClick={() => handleDelete(problem.id)}
+                                        onClick={() => handleDelete(problem.problemId)}
                                     >
                                         Delete
                                     </button>
@@ -107,18 +136,21 @@ function ProblemsManagement() {
                     </tbody>
                 </table>
                 <div className={cx('pagination')}>
-                    {Array.from(
-                        { length: Math.ceil(filteredProblems.length / problemsPerPage) },
-                        (_, i) => (
-                            <button
-                                key={i}
-                                className={currentPage === i + 1 ? 'active' : ''}
-                                onClick={() => paginate(i + 1)}
-                            >
-                                {i + 1}
-                            </button>
-                        ),
-                    )}
+                    <button
+                        disabled={query.PageNumber === 1}
+                        onClick={() => setQuery({ ...query, PageNumber: query.PageNumber - 1 })}
+                    >
+                        Trước
+                    </button>
+                    <span>
+                        Trang {query.PageNumber} trong {totalPages}
+                    </span>
+                    <button
+                        disabled={query.PageNumber === totalPages}
+                        onClick={() => setQuery({ ...query, PageNumber: query.PageNumber + 1 })}
+                    >
+                        Sau
+                    </button>
                 </div>
             </div>
         </AdminLayout>

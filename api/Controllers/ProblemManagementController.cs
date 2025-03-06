@@ -3,30 +3,49 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Helpers;
+using api.Interface.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace api.Controllers
 {
-    [Route("[controller]")]
-    public class ProblemManagementController : Controller
+    [Route("api/problemManagement")]
+    [ApiController]    public class ProblemManagementController : ControllerBase
     {
-        private readonly ILogger<ProblemManagementController> _logger;
-
-        public ProblemManagementController(ILogger<ProblemManagementController> logger)
+        private readonly IProblemManagementService _ProblemManagementService;
+        public ProblemManagementController(IProblemManagementService ProblemManagementService)
         {
-            _logger = logger;
+            _ProblemManagementService =ProblemManagementService;
         }
+        [HttpGet]
 
-        public IActionResult Index()
+        public async Task<IActionResult> GetAllProblemsForManagement([FromQuery] ProblemManagamentQueryObject query)
         {
-            return View();
+            var result = await _ProblemManagementService.ViewAllProblemtMangagement(query);
+            if (query.PageNumber > result.TotalPages)
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+         [HttpGet("categories")]
+        public async Task<IActionResult> GetCategories()
         {
-            return View("Error!");
+            var categories = await _ProblemManagementService.GetAllCategoriesAsync();
+            return Ok(categories);
+        }
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteProblem([FromQuery] string ProblemId)
+        {
+            await _ProblemManagementService.DeleteProblemAsync(ProblemId);
+            return Ok();
+        }
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateProblem([FromBody] ProblemFormObject problemFormObject)
+        {
+            await _ProblemManagementService.AddProblemAsync(problemFormObject);
+            return Ok();
         }
     }
 }
