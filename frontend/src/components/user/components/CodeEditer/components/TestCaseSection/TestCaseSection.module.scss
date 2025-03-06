@@ -45,7 +45,6 @@
     display: flex;
     padding: 10px var(--code-editing-padding);
     font-size: 1.5rem;
-    cursor: pointer;
 
     &:hover {
         background-color: #2d2d46;
@@ -54,6 +53,13 @@
 
 .testcaseItem.active {
     background-color: #2d2d46;
+    cursor: pointer;
+}
+
+.testcaseItem.deactive {
+    &:hover {
+        cursor: default;
+    }
 }
 
 .testcaseName {
@@ -74,10 +80,6 @@
     background-color: var(--background-color);
     padding: 3px 0;
     width: 100%;
-
-    // word-wrap: break-word;
-    // overflow-wrap: anywhere;
-    // white-space: normal;
 }
 
 .testcaseItemDetail::-webkit-scrollbar {

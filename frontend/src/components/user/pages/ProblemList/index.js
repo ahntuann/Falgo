@@ -74,7 +74,7 @@ const ProblemList = () => {
 
     return (
         <div className={cs('problemList')}>
-            <h2>Danh sách câu hỏi</h2>
+            <h2>Danh sách bài tập</h2>
             <div className={cs('filters')}>
                 <input
                     type="text"
@@ -131,7 +131,7 @@ const ProblemList = () => {
                         <tr key={i}>
                             <td>{problem.problemId}</td>
                             <td>
-                                <Link to="/NotFound">{problem.title}</Link>
+                                <Link to={`/problems/${problem.problemId}`}>{problem.title}</Link>
                             </td>
                             <td>{problem.category}</td>
                             <td>{problem.acceptanceRate}%</td>

@@ -17,5 +17,14 @@ namespace api.Mappers
                 Language = programmingLanguage.Language
             };
         }
+
+        public static ProgrammingLanguage ToProLanguageFromProLanguageDto(this ProgramingLanguageDto programmingLanguage)
+        {
+            return new ProgrammingLanguage
+            {
+                ProgrammingLanguageId = programmingLanguage.ProgrammingLanguageId,
+                Language = programmingLanguage.Language
+            };
+        }
     }
 }

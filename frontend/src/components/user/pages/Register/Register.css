@@ -44,7 +44,8 @@
 
 .password-group input {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
+    margin-right: 10px;
     padding-right: 40px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -54,13 +55,14 @@
 .eye-icon {
     position: absolute;
     right: 20px;
+    top: 7px;
     cursor: pointer;
     font-size: 18px;
     color: #666;
 }
 
 .register-button {
-    width: 100%;
+    width: 450px;
     align-items: center;
     padding: 12px;
     background-color: #38bdf8;

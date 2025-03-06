@@ -98,7 +98,7 @@ const Login = () => {
                             value={formik.values.password}
                             required
                         />
-                        <span className="eye-icon" onClick={togglePasswordVisibility}>
+                        <span className="eye-icon1" onClick={togglePasswordVisibility}>
                             {showPassword ? '🙈' : '👁'}
                         </span>
                         {formik.errors.password && (
@@ -110,9 +110,9 @@ const Login = () => {
                         <Link to="/register" className="create-account-link">
                             Tạo tài khoản mới
                         </Link>
-                        <a href="/forgot-password" className="forgot-password-link">
+                        <Link to="/reset-password" className="forgot-password-link">
                             Quên mật khẩu?
-                        </a>
+                        </Link>
                     </div>
                     <button type="submit" className="login-button">
                         Đăng nhập

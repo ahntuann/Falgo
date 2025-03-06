@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.Helpers;
 using api.Interface;
 using api.Model;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +50,7 @@ namespace api.Repository
         public async Task<List<Submission>> GetSubmissionsByProblemIdAsync(string problemId)
         {
             return await _context.Submissions
-                        .Include(s => s.AppUser)
+                        .Include(s => s.AppUser).Include(s => s.ProgrammingLanguage)
                         .Where(s => s.Problem.ProblemId == problemId)
                         .ToListAsync();
         }
@@ -62,6 +63,66 @@ namespace api.Repository
         public async Task<List<Submission>> GetAllSubmissionsAsync()
         {
             return await _context.Submissions.ToListAsync();
+        }
+
+        public async Task<List<Submission>> GetFilteredSubmissionsAsync(SubmissionListQueryObject query, string userId)
+        {
+            var submissionQuery = _context.Submissions.Include(s => s.AppUser).Include(s => s.ProgrammingLanguage).OrderByDescending(s => s.Point).OrderByDescending(s => s.SubmittedAt).AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.ProblemId))
+            {
+                submissionQuery = submissionQuery.Where(s => s.Problem.ProblemId == query.ProblemId);
+            }
+            if (!string.IsNullOrWhiteSpace(query.UserName))
+            {
+                submissionQuery = submissionQuery.Where(s => s.AppUser.FullName.Equals(query.UserName));
+            }
+            if (!string.IsNullOrWhiteSpace(query.ProgrammingLanguage))
+            {
+                submissionQuery = submissionQuery.Where(s => s.ProgrammingLanguage.Language == query.ProgrammingLanguage);
+            }
+            if (!string.IsNullOrWhiteSpace(query.Status))
+            {
+                submissionQuery = submissionQuery.Where(s => s.Status == query.Status);
+            }
+            if (!string.IsNullOrWhiteSpace(query.UserId))
+            {
+                submissionQuery = submissionQuery.Where(s => s.AppUser.Id == userId);
+            }
+            return await submissionQuery.ToListAsync();
+        }
+
+        public async Task<Submission> CreateASubmissionAsync(Submission submission)
+        {
+            if (submission == null)
+                throw new ArgumentNullException(nameof(submission));
+
+            try
+            {
+                submission.SubmissionId = Guid.NewGuid().ToString();
+                if (submission.ProgrammingLanguage != null)
+                {
+                    _context.Entry(submission.ProgrammingLanguage).State = EntityState.Unchanged;
+                }
+                if (submission.Problem != null)
+                {
+                    _context.Entry(submission.Problem).State = EntityState.Unchanged;
+                }
+                if (submission.AppUser != null)
+                {
+                    _context.Entry(submission.AppUser).State = EntityState.Unchanged;
+                }
+
+                await _context.Submissions.AddAsync(submission);
+
+                await _context.SaveChangesAsync();
+
+                return submission;
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex);
+                return null;
+            }
         }
     }
 }

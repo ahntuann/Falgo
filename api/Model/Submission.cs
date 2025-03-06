@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,8 +26,18 @@ namespace api.Model
         [Required]
         public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
         [Required]
-        public Problem Problem { get; set; } = new Problem();
-        public AppUser AppUser { get; set; } = new AppUser();
-        public ProgrammingLanguage ProgrammingLanguage { get; set; } = new ProgrammingLanguage();
+        public string ProblemId { get; set; }
+        [ForeignKey("ProblemId")]
+        public Problem Problem { get; set; }
+
+        [Required]
+        public string AppUserId { get; set; }
+        [ForeignKey("AppUserId")]
+        public AppUser AppUser { get; set; }
+
+        [Required]
+        public string ProgrammingLanguageId { get; set; }
+        [ForeignKey("ProgrammingLanguageId")]
+        public ProgrammingLanguage ProgrammingLanguage { get; set; }
     }
 }

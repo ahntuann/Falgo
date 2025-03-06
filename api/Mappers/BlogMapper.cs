@@ -34,17 +34,19 @@ namespace api.Mappers
                 TagBlog = BlogModel.TagBlog
             };
         }
-        public static Blog ToBlogFromCreateDto(this CreateBlogRequestDto BlogDto, string? userId)
+        public static Blog ToBlogFromCreateDto(this CreateBlogRequestDto BlogDto)
         {
             return new Blog
             {
-                UserId = userId,
+                UserId = BlogDto.UserId,
                 GuestName = BlogDto.GuestName,
                 GuestEmail = BlogDto.GuestEmail,
                 Thumbnail = BlogDto.Thumbnail,
                 title = BlogDto.title,
                 description = BlogDto.description,
                 Content = BlogDto.Content,
+                ImageBlog = BlogDto.Content,
+                CategoryBlog = BlogDto.CategoryBlog,
                 Status = BlogDto.Status,
                 CreateOn = BlogDto.CreateOn,
                 DatePublic = BlogDto.DatePublic,

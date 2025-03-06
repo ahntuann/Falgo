@@ -11,6 +11,8 @@ namespace api.Dtos.BlogSpace
         public string title { get; set; } = string.Empty;
         public string description { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
+        public string ImageBlog { get; set; } = string.Empty;
+        public string CategoryBlog { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
     }
 }

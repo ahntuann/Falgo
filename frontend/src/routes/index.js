@@ -1,6 +1,3 @@
-import { AdminLogin, Dashboard } from '~/components/admin/pages';
-import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
-
 import {
     Home,
     ProblemList,
@@ -8,8 +5,15 @@ import {
     Blog,
     DetailBlog,
     BlogUpdate,
+    UserBlog,
+    CreateBlog,
     CodeEditing,
+    ProblemDetail,
+    ResetPassword,
+    SubmissionList,
 } from '~/components/user/pages';
+import { AdminLogin, Dashboard } from '~/components/admin/pages';
+import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
 
 const routes = [
     {
@@ -27,6 +31,18 @@ const routes = [
     {
         component: ProblemList,
         path: '/problems',
+        layout: DefaultLayout,
+        role: ['user', 'guest'],
+    },
+    {
+        component: ProblemDetail,
+        path: '/problems/:problemId',
+        layout: DefaultLayout,
+        role: ['user', 'guest'],
+    },
+    {
+        component: SubmissionList,
+        path: '/submissions/:problemId',
         layout: DefaultLayout,
         role: ['user', 'guest'],
     },
@@ -50,8 +66,20 @@ const routes = [
         role: ['user', 'guest'],
     },
     {
+        component: UserBlog,
+        path: '/UserBlog',
+        layout: DefaultLayout,
+        role: ['user'],
+    },
+    {
         component: BlogUpdate,
         path: '/BlogUpdate',
+        layout: DefaultLayout,
+        role: ['user'],
+    },
+    {
+        component: CreateBlog,
+        path: '/CreateBlog',
         layout: DefaultLayout,
         role: ['user'],
     },
@@ -60,6 +88,12 @@ const routes = [
         path: '/practice',
         layout: CodeEditingLayout,
         role: ['user'],
+    },
+    {
+        component: ResetPassword,
+        path: '/reset-password',
+        layout: DefaultLayout,
+        role: ['user', 'guest'],
     },
 ];
 

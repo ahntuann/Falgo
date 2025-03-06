@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace api.Helpers
 {
-    public class QueryObject
+    public class ProblemListQueryObject
     {
         public string? UserId { get; set; }
         public string ProblemTitle { get; set; } = string.Empty;

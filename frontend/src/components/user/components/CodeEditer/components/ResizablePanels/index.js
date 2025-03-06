@@ -10,7 +10,7 @@ import TestCaseSection from '~/components/user/components/CodeEditer/components/
 
 const cs = classNames.bind(style);
 
-const ResizablePanels = ({ codeText, setCodeText, language }) => {
+const ResizablePanels = () => {
     const [topHeight, setTopHeight] = useState(450);
     const containerRef = useRef(null);
     const isResizing = useRef(false);
@@ -56,11 +56,7 @@ const ResizablePanels = ({ codeText, setCodeText, language }) => {
     return (
         <div className={cs('container')} ref={containerRef}>
             <div className={cs('topPanel')} style={{ height: `${topHeight}px` }}>
-                <CodeEditerSection
-                    language={language}
-                    codeText={codeText}
-                    setCodeText={setCodeText}
-                />
+                <CodeEditerSection />
             </div>
             <div className={cs('resizeBar')} onMouseDown={handleMouseDown}>
                 <FontAwesomeIcon className={cs('resizeBarIcon')} icon={faAngleDown} />

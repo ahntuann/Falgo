@@ -45,9 +45,38 @@ namespace api.Mappers
                 TotalPoint = problem.TotalPoint,
                 TimeLimit = problem.TimeLimit,
                 Author = problem.Author,
+                Category = problem.Category,
                 MemoryLimit = problem.MemoryLimit
             };
             return problemDetail;
+        }
+
+        public static Problem ToProblemFromProlemDetailDto(this ProblemDetailDto problemDto)
+        {
+            var problemDetail = new Problem
+            {
+                ProblemId = problemDto.ProblemId,
+                Title = problemDto.Title,
+                Detail = problemDto.Detail,
+                Input = problemDto.Input,
+                Output = problemDto.Output,
+                TotalPoint = problemDto.TotalPoint,
+                TimeLimit = problemDto.TimeLimit,
+                Author = problemDto.Author,
+                Category = problemDto.Category,
+                MemoryLimit = problemDto.MemoryLimit
+            };
+            return problemDetail;
+        }
+
+        public static ProblemSolvingDto ToProblemSolvingDtoFromProblem(this Problem problem)
+        {
+            return new ProblemSolvingDto
+            {
+                ProblemId = problem.ProblemId,
+                Title = problem.Title,
+                TimeLimit = problem.TimeLimit
+            };
         }
     }
 }
