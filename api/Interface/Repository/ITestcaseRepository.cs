@@ -6,8 +6,8 @@ using api.Model;
 
 namespace api.Interface.Repository
 {
-    public interface ITestcaseRepository
+    public interface ITestCaseRepository
     {
-        public  Task CreateTestCaseAsync(List<TestCase> test);
+        public Task<List<TestCase>> GetAllTestCaseByProblemIdAsync(string problemId);
     }
 }

@@ -5,21 +5,26 @@ using System.Threading.Tasks;
 using api.Data;
 using api.Interface.Repository;
 using api.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
 {
-    public class TestcaseRepository :ITestcaseRepository
+    public class TestCaseRepository : ITestCaseRepository
     {
-          private readonly ApplicationDBContext _context;
-        public TestcaseRepository(ApplicationDBContext context)
+        private readonly ApplicationDBContext _context;
+        public TestCaseRepository(ApplicationDBContext context)
         {
-            _context=context;
-        }  
-        public async Task CreateTestCaseAsync(List<TestCase> tests)
-{
-    await _context.TestCases.AddRangeAsync(tests);
-    await _context.SaveChangesAsync(); // Ensure data is saved
-}
+            _context = context;
+        }
 
+        public async Task<List<TestCase>> GetAllTestCaseByProblemIdAsync(string problemId)
+        {
+            var testCases = await _context.TestCases
+                                .Where(x => x.ProblemId == problemId)
+                                .Include(x => x.Problem)
+                                .ToListAsync();
+
+            return testCases;
+        }
     }
 }
