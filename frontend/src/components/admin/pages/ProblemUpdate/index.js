@@ -1,26 +1,16 @@
-import './ProblemForm.Module.scss';
+import './ProblemUpdate.Module.scss';
 import { useEffect, useState } from 'react';
-import classNames from 'classnames/bind';
-import { AdminLayout } from '~/layouts';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { AdminLayout } from '~/layouts';
 
-const ProblemForm = () => {
-    const [showForm, setShowForm] = useState(false); // Controls visibility
-    const [problem, setProblem] = useState({
-        problemId: '',
-        category: '',
-        title: '',
-        detail: '',
-        input: '',
-        output: '',
-        totalPoint: 0,
-        timeLimit: 0,
-        memoryLimit: 0,
-        author: '',
-        solution: '',
-    });
+const ProblemUpdate = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
 
+    const [problem, setProblem] = useState(location.state?.problem || {});
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const [testCases, setTestCases] = useState(
         Array.from({ length: 10 }, (_, index) => ({
             testCaseName: `Test Case ${index + 1}`,
@@ -32,50 +22,27 @@ const ProblemForm = () => {
     const handleChange = (e) => {
         setProblem({ ...problem, [e.target.name]: e.target.value });
     };
-
-    const handleTestCaseChange = (index, field, value) => {
-        const updatedTestCases = [...testCases];
-        updatedTestCases[index][field] = value;
-        setTestCases(updatedTestCases);
-    };
-
     const handleSubmit = async () => {
+        setLoading(true);
+        setError(null);
+
         const requestData = {
             problem: {
-                problemId: problem.problemId,
-                category: problem.category,
-                title: problem.title,
-                detail: problem.detail,
-                input: problem.input,
-                output: problem.output,
-                totalPoint: problem.totalPoint,
-                timeLimit: problem.timeLimit,
-                memoryLimit: problem.memoryLimit,
-                author: problem.author,
-                solution: problem.solution,
+                ...problem,
             },
-
-            testcase: testCases.map((tc, index) => ({
-                testCaseName: `Test Case ${index + 1}`, // Assigns a name for each test case
-                input: tc.input,
-                output: tc.output,
-            })),
+            testcase: testCases,
         };
-        try {
-            console.log(problem);
 
-            const response = await axios.post(
-                'http://localhost:5180/api/problemManagement/create',
-                requestData,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Accept: 'application/json',
-                    },
-                },
+        try {
+            const response = await axios.put(
+                `http://localhost:5180/api/problemManagement/update?problem=${problem}`,
             );
+            navigate('/ProblemsManagement');
         } catch (error) {
             console.error('Error:', error);
+            setError('An error occurred while saving.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -83,12 +50,16 @@ const ProblemForm = () => {
         <AdminLayout>
             <div className="problem-container">
                 <div className="problem-form">
+                    {loading && <p>Loading...</p>}
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+
                     <input
                         type="text"
                         name="problemId"
                         placeholder="ID"
                         value={problem.problemId}
                         onChange={handleChange}
+                        disabled={!!problem} // Disable ID field when updating
                     />
                     <h2>Mô tả bài toán</h2>
                     <textarea
@@ -138,7 +109,7 @@ const ProblemForm = () => {
                         type="number"
                         name="totalPoint"
                         placeholder="Điểm tối đa"
-                        value={problem.totalPoint}
+                        value={problem.score}
                         onChange={handleChange}
                     />
                     <input
@@ -163,30 +134,8 @@ const ProblemForm = () => {
                         onChange={handleChange}
                     />
 
-                    <h3>Test Cases</h3>
-                    {testCases.map((test, index) => (
-                        <div key={index} className="test-case">
-                            <input
-                                type="text"
-                                placeholder={`Test Case ${index + 1} Input`}
-                                value={test.input}
-                                onChange={(e) =>
-                                    handleTestCaseChange(index, 'input', e.target.value)
-                                }
-                            />
-                            <input
-                                type="text"
-                                placeholder={`Test Case ${index + 1} Output`}
-                                value={test.output}
-                                onChange={(e) =>
-                                    handleTestCaseChange(index, 'output', e.target.value)
-                                }
-                            />
-                        </div>
-                    ))}
-
-                    <button onClick={handleSubmit} className="submit-btn">
-                        Submit
+                    <button onClick={handleSubmit} className="submit-btn" disabled={loading}>
+                        Cập Nhật
                     </button>
                 </div>
             </div>
@@ -194,4 +143,4 @@ const ProblemForm = () => {
     );
 };
 
-export default ProblemForm;
+export default ProblemUpdate;

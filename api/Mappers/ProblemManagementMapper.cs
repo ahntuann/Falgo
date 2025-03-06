@@ -33,6 +33,7 @@ namespace api.Mappers
         {
             return testcaseDto.Select(dto => new TestCase
             {
+               TestCaseId  = Guid.NewGuid().ToString(),
                ProblemId = ProblemID, 
               Input = dto.Input,
               Output = dto.Output
@@ -47,9 +48,9 @@ namespace api.Mappers
             Detail=problemDto.Detail,
             Input=problemDto.Input,
             Output=problemDto.Output,
-            TotalPoint=problemDto.TotalPoint,
-             TimeLimit =problemDto.TimeLimit,
-             MemoryLimit =problemDto.MemoryLimit,
+            TotalPoint=int.Parse(problemDto.TotalPoint),
+             TimeLimit =int.Parse(problemDto.TimeLimit),
+             MemoryLimit =int.Parse(problemDto.MemoryLimit),
              Author=problemDto.Author,
             Solution=problemDto.Solution,
             };

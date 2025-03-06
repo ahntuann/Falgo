@@ -164,8 +164,10 @@ builder.Services.AddScoped<IProblemAdminRepository, ProblemAdminRepository>();
 builder.Services.AddScoped<IProblemAdminService, ProblemAdminService>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
-
+builder.Services.AddScoped<IProblemManagementRepository,ProblemManagementRepository>();
+builder.Services.AddScoped<IProblemManagementService,ProblemManagementService>();
 builder.Services.AddScoped<ISubmissionsAdminRepository, SubmissionsAdminRepository>();
+builder.Services.AddScoped<ITestCaseRepository,TestCaseRepository>();
 // Logging
 builder.Logging.AddConsole();
 

@@ -4,6 +4,7 @@ import classNames from 'classnames/bind';
 import styles from './ProblemManagement.module.scss';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ProblemUpdate from '../ProblemUpdate';
 
 const cx = classNames.bind(styles);
 function ProblemsManagement() {
@@ -64,7 +65,6 @@ function ProblemsManagement() {
     };
     const handleEdit = (id) => {
         console.log('Edit problem:', id);
-        // Implement edit functionality
     };
     const handleDelete = async (problemId) => {
         try {
@@ -118,7 +118,9 @@ function ProblemsManagement() {
                                 <td>
                                     <button
                                         className={cx('edit-btn')}
-                                        onClick={() => handleEdit(problem.problemId)}
+                                        onClick={() =>
+                                            navigate('/problemupdate', { state: { problem } })
+                                        }
                                     >
                                         Edit
                                     </button>

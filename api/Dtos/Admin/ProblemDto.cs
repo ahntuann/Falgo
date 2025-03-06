@@ -17,11 +17,11 @@ namespace api.Dtos.Admin
       
         public string Output { get; set; } = string.Empty;
      
-        public int TotalPoint { get; set; } = 0;
+        public string TotalPoint { get; set; } 
      
-        public int TimeLimit { get; set; }
+        public string TimeLimit { get; set; }
   
-        public int MemoryLimit { get; set; }
+        public string MemoryLimit { get; set; }
         public string? Author { get; set; }
         public string? Solution { get; set; }
     }

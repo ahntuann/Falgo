@@ -30,10 +30,7 @@ namespace api.Services
         {
             await _ProblemRepo.DeleteProblemAsync(ProblemID);
         }
-        public async Task CreateProblemAsync(Problem NewProblem)
-        {
-            await _ProblemRepo.CreateProblemAsync(NewProblem);
-        }
+        
         public async Task<List<string>> GetAllCategoriesAsync()
         {
             var problems = await _ProblemRepo.GetAllProblemAsync();
@@ -69,6 +66,19 @@ namespace api.Services
         {
            await _ProblemRepo.CreateProblemAsync(ProblemObject.Problem.ToProblemFromProblemDto());
            await _testcaseRepository.CreateTestCaseAsync(ProblemObject.testcase.ToTestcaseFromTestcaseDto(ProblemObject.Problem.ProblemId));
+        }
+         public async Task<object?> GetProblemDetailByIdAsync(string problemId)
+        {
+            var problem = await _ProblemRepo.GetProblemByIdAsync(problemId);
+            if (problem == null)
+            {
+                return null;
+            }
+            return problem;
+        }
+        public async Task UpdateProblemAsync(Problem problem)
+        {
+            await _ProblemRepo.UpdateProblemAsync( problem);
         }
     }
 }

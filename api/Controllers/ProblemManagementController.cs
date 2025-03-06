@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Helpers;
 using api.Interface.Services;
+using api.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -44,7 +45,14 @@ namespace api.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateProblem([FromBody] ProblemFormObject problemFormObject)
         {
+            Console.WriteLine("ProblemId:   "+problemFormObject.testcase);
             await _ProblemManagementService.AddProblemAsync(problemFormObject);
+            return Ok();
+        }
+        [HttpPut("update")]
+        public async Task<IActionResult>UpdateProblem([FromQuery] Problem problem)
+        {
+            await _ProblemManagementService.UpdateProblemAsync(problem);
             return Ok();
         }
     }
