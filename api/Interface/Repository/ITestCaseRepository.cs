@@ -9,5 +9,6 @@ namespace api.Interface.Repository
     public interface ITestCaseRepository
     {
         public Task<List<TestCase>> GetAllTestCaseByProblemIdAsync(string problemId);
+         public  Task CreateTestCaseAsync(List<TestCase> test);
     }
 }

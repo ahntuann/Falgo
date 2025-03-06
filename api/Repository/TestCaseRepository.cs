@@ -26,5 +26,10 @@ namespace api.Repository
 
             return testCases;
         }
+         public async Task CreateTestCaseAsync(List<TestCase> tests)
+{
+    await _context.TestCases.AddRangeAsync(tests);
+    await _context.SaveChangesAsync(); 
+}
     }
 }
