@@ -74,6 +74,11 @@ function CodeEditerAction() {
             programmingLanguages.at(languageId).programmingLanguageId,
             isTestCode,
         ).then((newTestCase) => {
+            if (newTestCase === undefined) {
+                alert('Hệ thống hiện không hỗ trợ ngôn ngữ này.');
+                return;
+            }
+
             setTestCase(newTestCase);
             setTestcaseAndStatus(
                 newTestCase.map((testCase, index) => {

@@ -27,6 +27,7 @@ namespace api.Repository
         public async Task<ProgrammingLanguage?> GetProgrammingLanguageByIdAsync(string id)
         {
             var proLang = await _context.ProgrammingLanguage
+                                .AsNoTracking()
                                 .FirstOrDefaultAsync(x => x.ProgrammingLanguageId == id);
 
             return proLang;

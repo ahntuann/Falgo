@@ -83,5 +83,10 @@ namespace api.Services
                 .ToList();
             return languages;
         }
+
+        public async Task<Submission> CreateASubmissionAsync(Submission submission)
+        {
+            return await _subRepo.CreateASubmissionAsync(submission);
+        }
     }
 }

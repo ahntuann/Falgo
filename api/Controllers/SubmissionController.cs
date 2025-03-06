@@ -9,6 +9,7 @@ using api.Dtos.TestCase;
 using api.Helpers;
 using api.Interface;
 using api.Interface.Services;
+using api.Mappers;
 using api.Model;
 using Microsoft.AspNetCore.Mvc;
 
@@ -101,6 +102,11 @@ namespace api.Controllers
                 List<TestCaseStatusDto> testCaseStatuses = new List<TestCaseStatusDto>();
 
                 int numOfExecution = submissionPostDto.IsTestCode ? 3 : 10;
+                int numOfSucces = 0;
+                bool isWrongAnswer = false;
+                bool isError = false;
+                bool isTimeLimitExceed = false;
+                double executionTime = 0;
 
                 for (int i = 0; i < 10; i++)
                 {
@@ -139,10 +145,47 @@ namespace api.Controllers
 
                     var output = await ExecuteCommand(dockerCommand, outputPath, testCase, problem);
 
+                    if (output.Result == "Success")
+                        numOfSucces++;
+                    else if (output.Result == "Error")
+                        isError = true;
+                    else if (output.Result == "Time Limit Exceeded")
+                        isTimeLimitExceed = true;
+                    else if (output.Result == "Wrong answer")
+                        isWrongAnswer = true;
+
+                    executionTime += output.ExecutionTime;
+
                     testCaseStatuses.Add(output);
                 }
 
                 Directory.Delete(baseURL, true);
+
+                if (!submissionPostDto.IsTestCode)
+                {
+                    System.Console.WriteLine(submissionPostDto.ProgrammingLanguageId);
+                    string status;
+                    if (isError)
+                        status = "Compilation Error";
+                    else if (isTimeLimitExceed)
+                        status = "Time Limit Exceeded";
+                    else if (isWrongAnswer)
+                        status = "Wrong Answer";
+                    else
+                        status = "Accepted";
+
+                    await _submissionService.CreateASubmissionAsync(new Submission
+                    {
+                        Point = numOfSucces * 10,
+                        SourceCode = submissionPostDto.SourceCode,
+                        Status = status,
+                        ExecuteTime = executionTime,
+                        MemoryUsed = 1000,
+                        ProblemId = submissionPostDto.ProblemID,
+                        AppUserId = submissionPostDto.UserId,
+                        ProgrammingLanguageId = submissionPostDto.ProgrammingLanguageId
+                    });
+                }
 
                 return Ok(testCaseStatuses);
             }

@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using api.Interface;
+using api.Model;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace api.Services
@@ -21,6 +22,11 @@ namespace api.Services
             _contestRegisRepo = contestRegisRepo;
             _userRepo = userRepo;
             _contestRepo = contestRepo;
+        }
+
+        public async Task<AppUser> GetUserByIdAsync(string userId)
+        {
+            return await _userRepo.GetUserByIdAsync(userId);
         }
 
         public async Task<bool?> IsUserRegisContest(string userId, string contestId)
@@ -50,18 +56,19 @@ namespace api.Services
             smtp.EnableSsl = true;
             smtp.Port = 587;
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtp.Credentials = new NetworkCredential(from,password);
+            smtp.Credentials = new NetworkCredential(from, password);
             try
             {
                 smtp.Send(mail);
                 Console.WriteLine("Gửi email thành công!");
-                
-            }catch(Exception ex)
+
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine("Lỗi khi gửi email: " + ex.Message);
             }
         }
 
     }
-    
+
 }
