@@ -1,23 +1,20 @@
 import classNames from 'classnames/bind';
 import style from './TestCaseSection.module.scss';
-import notifyTestcase from '~/ultils/notifyTestcase';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClockFour, faCircleCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
-import CodeEditingContext from '~/context/CodeEditingContext';
+import {
+    faClockFour,
+    faCircleCheck,
+    faCircleExclamation,
+    faLock,
+} from '@fortawesome/free-solid-svg-icons';
+import useCodeEditing from '~/hooks/useCodeEditing';
 
 const cs = classNames.bind(style);
 
 function TestCaseSection() {
-    const { testCase } = useContext(CodeEditingContext);
+    const { testCase, testcaseAndStatus, notifyContent } = useCodeEditing();
 
-    const [notifyContent, setNotifyContent] = useState(notifyTestcase['needToTest']);
-    const [testcaseAndStatus, setTestcaseAndStatus] = useState(
-        Array.from({ length: 10 }, (_, index) => ({
-            name: `Kiểm thử ${index + 1}`,
-            status: 'notYet',
-        })),
-    );
     const [testcaseFocus, setTestcaseFocus] = useState(0);
     const [testCaseCur, setTestCaseCur] = useState([]);
 
@@ -43,7 +40,9 @@ function TestCaseSection() {
 
     const getTestcaseIcon = (status) => {
         switch (status) {
-            case 'notYet':
+            case 'lock':
+                return <FontAwesomeIcon icon={faLock} />;
+            case 'inExecution':
                 return <FontAwesomeIcon icon={faClockFour} />;
             case 'fail':
                 return <FontAwesomeIcon icon={faCircleExclamation} style={{ color: 'red' }} />;
@@ -62,9 +61,14 @@ function TestCaseSection() {
                 <div className={cs('testcaseList')}>
                     {testcaseAndStatus.map((testcase, i) => (
                         <div
-                            className={cs('testcaseItem', { active: testcaseFocus === i })}
+                            className={cs('testcaseItem', {
+                                active: testcaseFocus === i,
+                                deactive: testcase.status === 'lock',
+                            })}
                             key={i}
-                            onClick={() => setTestcaseFocus(i)}
+                            onClick={() => {
+                                if (i < 3) setTestcaseFocus(i);
+                            }}
                         >
                             <div className={cs('testcaseIcon')}>
                                 {getTestcaseIcon(testcase.status)}

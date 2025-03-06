@@ -8,7 +8,7 @@ import {
     faCirclePlay,
     faHandPointer,
 } from '@fortawesome/free-solid-svg-icons';
-import { use, useEffect, useState } from 'react';
+import { useState } from 'react';
 import defaultCodes from '~/ultils/codeDefault';
 
 import useCodeEditing from '~/hooks/useCodeEditing';
@@ -20,6 +20,7 @@ const cs = classNames.bind(style);
 function CodeEditerAction() {
     const {
         isSubmitable,
+        setIsSubmitable,
         codeText,
         setCodeText,
         programmingLanguages,
@@ -27,6 +28,8 @@ function CodeEditerAction() {
         setLanguageId,
         briefInfoProblem,
         setTestCase,
+        setTestcaseAndStatus,
+        setNotifyContent,
     } = useCodeEditing();
     const { appUser } = useAuth();
 
@@ -51,13 +54,56 @@ function CodeEditerAction() {
 
     //
     const handleSubmitSolution = (isTestCode) => {
+        setTestcaseAndStatus(
+            (prev) =>
+                prev.map((_, i) => {
+                    return {
+                        name: `Kiểm thử ${i + 1}`,
+                        status: i >= 3 ? 'lock' : 'inExecution',
+                    };
+                }),
+            [],
+        );
+
+        let numOfSuccess = 0;
+
         submitSolutionForAProblemAPI(
             briefInfoProblem.problemId,
             appUser.id,
             codeText,
             programmingLanguages.at(languageId).programmingLanguageId,
             isTestCode,
-        ).then((newTestCase) => setTestCase(newTestCase));
+        ).then((newTestCase) => {
+            setTestCase(newTestCase);
+            setTestcaseAndStatus(
+                newTestCase.map((testCase, index) => {
+                    if (testCase.result === 'Success') numOfSuccess++;
+
+                    return {
+                        name: `Kiểm thử ${index + 1}`,
+                        status:
+                            index >= 3
+                                ? 'lock'
+                                : `${testCase.result === 'Success' ? 'success' : 'fail'}`,
+                    };
+                }),
+            );
+
+            if (isTestCode)
+                if (numOfSuccess === 3) {
+                    setNotifyContent('3/3 kiểm thử mẫu đã thành công. \n Bạn đã có thể nộp code!');
+                    setIsSubmitable(true);
+                } else
+                    setNotifyContent(
+                        `${numOfSuccess}/3 kiểm thử mẫu thành công. \n Vui lòng kiểm tra lại!`,
+                    );
+            else if (numOfSuccess === 10)
+                setNotifyContent('10/10 kiểm thử đã thành công. \n Chúc mừng bạn lthao <3');
+            else
+                setNotifyContent(
+                    `${numOfSuccess}/10 kiểm thử thành công. \n Vui lòng kiểm tra lại!`,
+                );
+        });
     };
 
     return (
@@ -96,6 +142,9 @@ function CodeEditerAction() {
                     className={cs('submitBtn', {
                         active: isSubmitable,
                     })}
+                    onClick={() => {
+                        if (isSubmitable) handleSubmitSolution(false);
+                    }}
                 >
                     <FontAwesomeIcon className={cs('moreActionIcon')} icon={faHandPointer} />
                     Nộp bài

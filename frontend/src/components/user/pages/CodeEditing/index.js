@@ -7,6 +7,7 @@ import { faAngleLeft, faCircleQuestion } from '@fortawesome/free-solid-svg-icons
 import { CodeEditer } from '~/components/user/components';
 import { fetchProblemSolvingByIdAPI } from '~/apis';
 import { useEffect, useState } from 'react';
+import Chatbot from '~/components/user/components/ChatBot';
 
 const cs = classNames.bind(style);
 
@@ -34,6 +35,8 @@ function CodeEditing() {
             </div>
 
             {problem !== null && problem !== undefined && <CodeEditer briefInfoProblem={problem} />}
+
+            <Chatbot />
         </div>
     );
 }

@@ -100,8 +100,24 @@ namespace api.Controllers
                 ProblemDetailDto problem = await _proService.GetProblemDetailByIdAsync(submissionPostDto.ProblemID);
                 List<TestCaseStatusDto> testCaseStatuses = new List<TestCaseStatusDto>();
 
-                foreach (var testCase in testCases)
+                int numOfExecution = submissionPostDto.IsTestCode ? 3 : 10;
+
+                for (int i = 0; i < 10; i++)
                 {
+                    TestCase testCase = testCases.ElementAt(i);
+
+                    if (i >= numOfExecution)
+                    {
+                        testCaseStatuses.Add(new TestCaseStatusDto
+                        {
+                            TestCaseId = testCase.TestCaseId,
+                            Input = testCase.Input,
+                            Output = testCase.Output,
+                        });
+
+                        continue;
+                    }
+
                     string inputFileName = "input.txt";
                     string outputFileName = "output.txt";
 
