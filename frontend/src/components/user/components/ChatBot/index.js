@@ -6,7 +6,8 @@ import style from './ChatBot.module.scss';
 
 const cs = classNames.bind(style);
 
-const genAI = new GoogleGenerativeAI('AIzaSyAQKlODg9pioCIZ1gBy9KwoQyG4KDaIVpg');
+const geminiKey = process.env.REACT_APP_GEMINI_KEY;
+const genAI = new GoogleGenerativeAI(geminiKey);
 const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
 const Chatbot = () => {

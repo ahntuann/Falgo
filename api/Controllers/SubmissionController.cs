@@ -130,7 +130,12 @@ namespace api.Controllers
                     string runCommand = GetRunCommand(proLangDto.Language, fileName);
 
                     string fixPermissionCommand = "chmod -R 777 /app";
-                    string dockerCommand = $"docker run --rm -v '{baseURL}:/app' {dockerImage} /bin/bash -c '{fixPermissionCommand} && {compileCommand} && {runCommand}'";
+
+                    string dockerCommand;
+                    if (compileCommand != "")
+                        dockerCommand = $"docker run --rm -v '{baseURL}:/app' {dockerImage} /bin/bash -c '{fixPermissionCommand} && {compileCommand} && {runCommand}'";
+                    else
+                        dockerCommand = $"docker run --rm -v '{baseURL}:/app' {dockerImage} /bin/bash -c '{fixPermissionCommand} && {runCommand}'";
 
                     var output = await ExecuteCommand(dockerCommand, outputPath, testCase, problem);
 
@@ -178,7 +183,7 @@ namespace api.Controllers
         {
             return language switch
             {
-                "Python" => $"python /app/{fileName} < /app/input.txt > /app/output.txt",
+                "Python" => $"python3 /app/{fileName} < /app/input.txt > /app/output.txt",
                 "C++" => $"/app/main < /app/input.txt > /app/output.txt",
                 "Java" => $"java -cp /app/ Main < /app/input.txt > /app/output.txt",
                 _ => throw new ArgumentException("Not support this programming language")
