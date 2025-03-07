@@ -17,6 +17,6 @@ namespace api.Interface.Services
         public  Task<PageResult<ViewProblemManagementDto>> ViewAllProblemtMangagement(ProblemManagamentQueryObject query);
         public  Task AddProblemAsync (ProblemFormObject ProblemObject);
           public  Task<object?> GetProblemDetailByIdAsync(string problemId);
-          public Task UpdateProblemAsync(Problem problem);
+          public Task UpdateProblemAsync(ProblemDto problem);
     }
 }

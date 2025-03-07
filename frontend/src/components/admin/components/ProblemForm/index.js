@@ -89,6 +89,7 @@ const ProblemForm = () => {
                         placeholder="ID"
                         value={problem.problemId}
                         onChange={handleChange}
+                        required
                     />
                     <h2>Mô tả bài toán</h2>
                     <textarea
@@ -97,6 +98,7 @@ const ProblemForm = () => {
                         placeholder="Viết mô tả bài toán ở đây"
                         rows={10}
                         style={{ width: '100%', padding: '10px', fontSize: '16px' }}
+                        required
                     />
                     <h2>Lời giải</h2>
                     <textarea
@@ -105,6 +107,7 @@ const ProblemForm = () => {
                         placeholder="Viết lời giải bài toán ở đây"
                         rows={10}
                         style={{ width: '100%', padding: '10px', fontSize: '16px' }}
+                        required
                     />
                     <input
                         type="text"
@@ -112,6 +115,7 @@ const ProblemForm = () => {
                         placeholder="Đề bài"
                         value={problem.title}
                         onChange={handleChange}
+                        required
                     />
                     <input
                         type="text"
@@ -119,6 +123,7 @@ const ProblemForm = () => {
                         placeholder="Thể loại"
                         value={problem.category}
                         onChange={handleChange}
+                        required
                     />
                     <input
                         type="text"
@@ -126,6 +131,7 @@ const ProblemForm = () => {
                         placeholder="Input"
                         value={problem.input}
                         onChange={handleChange}
+                        required
                     />
                     <input
                         type="text"
@@ -133,6 +139,7 @@ const ProblemForm = () => {
                         placeholder="Output"
                         value={problem.output}
                         onChange={handleChange}
+                        required
                     />
                     <input
                         type="number"
@@ -140,6 +147,7 @@ const ProblemForm = () => {
                         placeholder="Điểm tối đa"
                         value={problem.totalPoint}
                         onChange={handleChange}
+                        required
                     />
                     <input
                         type="number"
@@ -147,6 +155,7 @@ const ProblemForm = () => {
                         placeholder="Time Limit (ms)"
                         value={problem.timeLimit}
                         onChange={handleChange}
+                        required
                     />
                     <input
                         type="number"
@@ -154,6 +163,7 @@ const ProblemForm = () => {
                         placeholder="Memory Limit (MB)"
                         value={problem.memoryLimit}
                         onChange={handleChange}
+                        required
                     />
                     <input
                         type="text"
@@ -161,6 +171,7 @@ const ProblemForm = () => {
                         placeholder="Người đăng (optional)"
                         value={problem.author}
                         onChange={handleChange}
+                        required
                     />
 
                     <h3>Test Cases</h3>
@@ -173,6 +184,7 @@ const ProblemForm = () => {
                                 onChange={(e) =>
                                     handleTestCaseChange(index, 'input', e.target.value)
                                 }
+                                required
                             />
                             <input
                                 type="text"
@@ -181,12 +193,13 @@ const ProblemForm = () => {
                                 onChange={(e) =>
                                     handleTestCaseChange(index, 'output', e.target.value)
                                 }
+                                required
                             />
                         </div>
                     ))}
 
                     <button onClick={handleSubmit} className="submit-btn">
-                        Submit
+                        Tạo bài
                     </button>
                 </div>
             </div>

@@ -35,7 +35,8 @@ const ProblemUpdate = () => {
 
         try {
             const response = await axios.put(
-                `http://localhost:5180/api/problemManagement/update?problem=${problem}`,
+                `http://localhost:5180/api/problemManagement/update`,
+                problem,
             );
             navigate('/ProblemsManagement');
         } catch (error) {
@@ -109,7 +110,7 @@ const ProblemUpdate = () => {
                         type="number"
                         name="totalPoint"
                         placeholder="Điểm tối đa"
-                        value={problem.score}
+                        defaultValue={problem.score}
                         onChange={handleChange}
                     />
                     <input

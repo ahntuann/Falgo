@@ -76,9 +76,9 @@ namespace api.Services
             }
             return problem;
         }
-        public async Task UpdateProblemAsync(Problem problem)
+        public async Task UpdateProblemAsync(ProblemDto problem)
         {
-            await _ProblemRepo.UpdateProblemAsync( problem);
+            await _ProblemRepo.UpdateProblemAsync( problem.ToProblemFromProblemDto());
         }
     }
 }

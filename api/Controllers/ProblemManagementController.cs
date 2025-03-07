@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dtos.Admin;
 using api.Helpers;
 using api.Interface.Services;
 using api.Model;
@@ -50,7 +51,7 @@ namespace api.Controllers
             return Ok();
         }
         [HttpPut("update")]
-        public async Task<IActionResult>UpdateProblem([FromQuery] Problem problem)
+        public async Task<IActionResult>UpdateProblem([FromBody] ProblemDto problem)
         {
             await _ProblemManagementService.UpdateProblemAsync(problem);
             return Ok();
