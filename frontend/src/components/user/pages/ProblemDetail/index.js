@@ -82,21 +82,16 @@ const ProblemDetail = () => {
                 </p>
             </div>
             <div className={cs('actions')}>
-                <a
-                    href={`/solve/${problemId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cs('button', 'primary')}
-                >
+                <Link to={`/practice?id=${problemId}`} className={cs('button', 'primary')}>
                     Làm bài
-                </a>
+                </Link>
                 <Link
                     to={`/submissions?problemId=${problemId}&userId=${appUser?.id}`}
                     className={cs('button', 'secondary')}
                 >
                     Lịch sử nộp bài
                 </Link>
-                <Link to="/submissions" className={cs('button', 'secondary')}>
+                <Link to={`/submissions/${problemId}`} className={cs('button', 'secondary')}>
                     Danh sách bài nộp
                 </Link>
                 <Link to="/problems" className={cs('button', 'back')}>

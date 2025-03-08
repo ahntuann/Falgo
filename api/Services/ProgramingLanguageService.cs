@@ -25,5 +25,15 @@ namespace api.Services
                     .Select(x => x.ToProLanguageDtoFromProLanguage())
                     .ToList();
         }
+
+        public async Task<ProgramingLanguageDto?> GetProgramingLanguageAsync(string id)
+        {
+            var proLang = await _proLanguageRepo.GetProgrammingLanguageByIdAsync(id);
+
+            if (proLang == null)
+                return null;
+
+            return proLang.ToProLanguageDtoFromProLanguage();
+        }
     }
 }

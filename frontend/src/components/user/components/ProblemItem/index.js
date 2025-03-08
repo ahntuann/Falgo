@@ -4,11 +4,13 @@ import style from './ProblemItem.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import TippyHeadless from '~/components/user/components/TippyHeadless';
+import { Link } from 'react-router-dom';
 
 const cs = classNames.bind(style);
 
 function ProblemItem({
     detail,
+    problemId,
     name,
     point,
     pointAchive,
@@ -41,7 +43,9 @@ function ProblemItem({
                     {point}
                 </div>
                 <div className={cs('getInProblem')}>
-                    <FontAwesomeIcon icon={faPlayCircle} />
+                    <Link to={`/problems/${problemId}`}>
+                        <FontAwesomeIcon icon={faPlayCircle} />
+                    </Link>
                 </div>
                 <div className={cs('author')}>{author}</div>
 

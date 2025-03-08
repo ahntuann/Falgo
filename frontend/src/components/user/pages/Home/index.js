@@ -34,8 +34,11 @@ function Home() {
             userId: appUser.id,
         };
 
-        fetchProblemHomePageAPI(kindOfProblem).then((newProblems) => setProblems(newProblems));
-    }, [appUser, problemDailyFocus]);
+        fetchProblemHomePageAPI(kindOfProblem).then((newProblems) => {
+            console.log(newProblems);
+            setProblems(newProblems);
+        });
+    }, [userRole, problemDailyFocus]);
 
     // fetch Contest Brief
     useEffect(() => {
@@ -81,6 +84,7 @@ function Home() {
                                 <ProblemItem
                                     key={i}
                                     detail={problem.detail}
+                                    problemId={problem.problemId}
                                     itemNumber={i}
                                     isMostAttempted={problemDailyFocus === 0}
                                     isDoned={problemDailyFocus === 2}

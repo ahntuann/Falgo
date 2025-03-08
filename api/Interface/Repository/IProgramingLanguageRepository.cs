@@ -9,5 +9,6 @@ namespace api.Interface
     public interface IProgramingLanguageRepository
     {
         public Task<List<ProgrammingLanguage>> GetAllProgramingLanguageAsync();
+        public Task<ProgrammingLanguage?> GetProgrammingLanguageByIdAsync(string id);
     }
 }

@@ -26,7 +26,7 @@ namespace api.Repository
 
         public async Task<Problem?> GetProblemByIdAsync(string problemId)
         {
-            return await _context.Problems.FirstOrDefaultAsync(p => p.ProblemId == problemId);
+            return await _context.Problems.AsNoTracking().FirstOrDefaultAsync(p => p.ProblemId == problemId);
         }
 
         public async Task<List<Problem>> GetFilteredProblemsAsync(ProblemListQueryObject query, string userId)

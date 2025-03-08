@@ -3,161 +3,127 @@
     align-items: flex-start;
     gap: 20px;
     padding: 20px;
-}
-
-.show-Conent{
-    width: 60%;
-}
-.show-content-informationinformation{
-    display: flex;
-    justify-content: space-between;
-    img{
-        width: 20%;
-    }
-}
-
-.show-content {
-    flex: 2;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-
-.suggest-bar {
-    flex: 1;
-    display: flex;
-    gap: 20px;
-}
-
-.suggest-by-author, .suggest {
-    flex: 1; /* Mỗi phần chiếm 50% */
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.suggest-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-    padding: 10px;
-    border-radius: 6px;
-    transition: background 0.3s;
-}
-
-.suggest-item:hover {
-    background: #f1f1f1;
-}
-
-.suggest-img {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 4px;
-}
-.suggest-bar {
-    display: flex;
-    gap: 20px;
-}
-
-/* Nếu chỉ có 1 cột, nó sẽ chiếm toàn bộ chiều rộng */
-.suggest-bar > div {
-    flex: 1;
-}
-
-/* Hiển thị thumbnail trên tiêu đề */
-.suggest-item {
-    display: flex;
-    flex-direction: column; /* Thumbnail trên, tiêu đề dưới */
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-    padding: 10px;
-    border-radius: 6px;
-    transition: background 0.3s;
-    text-align: center;
-}
-
-.suggest-item:hover {
-    background: #f1f1f1;
-}
-
-/* Container chung cho các nút */
-.actions {
-    display: flex;
-    gap: 10px; 
-}
-
-/* Nút chỉnh sửa */
-.edit {
-    background-color: #ffc107;
-    color: #333;
-    padding: 8px 14px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-        background-color: #e0a800;
-        transform: scale(1.05);
-    }
-}
-
-/* Nút xóa */
-.delete-btn {
-    background-color: #dc3545;
     color: white;
-    padding: 8px 14px;
-    border-radius: 5px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    .show-Conent {
+        width: 60%;
+    }
+    .show-content-informationinformation {
+        display: flex;
+        justify-content: space-between;
+        .thumbnail{
+            width: 172px;
+            height: 172px;
+            border: 1px solid white;
+            border-radius: 10px;
+        }
+    }
 
-    &:hover {
-        background-color: #c82333;
-        transform: scale(1.05);
-    }
-}
-
-.action-buttons{
-    button {
-        text-align: center;
-        padding: 8px 12px; 
-        border-radius: 4px;
-        font-size: 14px;
-    }
-    .suggest-img {
-        max-width: 150px;
-        height: auto;
-        object-fit: cover;
-        border-radius: 4px;
-    }
-    
-    .edit-btn {
-        background-color: #ffc107;
+    .show-content {
+        flex: 2;
+        background: #666080;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         color: black;
-        border: none;
+        .ContextImgVideo{
+            width: 100%;
+            height: 696.92px;
+        }
     }
-    
-    .delete-btn {
-        background-color: #dc3545;
-        color: white;
-        border: none;
+
+    .suggest-bar {
+        flex: 1;
+        gap: 20px;
+        text-align: center;
     }
-    
-    .edit:hover {
-        background-color: #e0a800;
+
+    .suggest-by-author,
+    .suggest {
+        flex: 1;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        .suggest-img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .suggest-item {
+            border: 1px solid white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 6px;
+            transition: background 0.3s;
+            text-align: center;
+
+            .btn-read-more {
+                cursor: pointer;
+                color: white;
+                text-decoration: none;
+            }
+        }
+        .suggest-item:hover .btn-read-more {
+            color: black;
+        }
+        .suggest-item:hover {
+            background: #f1f1f1;
+        }
     }
-    
-    .delete:hover {
-        background-color: #c82333;
+
+    .action-buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        button {
+            text-align: center;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .suggest-img {
+            max-width: 150px;
+            height: auto;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .edit {
+            color: black;
+            border: none;
+            height: 40px;
+            background-color: #d4aa2d;
+            padding: 8px 14px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background-color: #ffc004;
+                transform: scale(1.05);
+            }
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            height: 40px;
+            padding: 8px 14px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            &:hover {
+                background-color: #c82333;
+                transform: scale(1.05);
+            }
+        }
     }
 }

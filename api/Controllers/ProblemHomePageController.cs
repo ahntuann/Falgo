@@ -26,6 +26,7 @@ namespace api.Controllers
             {
                 var problems = await _proService.GetXProblemHomePageMostAttmpedAsync(query.PageSize, DateTime.Now.Month, DateTime.Now.Year);
 
+                System.Console.WriteLine(problems);
                 if (problems == null)
                 {
                     return NotFound("There are no problems in this month");

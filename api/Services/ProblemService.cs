@@ -68,6 +68,11 @@ namespace api.Services
             };
         }
 
+        public async Task<Problem> GetProblemByIdAsync(string problemId)
+        {
+            return await _problemRepository.GetProblemByIdAsync(problemId);
+        }
+
         public async Task<ProblemDetailDto?> GetProblemDetailByIdAsync(string problemId)
         {
             var problem = await _problemRepository.GetProblemByIdAsync(problemId);
@@ -77,6 +82,15 @@ namespace api.Services
             }
             var problemDetail = problem.ToProblemDetailDto();
             return problemDetail;
+        }
+
+        public async Task<ProblemSolvingDto?> GetProblemSolvingByIdAsync(string problemId)
+        {
+            var problem = await _problemRepository.GetProblemByIdAsync(problemId);
+            if (problem == null)
+                return null;
+
+            return problem.ToProblemSolvingDtoFromProblem();
         }
     }
 }

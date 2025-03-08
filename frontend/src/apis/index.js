@@ -84,3 +84,45 @@ export const fetchNumberNotAcceptedSubmissionByLanguageAPI = async (userId, lang
         console.log(error);
     }
 };
+
+export const fetchProblemSolvingByIdAPI = async (problemId) => {
+    try {
+        const response = await axios.get(
+            `${API_ROOT}/api/problem/problemDetail?ProblemId=${problemId}&Solving=${true}`,
+        );
+
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const fetchAllTestCaseForAProblemAPI = async (problemId) => {
+    try {
+        const response = await axios.get(`${API_ROOT}/api/testcase?ProblemId=${problemId}`);
+
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const submitSolutionForAProblemAPI = async (
+    problemID,
+    userId,
+    sourceCode,
+    programmingLanguageId,
+    isTestCode,
+) => {
+    try {
+        const reponse = await axios.post(`${API_ROOT}/api/submission`, {
+            problemID,
+            userId,
+            sourceCode,
+            programmingLanguageId,
+            isTestCode,
+        });
+
+        return reponse.data;
+    } catch (error) {}
+};

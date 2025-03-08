@@ -51,7 +51,7 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5feebd43-96d7-4b4d-bdf5-ee8e0277db6b",
+                            Id = "7ed3597a-7f26-4f0b-9b1d-bf0da31a7d7c",
                             Name = "User",
                             NormalizedName = "USER"
                         },
