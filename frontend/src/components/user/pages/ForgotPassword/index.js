@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ResetPassword.module.scss';
-
+import * as Yup from 'yup';
 import classNames from 'classnames/bind';
 import style from './ResetPassword.module.scss';
 const cs = classNames.bind(style);
@@ -56,6 +56,21 @@ function ForgotPassword() {
     };
 
     const changePassword = async () => {
+        const passwordSchema = Yup.string()
+            .min(12, 'Mật khẩu phải có ít nhất 12 ký tự')
+            .matches(/[0-9]/, 'Mật khẩu phải có ít nhất một số')
+            .matches(/[a-z]/, 'Mật khẩu phải có ít nhất một ký tự viết thường')
+            .matches(/[A-Z]/, 'Mật khẩu phải có ít nhất một ký tự viết hoa')
+            .matches(/[^a-zA-Z0-9]/, 'Mật khẩu phải có ít nhất một ký tự đặc biệt')
+            .required('Mật khẩu được yêu cầu');
+
+        try {
+            await passwordSchema.validate(newPassword);
+        } catch (error) {
+            alert(error.message);
+            return;
+        }
+
         if (newPassword !== confirmPassword) {
             alert('Mật khẩu xác nhận không khớp!');
             return;
@@ -93,14 +108,14 @@ function ForgotPassword() {
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Nhập Username"
+                        placeholder="Tên đăng nhập"
                     />
                     <input
                         className={cs('resetpassword-input')}
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Nhập Email"
+                        placeholder="Email"
                     />
                     <button className={cs('resetpassword-button', 'primary')} onClick={verifyUser}>
                         Tiếp tục
