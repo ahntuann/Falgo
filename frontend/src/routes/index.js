@@ -11,6 +11,7 @@ import {
     ProblemDetail,
     ForgotPassword,
     SubmissionList,
+    UpdateProfile,
 } from '~/components/user/pages';
 import { AdminLogin, Dashboard } from '~/components/admin/pages';
 import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
@@ -94,6 +95,12 @@ const routes = [
         path: '/forgot-password',
         layout: DefaultLayout,
         role: ['user', 'guest'],
+    },
+    {
+        component: UpdateProfile,
+        path: '/UpdateProfile',
+        layout: DefaultLayout,
+        role: ['user'],
     },
 ];
 

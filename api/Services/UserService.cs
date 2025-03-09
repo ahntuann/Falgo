@@ -97,43 +97,46 @@ namespace api.Services
                 CreatedAt = user.CreatedAt,
                 TotalSubmissions = totalSubmissions,
                 TotalSolved = totalSolved,
-                Avatar = user.Avatar
+                Avatar = user.Avatar,
+                Address = user.Address
             };
         }
-            public async Task<bool> UpdateUserAvatar(string userId, IFormFile avatar)
+        
+        public async Task<bool> UpdateUserAsync(string userId, UpdateUserDto updateUserDto)
+        {
+            return await _userRepo.UpdateUserAsync(userId, updateUserDto);
+        }
+
+        public async Task<string> UploadAvatarAsync(string userId, IFormFile avatar)
+        {
+            if (avatar == null || avatar.Length == 0)
+                throw new ArgumentException("Vui lòng chọn ảnh để tải lên!");
+
+            // Tạo thư mục lưu ảnh nếu chưa tồn tại
+            string uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+
+            // Tạo tên file duy nhất
+            string fileName = $"{Guid.NewGuid()}{Path.GetExtension(avatar.FileName)}";
+            string filePath = Path.Combine(uploadsFolder, fileName);
+
+            // Lưu ảnh vào thư mục
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                try
-                {
-                    var user = await _userRepo.GetUserByIdAsync(userId);
-                    if (user == null)
-                        return false;
-
-                    // Định nghĩa đường dẫn lưu avatar
-                    var uploadsFolder = Path.Combine(_env.WebRootPath, "avatars");
-                    if (!Directory.Exists(uploadsFolder))
-                        Directory.CreateDirectory(uploadsFolder);
-
-                    // Đặt tên file
-                    var fileName = $"{userId}_{Path.GetFileName(avatar.FileName)}";
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    // Lưu file vào thư mục
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await avatar.CopyToAsync(stream);
-                    }
-
-                    // Cập nhật đường dẫn avatar trong database
-                    user.Avatar = $"/avatars/{fileName}";
-                    await _userRepo.UpdateUser(user);
-
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
+                await avatar.CopyToAsync(fileStream);
             }
+
+            // Cập nhật đường dẫn ảnh vào database
+            var user = await _userRepo.GetUserByIdAsync(userId);
+            if (user == null)
+                throw new KeyNotFoundException("Người dùng không tồn tại!");
+
+            user.Avatar = $"/uploads/{fileName}";
+            await _userRepo.UpdateUserAsync(user);
+
+            return user.Avatar;
+        }
 
     }
 

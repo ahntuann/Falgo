@@ -7,6 +7,7 @@ using api.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using api.Dtos.User;
 
 namespace api.Controllers
 {
@@ -15,9 +16,11 @@ namespace api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IWebHostEnvironment _env;
+        public UserController(IUserService userService, IWebHostEnvironment env)
         {
             _userService = userService;
+            _env = env;
         }
 
         [HttpGet("isRegis")]
@@ -36,8 +39,8 @@ namespace api.Controllers
                 return Ok(new { isRegis = true });
         }
 
-        [HttpGet("profile")]
-        public async Task<IActionResult> GetUserProfile([FromQuery(Name = "userId")] string userId)
+        [HttpGet("profile/{userId}")]
+        public async Task<IActionResult> GetUserProfile(string userId)
         {
             if (string.IsNullOrEmpty(userId))
                 return BadRequest("User ID is required");
@@ -49,22 +52,41 @@ namespace api.Controllers
 
             return Ok(profile);
         }
-
-        [HttpPost("update-avatar")]
-        public async Task<IActionResult> UpdateAvatar([FromQuery] string userId, [FromForm] IFormFile avatar)
+        [HttpPut("update/{userId}")]
+        public async Task<IActionResult> UpdateUser(string userId, [FromBody] UpdateUserDto updateUserDto)
         {
-            if (string.IsNullOrEmpty(userId))
-                return BadRequest("User ID is required");
-
-            if (avatar == null || avatar.Length == 0)
-                return BadRequest("File is required");
-
-            var result = await _userService.UpdateUserAvatar(userId, avatar);
-
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+                
+            var result = await _userService.UpdateUserAsync(userId, updateUserDto);
+            
             if (!result)
-                return StatusCode(500, "Lỗi khi cập nhật avatar");
-
-            return Ok(new { message = "Avatar cập nhật thành công" });
+                return BadRequest("Failed to update user information or user not found");
+                
+            return Ok(new { success = true, message = "User information updated successfully" });
         }
+
+        [HttpPost("upload-avatar/{userId}")]
+        public async Task<IActionResult> UploadAvatar(string userId, IFormFile avatar)
+        {
+            try
+            {
+                string avatarUrl = await _userService.UploadAvatarAsync(userId, avatar);
+                return Ok(new { message = "Cập nhật ảnh đại diện thành công!", avatarUrl });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi server!", error = ex.Message });
+            }
+        }
+
     }
 }
