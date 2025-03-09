@@ -9,5 +9,9 @@ namespace api.Interface
     public interface IUserRepository
     {
         public Task<AppUser?> GetUserByIdAsync(string id);
+        Task<int> GetUserSolvedCountAsync(string userId);
+        Task<int> GetUserSubmissionCountAsync(string userId); 
+        Task UpdateUserAsync(AppUser user);
+        Task<bool> UpdateUser(AppUser user);
     }
 }

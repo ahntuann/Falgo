@@ -124,5 +124,12 @@ namespace api.Repository
                 return null;
             }
         }
+        public async Task<bool> HasUserSolvedProblemAsync(string userId, string problemId)
+        {
+        return await _context.Submissions
+        .AnyAsync(s => s.AppUserId == userId 
+                 && s.ProblemId == problemId 
+                 && s.Status == "Accepted");
+        }
     }
 }

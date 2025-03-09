@@ -19,7 +19,7 @@ namespace api.Services
         {
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30) 
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(90) 
             };
             _cache.Set(email, otp, cacheEntryOptions);
             Console.WriteLine($"[DEBUG] OTP mới cho {email}: {otp}");

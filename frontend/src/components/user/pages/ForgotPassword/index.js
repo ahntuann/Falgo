@@ -42,7 +42,7 @@ function ForgotPassword() {
         if (response.ok) {
             alert('Mã xác nhận đã được gửi!');
             setStep(2);
-            setTimeLeft(30);
+            setTimeLeft(90);
         } else {
             alert('Username hoặc Email không đúng!');
         }
