@@ -24,5 +24,6 @@ namespace api.Dtos.Admin
         public string MemoryLimit { get; set; }
         public string? Author { get; set; }
         public string? Solution { get; set; }
+        
     }
 }

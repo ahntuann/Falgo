@@ -64,8 +64,11 @@ namespace api.Services
         }
         public async Task AddProblemAsync (ProblemFormObject ProblemObject)
         {
-           await _ProblemRepo.CreateProblemAsync(ProblemObject.Problem.ToProblemFromProblemDto());
-           await _testcaseRepository.CreateTestCaseAsync(ProblemObject.testcase.ToTestcaseFromTestcaseDto(ProblemObject.Problem.ProblemId));
+
+            Problem problem = ProblemObject.Problem.ToProblemFromProblemDto();
+           await _ProblemRepo.CreateProblemAsync(problem);
+        
+           await _testcaseRepository.CreateTestCaseAsync(ProblemObject.testcase.ToTestcaseFromTestcaseDto(problem.ProblemId));
         }
          public async Task<object?> GetProblemDetailByIdAsync(string problemId)
         {
