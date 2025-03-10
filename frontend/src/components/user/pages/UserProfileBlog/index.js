@@ -415,7 +415,7 @@ const UserProfileBlog = () => {
 
                         <div className={cs('blog-sidebar')}>
                             <div className={cs('actions-buttons')}>
-                                <Link to="/BlogCreate" className={cs('create-btn')}>
+                                <Link to={'/CreateBlog'} className={cs('create-btn')}>
                                     Tạo bài viết mới
                                 </Link>
                             </div>
