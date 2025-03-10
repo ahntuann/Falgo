@@ -82,7 +82,12 @@ const ProblemDetail = () => {
                 </p>
             </div>
             <div className={cs('actions')}>
-                <Link to={`/practice?id=${problemId}`} className={cs('button', 'primary')}>
+                <Link
+                    to={`/practice?id=${problemId}`}
+                    className={cs('button', 'primary')}
+                    target="blank"
+                    rel="noopener"
+                >
                     Làm bài
                 </Link>
                 <Link
