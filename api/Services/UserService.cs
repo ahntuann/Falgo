@@ -97,43 +97,58 @@ namespace api.Services
                 CreatedAt = user.CreatedAt,
                 TotalSubmissions = totalSubmissions,
                 TotalSolved = totalSolved,
-                Avatar = user.Avatar
+                Avatar = user.Avatar,
+                Address = user.Address
             };
         }
-            public async Task<bool> UpdateUserAvatar(string userId, IFormFile avatar)
+        
+        public async Task<bool> UpdateUserAsync(string userId, UpdateUserDto updateUserDto)
+        {
+            return await _userRepo.UpdateUserAsync(userId, updateUserDto);
+        }
+
+       public async Task<AvatarUpdateResult> UpdateUserAvatarAsync(string userId, IFormFile avatar)
+        {
+            var user = await _userRepo.GetUserByIdAsync(userId);
+            
+            if (user == null)
+                return new AvatarUpdateResult { Success = false };
+            
+            // Tạo đường dẫn lưu file
+            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "avatars");
+            
+            // Đảm bảo thư mục tồn tại
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+            
+            // Tạo tên file duy nhất để tránh trùng lặp
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + avatar.FileName;
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            
+            // Lưu file vào thư mục
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                try
-                {
-                    var user = await _userRepo.GetUserByIdAsync(userId);
-                    if (user == null)
-                        return false;
-
-                    // Định nghĩa đường dẫn lưu avatar
-                    var uploadsFolder = Path.Combine(_env.WebRootPath, "avatars");
-                    if (!Directory.Exists(uploadsFolder))
-                        Directory.CreateDirectory(uploadsFolder);
-
-                    // Đặt tên file
-                    var fileName = $"{userId}_{Path.GetFileName(avatar.FileName)}";
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    // Lưu file vào thư mục
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await avatar.CopyToAsync(stream);
-                    }
-
-                    // Cập nhật đường dẫn avatar trong database
-                    user.Avatar = $"/avatars/{fileName}";
-                    await _userRepo.UpdateUser(user);
-
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
+                await avatar.CopyToAsync(fileStream);
             }
+            
+            // Đường dẫn lưu vào database
+            string avatarUrl = "/images/avatars/" + uniqueFileName;
+            
+            // Cập nhật đường dẫn avatar trong database
+            user.Avatar = avatarUrl;
+            
+            // Lưu thay đổi vào database
+            bool updated = await _userRepo.UpdateUser(user);
+            
+            return new AvatarUpdateResult
+            {
+                Success = updated,
+                AvatarUrl = updated ? avatarUrl : null
+            };
+        }
+
+
+
 
     }
 

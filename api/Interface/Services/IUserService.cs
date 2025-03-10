@@ -13,6 +13,7 @@ namespace api.Interface
         public Task SendEmailAsync(string toEmail, string subject, string body);
         public Task<AppUser> GetUserByIdAsync(string userId);
         Task<UserProfileDto> GetUserProfile(string userId);
-        Task<bool> UpdateUserAvatar(string userId, IFormFile avatar);
+         Task<bool> UpdateUserAsync(string userId, UpdateUserDto updateUserDto);
+         Task<AvatarUpdateResult> UpdateUserAvatarAsync(string userId, IFormFile avatar);
     }
 }
