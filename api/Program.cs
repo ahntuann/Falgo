@@ -1,4 +1,5 @@
 using api.Data;
+using System.IO;
 using api.Model;
 using api.Repository;
 using api.Interface;
@@ -21,6 +22,8 @@ using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 using api.Interface.Repository;
 using api.Interface.Services;
+using Microsoft.Extensions.FileProviders;
+using api.Helpers;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +34,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
-    option.OperationFilter<SwaggerFileOperationFilter>();
+    option.OperationFilter<FileUploadOperationFilter>();
+    option.EnableAnnotations();
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -177,13 +181,21 @@ builder.Logging.AddConsole();
 
 var app = builder.Build();
 
+// Tạo thư mục lưu trữ avatar
+var avatarDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "avatars");
+if (!Directory.Exists(avatarDir))
+{
+    Directory.CreateDirectory(avatarDir);
+}
+
 // Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseStaticFiles();
+app.UseRouting();
 app.UseWebSockets();
 app.UseCors("AllowReactApp");
 app.UseCors("AllowAll");
@@ -192,5 +204,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 app.MapControllers();
-
 app.Run();

@@ -14,6 +14,6 @@ namespace api.Interface
         public Task<AppUser> GetUserByIdAsync(string userId);
         Task<UserProfileDto> GetUserProfile(string userId);
          Task<bool> UpdateUserAsync(string userId, UpdateUserDto updateUserDto);
-         Task<string> UploadAvatarAsync(string userId, IFormFile avatar);
+         Task<AvatarUpdateResult> UpdateUserAvatarAsync(string userId, IFormFile avatar);
     }
 }

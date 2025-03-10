@@ -107,36 +107,48 @@ namespace api.Services
             return await _userRepo.UpdateUserAsync(userId, updateUserDto);
         }
 
-        public async Task<string> UploadAvatarAsync(string userId, IFormFile avatar)
+       public async Task<AvatarUpdateResult> UpdateUserAvatarAsync(string userId, IFormFile avatar)
         {
-            if (avatar == null || avatar.Length == 0)
-                throw new ArgumentException("Vui lòng chọn ảnh để tải lên!");
-
-            // Tạo thư mục lưu ảnh nếu chưa tồn tại
-            string uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+            var user = await _userRepo.GetUserByIdAsync(userId);
+            
+            if (user == null)
+                return new AvatarUpdateResult { Success = false };
+            
+            // Tạo đường dẫn lưu file
+            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "avatars");
+            
+            // Đảm bảo thư mục tồn tại
             if (!Directory.Exists(uploadsFolder))
                 Directory.CreateDirectory(uploadsFolder);
-
-            // Tạo tên file duy nhất
-            string fileName = $"{Guid.NewGuid()}{Path.GetExtension(avatar.FileName)}";
-            string filePath = Path.Combine(uploadsFolder, fileName);
-
-            // Lưu ảnh vào thư mục
+            
+            // Tạo tên file duy nhất để tránh trùng lặp
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + avatar.FileName;
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            
+            // Lưu file vào thư mục
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await avatar.CopyToAsync(fileStream);
             }
-
-            // Cập nhật đường dẫn ảnh vào database
-            var user = await _userRepo.GetUserByIdAsync(userId);
-            if (user == null)
-                throw new KeyNotFoundException("Người dùng không tồn tại!");
-
-            user.Avatar = $"/uploads/{fileName}";
-            await _userRepo.UpdateUserAsync(user);
-
-            return user.Avatar;
+            
+            // Đường dẫn lưu vào database
+            string avatarUrl = "/images/avatars/" + uniqueFileName;
+            
+            // Cập nhật đường dẫn avatar trong database
+            user.Avatar = avatarUrl;
+            
+            // Lưu thay đổi vào database
+            bool updated = await _userRepo.UpdateUser(user);
+            
+            return new AvatarUpdateResult
+            {
+                Success = updated,
+                AvatarUrl = updated ? avatarUrl : null
+            };
         }
+
+
+
 
     }
 

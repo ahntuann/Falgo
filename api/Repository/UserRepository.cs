@@ -80,7 +80,7 @@ namespace api.Repository
         }
         public async Task<bool> UpdateUser(AppUser user)
         {
-            _context.Users.Update(user);
+            _context.AppUsers.Update(user);
             return await _context.SaveChangesAsync() > 0;
         }
 

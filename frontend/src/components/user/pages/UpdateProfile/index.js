@@ -102,14 +102,27 @@ const UpdateProfile = () => {
                 const formData = new FormData();
                 formData.append('avatar', selectedFile);
 
-                await axios.post(
-                    `http://localhost:5180/api/user/upload-avatar/${userId}`,
-                    formData,
-                    { headers: { 'Content-Type': 'multipart/form-data' } },
-                );
+                try {
+                    // Sử dụng endpoint mới: update-avatar/{userId}
+                    const response = await axios.post(
+                        `http://localhost:5180/api/user/update-avatar/${userId}`,
+                        formData,
+                        { headers: { 'Content-Type': 'multipart/form-data' } },
+                    );
 
-                alert('Cập nhật ảnh đại diện thành công!');
-                window.location.reload();
+                    console.log('Kết quả upload avatar:', response.data);
+
+                    if (response.data.success) {
+                        alert('Cập nhật ảnh đại diện thành công!');
+                        // Cập nhật lại user state với URL avatar mới
+                        setUser({ ...user, avatar: response.data.avatarUrl });
+                    } else {
+                        alert('Không thể cập nhật ảnh đại diện!');
+                    }
+                } catch (error) {
+                    console.error('Lỗi khi upload avatar:', error);
+                    alert('Có lỗi xảy ra khi cập nhật ảnh đại diện!');
+                }
             } else {
                 alert('Cập nhật thông tin thành công!');
             }
@@ -139,7 +152,11 @@ const UpdateProfile = () => {
             <div className={cs('profile-content')}>
                 <div className={cs('profile-avatar')}>
                     <img
-                        src={`http://localhost:5180${user.avatar || '/default-avatar.png'}`}
+                        src={
+                            user.avatar
+                                ? `http://localhost:5180${user.avatar}`
+                                : 'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
+                        }
                         alt="Avatar người dùng"
                         className={cs('avatar-image')}
                     />

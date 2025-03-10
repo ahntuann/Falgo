@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Profile.module.scss';
 import { useNavigate } from 'react-router-dom';
+import logo from '~/assets/images/logo/logo.png';
 const cs = classNames.bind(styles);
 
 const Profile = () => {
@@ -120,7 +121,11 @@ const Profile = () => {
 
                 <div className={cs('profile-avatar')}>
                     <img
-                        src={user.avatar || '/default-avatar.png'}
+                        src={
+                            user.avatar
+                                ? `http://localhost:5180${user.avatar}`
+                                : 'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
+                        }
                         alt="Avatar người dùng"
                         className={cs('avatar-image')}
                     />
