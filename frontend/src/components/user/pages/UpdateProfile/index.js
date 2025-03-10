@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './UpdateProfile.module.scss';
 
@@ -144,7 +144,9 @@ const UpdateProfile = () => {
                         Hồ sơ cá nhân
                     </button>
                     <button className={cs('nav-tab', 'active')}>Chỉnh sửa hồ sơ</button>
-                    <button className={cs('nav-tab')}>Bài viết</button>
+                    <button className={cs('nav-tab')} onClick={() => navigate('/userprofileblog')}>
+                        Bài viết
+                    </button>
                     <button className={cs('nav-tab')}>Bài nộp</button>
                     <button className={cs('nav-tab')}>Cuộc thi</button>
                 </div>

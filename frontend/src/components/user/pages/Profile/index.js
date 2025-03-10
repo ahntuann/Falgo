@@ -89,7 +89,9 @@ const Profile = () => {
                     <button className={cs('nav-tab')} onClick={() => navigate('/updateprofile')}>
                         Chỉnh sửa hồ sơ
                     </button>
-                    <button className={cs('nav-tab')}>Bài viết</button>
+                    <button className={cs('nav-tab')} onClick={() => navigate('/userprofileblog')}>
+                        Bài viết
+                    </button>
                     <button className={cs('nav-tab')}>Bài nộp</button>
                     <button className={cs('nav-tab')}>Cuộc thi</button>
                 </div>

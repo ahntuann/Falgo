@@ -13,3 +13,4 @@ export { default as UpdateProfile } from './UpdateProfile';
 export { default as CodeEditing } from './CodeEditing';
 export { default as SubmissionList } from './SubmissionList';
 export { default as ForgotPassword } from './ForgotPassword';
+export { default as UserProfileBlog } from './UserProfileBlog';

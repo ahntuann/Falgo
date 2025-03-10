@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace api.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -303,10 +303,10 @@ namespace api.Migrations
                 columns: table => new
                 {
                     TestCaseId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProblemId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TestCaseName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Input = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Output = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Output = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProblemId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -405,9 +405,9 @@ namespace api.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "336503e6-3dd5-410d-9533-26f09e6b0cb1", null, "Guest", "GUEST" },
-                    { "5feebd43-96d7-4b4d-bdf5-ee8e0277db6b", null, "User", "USER" },
-                    { "8117d1c6-7746-451a-a6d9-3007fe4b8eaa", null, "Admin", "ADMIN" }
+                    { "0682dde4-476a-4f2a-a337-bb851b64456c", null, "Guest", "GUEST" },
+                    { "0e60e260-c078-43a9-9987-64fe89e389e9", null, "Admin", "ADMIN" },
+                    { "4d5f9fc5-e8b3-4d32-81dd-8f445f7e1b8d", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
