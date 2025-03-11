@@ -268,300 +268,309 @@ const UserProfileBlog = () => {
     };
 
     return (
-        <div className={cs('profile-container')}>
-            {/* Profile Header - Matching the Profile component */}
-            <div className={cs('profile-header')}>
-                <div className={cs('nav-tabs')}>
-                    <button className={cs('nav-tab')} onClick={() => navigate('/profile')}>
-                        Hồ sơ cá nhân
-                    </button>
-                    <button className={cs('nav-tab')} onClick={() => navigate('/updateprofile')}>
-                        Chỉnh sửa hồ sơ
-                    </button>
-                    <button className={cs('nav-tab', 'active')}>Bài viết</button>
-                    <button className={cs('nav-tab')}>Bài nộp</button>
-                    <button className={cs('nav-tab')}>Cuộc thi</button>
-                </div>
-            </div>
-
-            <div className={cs('profile-content')}>
-                <div className={cs('blog-content')}>
-                    <div className={cs('blog-header')}>
-                        <h2 className={cs('title')}>Bài viết của tôi</h2>
-                        <div className={cs('search-bar')}>
-                            <input
-                                type="text"
-                                name="search"
-                                placeholder="Tìm kiếm bài viết..."
-                                value={query.search}
-                                onChange={handleChange}
-                            />
-                        </div>
+        <div className={cs('profilePage')}>
+            <div className={cs('profile-container')}>
+                {/* Profile Header - Matching the Profile component */}
+                <div className={cs('profile-header')}>
+                    <div className={cs('nav-tabs')}>
+                        <button className={cs('nav-tab')} onClick={() => navigate('/profile')}>
+                            Hồ sơ cá nhân
+                        </button>
+                        <button
+                            className={cs('nav-tab')}
+                            onClick={() => navigate('/updateprofile')}
+                        >
+                            Chỉnh sửa hồ sơ
+                        </button>
+                        <button className={cs('nav-tab', 'active')}>Bài viết</button>
+                        <button className={cs('nav-tab')}>Bài nộp</button>
+                        <button className={cs('nav-tab')}>Cuộc thi</button>
                     </div>
+                </div>
 
-                    <div className={cs('blog-main-content')}>
-                        <div className={cs('blog-list')}>
-                            {paginatedBlogs.length > 0 ? (
-                                paginatedBlogs.map((blog) => (
-                                    <div key={blog.id} className={cs('blog-item')}>
-                                        <img
-                                            src={blog.thumbnail ? blog.thumbnail : NoImage}
-                                            alt={blog.title}
-                                            className={cs('thumbnail')}
-                                            onError={(e) => {
-                                                e.target.onerror = null;
-                                                e.target.src = NoImage;
-                                            }}
-                                        />
+                <div className={cs('profile-content')}>
+                    <div className={cs('blog-content')}>
+                        <div className={cs('blog-header')}>
+                            <h2 className={cs('title')}>Bài viết của tôi</h2>
+                            <div className={cs('search-bar')}>
+                                <input
+                                    type="text"
+                                    name="search"
+                                    placeholder="Tìm kiếm bài viết..."
+                                    value={query.search}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
 
-                                        <div className={cs('content')}>
-                                            <h2>{blog.title}</h2>
-                                            <p>{blog.description}</p>
-                                            {blog.categoryBlog &&
-                                                blog.categoryBlog.trim() !== '' &&
-                                                blog.categoryBlog.trim() !== ',' && (
-                                                    <div className={cs('category-tags')}>
-                                                        {blog.categoryBlog
-                                                            .split(',')
-                                                            .map((category, index) => (
-                                                                <button
-                                                                    key={index}
-                                                                    className={cs('category-item')}
-                                                                    onClick={() =>
-                                                                        handleCategoryChange(
-                                                                            category.trim(),
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    {category.trim()}
-                                                                </button>
-                                                            ))}
-                                                    </div>
-                                                )}
+                        <div className={cs('blog-main-content')}>
+                            <div className={cs('blog-list')}>
+                                {paginatedBlogs.length > 0 ? (
+                                    paginatedBlogs.map((blog) => (
+                                        <div key={blog.id} className={cs('blog-item')}>
+                                            <img
+                                                src={blog.thumbnail ? blog.thumbnail : NoImage}
+                                                alt={blog.title}
+                                                className={cs('thumbnail')}
+                                                onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src = NoImage;
+                                                }}
+                                            />
 
-                                            <div className={cs('Date')}>
-                                                <p>
-                                                    Ngày đăng:{' '}
-                                                    {blog.createOn
-                                                        ? new Date(
-                                                              blog.createOn + 'Z',
-                                                          ).toLocaleDateString('vi-VN')
-                                                        : 'Không có dữ liệu'}
-                                                </p>
-                                                <p>
-                                                    Ngày công bố:{' '}
-                                                    {blog.datePublic
-                                                        ? new Date(
-                                                              blog.datePublic + 'Z',
-                                                          ).toLocaleDateString('vi-VN')
-                                                        : 'Không có dữ liệu'}
-                                                </p>
-                                            </div>
+                                            <div className={cs('content')}>
+                                                <h2>{blog.title}</h2>
+                                                <p>{blog.description}</p>
+                                                {blog.categoryBlog &&
+                                                    blog.categoryBlog.trim() !== '' &&
+                                                    blog.categoryBlog.trim() !== ',' && (
+                                                        <div className={cs('category-tags')}>
+                                                            {blog.categoryBlog
+                                                                .split(',')
+                                                                .map((category, index) => (
+                                                                    <button
+                                                                        key={index}
+                                                                        className={cs(
+                                                                            'category-item',
+                                                                        )}
+                                                                        onClick={() =>
+                                                                            handleCategoryChange(
+                                                                                category.trim(),
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        {category.trim()}
+                                                                    </button>
+                                                                ))}
+                                                        </div>
+                                                    )}
 
-                                            <div className={cs('actions')}>
-                                                <div className={cs('userPart')}>
-                                                    {userRole !== 'guest' &&
-                                                        userObject &&
-                                                        userObject.id === blog.userId && (
-                                                            <>
-                                                                <Link
-                                                                    to={'/BlogUpdate'}
-                                                                    state={{ blog }}
-                                                                    className={cs('edit')}
-                                                                >
-                                                                    Chỉnh sửa
-                                                                </Link>
-                                                                <button
-                                                                    className={cs('delete')}
-                                                                    onClick={() =>
-                                                                        handleDelete(blog.id)
-                                                                    }
-                                                                >
-                                                                    Xóa
-                                                                </button>
-                                                            </>
-                                                        )}
+                                                <div className={cs('Date')}>
+                                                    <p>
+                                                        Ngày đăng:{' '}
+                                                        {blog.createOn
+                                                            ? new Date(
+                                                                  blog.createOn + 'Z',
+                                                              ).toLocaleDateString('vi-VN')
+                                                            : 'Không có dữ liệu'}
+                                                    </p>
+                                                    <p>
+                                                        Ngày công bố:{' '}
+                                                        {blog.datePublic
+                                                            ? new Date(
+                                                                  blog.datePublic + 'Z',
+                                                              ).toLocaleDateString('vi-VN')
+                                                            : 'Không có dữ liệu'}
+                                                    </p>
                                                 </div>
-                                                <p
-                                                    className={cs('status', {
-                                                        approved: blog.status === 'Thông qua',
-                                                        rejected: blog.status === 'Từ chối',
-                                                        report: blog.status === 'Báo cáo',
-                                                        pending:
-                                                            blog.status !== 'Thông qua' &&
-                                                            blog.status !== 'Từ chối' &&
-                                                            blog.status !== 'Báo cáo',
-                                                    })}
-                                                >
-                                                    {blog.status}
-                                                </p>
-                                                <Link
-                                                    to={'/DetailBlog'}
-                                                    state={{ blog }}
-                                                    className={cs('btn-read-more')}
-                                                >
-                                                    Xem thêm
-                                                </Link>
+
+                                                <div className={cs('actions')}>
+                                                    <div className={cs('userPart')}>
+                                                        {userRole !== 'guest' &&
+                                                            userObject &&
+                                                            userObject.id === blog.userId && (
+                                                                <>
+                                                                    <Link
+                                                                        to={'/BlogUpdate'}
+                                                                        state={{ blog }}
+                                                                        className={cs('edit')}
+                                                                    >
+                                                                        Chỉnh sửa
+                                                                    </Link>
+                                                                    <button
+                                                                        className={cs('delete')}
+                                                                        onClick={() =>
+                                                                            handleDelete(blog.id)
+                                                                        }
+                                                                    >
+                                                                        Xóa
+                                                                    </button>
+                                                                </>
+                                                            )}
+                                                    </div>
+                                                    <p
+                                                        className={cs('status', {
+                                                            approved: blog.status === 'Thông qua',
+                                                            rejected: blog.status === 'Từ chối',
+                                                            report: blog.status === 'Báo cáo',
+                                                            pending:
+                                                                blog.status !== 'Thông qua' &&
+                                                                blog.status !== 'Từ chối' &&
+                                                                blog.status !== 'Báo cáo',
+                                                        })}
+                                                    >
+                                                        {blog.status}
+                                                    </p>
+                                                    <Link
+                                                        to={'/DetailBlog'}
+                                                        state={{ blog }}
+                                                        className={cs('btn-read-more')}
+                                                    >
+                                                        Xem thêm
+                                                    </Link>
+                                                </div>
                                             </div>
                                         </div>
+                                    ))
+                                ) : (
+                                    <div className={cs('no-blogs')}>
+                                        <p>Bạn chưa có bài viết nào!</p>
                                     </div>
-                                ))
-                            ) : (
-                                <div className={cs('no-blogs')}>
-                                    <p>Bạn chưa có bài viết nào!</p>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className={cs('blog-sidebar')}>
-                            <div className={cs('actions-buttons')}>
-                                <Link to={'/CreateBlog'} className={cs('create-btn')}>
-                                    Tạo bài viết mới
-                                </Link>
+                                )}
                             </div>
 
-                            <div className={cs('filter-section')}>
-                                <h3>Lọc bài viết</h3>
-
-                                <h3>Danh mục</h3>
-                                <div className={cs('category-list')}>
-                                    {categories.map((category, index) => (
-                                        <button
-                                            key={index}
-                                            className={cs('category-btn', {
-                                                active: query.category === category,
-                                            })}
-                                            onClick={() => handleCategoryChange(category)}
-                                        >
-                                            {category}
-                                        </button>
-                                    ))}
+                            <div className={cs('blog-sidebar')}>
+                                <div className={cs('actions-buttons')}>
+                                    <Link to={'/CreateBlog'} className={cs('create-btn')}>
+                                        Tạo bài viết mới
+                                    </Link>
                                 </div>
 
-                                <div className={cs('sort-controls')}>
-                                    <select
-                                        name="sortBy"
-                                        className={cs('sort-select')}
-                                        value={query.sortBy}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="createOn">Sắp xếp theo ngày tạo</option>
-                                        <option value="title">Sắp xếp theo tiêu đề</option>
-                                        <option value="status">Sắp xếp theo trạng thái</option>
-                                    </select>
-                                    <button
-                                        className={cs('sort-direction')}
-                                        onClick={toggleSortDirection}
-                                    >
-                                        {query.IsDescending ? '↓' : '↑'}
-                                    </button>
-                                </div>
+                                <div className={cs('filter-section')}>
+                                    <h3>Lọc bài viết</h3>
 
-                                <div className={cs('filter-groups')}>
-                                    <div className={cs('filter-group')}>
-                                        <h3>Thời gian đăng</h3>
-                                        <div className={cs('date-inputs')}>
-                                            <select
-                                                className={cs('date-select')}
-                                                name="day"
-                                                value={dateFilter.day}
-                                                onChange={handleDateChange}
+                                    <h3>Danh mục</h3>
+                                    <div className={cs('category-list')}>
+                                        {categories.map((category, index) => (
+                                            <button
+                                                key={index}
+                                                className={cs('category-btn', {
+                                                    active: query.category === category,
+                                                })}
+                                                onClick={() => handleCategoryChange(category)}
                                             >
-                                                <option value="">Ngày</option>
-                                                {Array.from({ length: 31 }, (_, i) => i + 1).map(
-                                                    (day) => (
+                                                {category}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <div className={cs('sort-controls')}>
+                                        <select
+                                            name="sortBy"
+                                            className={cs('sort-select')}
+                                            value={query.sortBy}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="createOn">Sắp xếp theo ngày tạo</option>
+                                            <option value="title">Sắp xếp theo tiêu đề</option>
+                                            <option value="status">Sắp xếp theo trạng thái</option>
+                                        </select>
+                                        <button
+                                            className={cs('sort-direction')}
+                                            onClick={toggleSortDirection}
+                                        >
+                                            {query.IsDescending ? '↓' : '↑'}
+                                        </button>
+                                    </div>
+
+                                    <div className={cs('filter-groups')}>
+                                        <div className={cs('filter-group')}>
+                                            <h3>Thời gian đăng</h3>
+                                            <div className={cs('date-inputs')}>
+                                                <select
+                                                    className={cs('date-select')}
+                                                    name="day"
+                                                    value={dateFilter.day}
+                                                    onChange={handleDateChange}
+                                                >
+                                                    <option value="">Ngày</option>
+                                                    {Array.from(
+                                                        { length: 31 },
+                                                        (_, i) => i + 1,
+                                                    ).map((day) => (
                                                         <option key={day} value={day}>
                                                             {day}
                                                         </option>
-                                                    ),
-                                                )}
-                                            </select>
-                                            <select
-                                                className={cs('date-select')}
-                                                name="month"
-                                                value={dateFilter.month}
-                                                onChange={handleDateChange}
-                                            >
-                                                <option value="">Tháng</option>
-                                                {Array.from({ length: 12 }, (_, i) => i + 1).map(
-                                                    (month) => (
+                                                    ))}
+                                                </select>
+                                                <select
+                                                    className={cs('date-select')}
+                                                    name="month"
+                                                    value={dateFilter.month}
+                                                    onChange={handleDateChange}
+                                                >
+                                                    <option value="">Tháng</option>
+                                                    {Array.from(
+                                                        { length: 12 },
+                                                        (_, i) => i + 1,
+                                                    ).map((month) => (
                                                         <option key={month} value={month}>
                                                             {month}
                                                         </option>
-                                                    ),
-                                                )}
+                                                    ))}
+                                                </select>
+                                                <input
+                                                    type="number"
+                                                    className={cs('year-input')}
+                                                    placeholder="Năm"
+                                                    name="year"
+                                                    value={dateFilter.year}
+                                                    onChange={handleDateChange}
+                                                    min="2000"
+                                                    max="2099"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className={cs('filter-group')}>
+                                            <h3>Trạng thái</h3>
+                                            <select
+                                                className={cs('status-select')}
+                                                name="status"
+                                                value={query.status}
+                                                onChange={handleChange}
+                                            >
+                                                <option value="">Tất cả</option>
+                                                {StatusOptions.map((status, index) => (
+                                                    <option key={index} value={status}>
+                                                        {status}
+                                                    </option>
+                                                ))}
                                             </select>
-                                            <input
-                                                type="number"
-                                                className={cs('year-input')}
-                                                placeholder="Năm"
-                                                name="year"
-                                                value={dateFilter.year}
-                                                onChange={handleDateChange}
-                                                min="2000"
-                                                max="2099"
-                                            />
                                         </div>
                                     </div>
 
-                                    <div className={cs('filter-group')}>
-                                        <h3>Trạng thái</h3>
-                                        <select
-                                            className={cs('status-select')}
-                                            name="status"
-                                            value={query.status}
-                                            onChange={handleChange}
-                                        >
-                                            <option value="">Tất cả</option>
-                                            {StatusOptions.map((status, index) => (
-                                                <option key={index} value={status}>
-                                                    {status}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
+                                    <button className={cs('reset-button')} onClick={handleReset}>
+                                        Đặt lại bộ lọc
+                                    </button>
                                 </div>
-
-                                <button className={cs('reset-button')} onClick={handleReset}>
-                                    Đặt lại bộ lọc
-                                </button>
                             </div>
                         </div>
-                    </div>
 
-                    {totalPages > 1 && (
-                        <div className={cs('pagination')}>
-                            <button
-                                className={cs('pagination-btn')}
-                                onClick={() => handlePageChange(1)}
-                                disabled={query.page === 1}
-                            >
-                                ≪
-                            </button>
-                            <button
-                                className={cs('pagination-btn')}
-                                onClick={() => handlePageChange(query.page - 1)}
-                                disabled={query.page === 1}
-                            >
-                                ◂
-                            </button>
-                            <div className={cs('page-numbers')}>{renderPageNumbers()}</div>
-                            <button
-                                className={cs('pagination-btn')}
-                                onClick={() => handlePageChange(query.page + 1)}
-                                disabled={query.page === totalPages}
-                            >
-                                ▸
-                            </button>
-                            <button
-                                className={cs('pagination-btn')}
-                                onClick={() => handlePageChange(totalPages)}
-                                disabled={query.page === totalPages}
-                            >
-                                ≫
-                            </button>
-                        </div>
-                    )}
+                        {totalPages > 1 && (
+                            <div className={cs('pagination')}>
+                                <button
+                                    className={cs('pagination-btn')}
+                                    onClick={() => handlePageChange(1)}
+                                    disabled={query.page === 1}
+                                >
+                                    ≪
+                                </button>
+                                <button
+                                    className={cs('pagination-btn')}
+                                    onClick={() => handlePageChange(query.page - 1)}
+                                    disabled={query.page === 1}
+                                >
+                                    ◂
+                                </button>
+                                <div className={cs('page-numbers')}>{renderPageNumbers()}</div>
+                                <button
+                                    className={cs('pagination-btn')}
+                                    onClick={() => handlePageChange(query.page + 1)}
+                                    disabled={query.page === totalPages}
+                                >
+                                    ▸
+                                </button>
+                                <button
+                                    className={cs('pagination-btn')}
+                                    onClick={() => handlePageChange(totalPages)}
+                                    disabled={query.page === totalPages}
+                                >
+                                    ≫
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

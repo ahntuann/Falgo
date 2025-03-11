@@ -137,70 +137,77 @@ const UpdateProfile = () => {
     if (error) return <div className={cs('error')}>{error}</div>;
 
     return (
-        <div className={cs('profile-container')}>
-            <div className={cs('profile-header')}>
-                <div className={cs('nav-tabs')}>
-                    <button className={cs('nav-tab')} onClick={() => navigate('/profile')}>
-                        Hồ sơ cá nhân
-                    </button>
-                    <button className={cs('nav-tab', 'active')}>Chỉnh sửa hồ sơ</button>
-                    <button className={cs('nav-tab')} onClick={() => navigate('/userprofileblog')}>
-                        Bài viết
-                    </button>
-                    <button className={cs('nav-tab')}>Bài nộp</button>
-                    <button className={cs('nav-tab')}>Cuộc thi</button>
-                </div>
-            </div>
-            <div className={cs('profile-content')}>
-                <div className={cs('profile-avatar')}>
-                    <img
-                        src={
-                            user.avatar
-                                ? `http://localhost:5180${user.avatar}`
-                                : 'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
-                        }
-                        alt="Avatar người dùng"
-                        className={cs('avatar-image')}
-                    />
-                    {editing && <input type="file" accept="image/*" onChange={handleFileChange} />}
-                </div>
-                <div className={cs('profile-info')}>
-                    {[
-                        { key: 'userName', label: 'Tên đăng nhập' },
-                        { key: 'fullName', label: 'Họ và tên' },
-                        { key: 'email', label: 'Email' },
-                        { key: 'dateOfBirth', label: 'Ngày sinh', type: 'date' },
-                        { key: 'phoneNumber', label: 'Số điện thoại' },
-                        { key: 'address', label: 'Địa chỉ' },
-                    ].map(({ key, label, type }) => (
-                        <div key={key} className={cs('info-row')}>
-                            <div className={cs('info-label')}>{label}</div>
-                            <div className={cs('info-value')}>
-                                {editing ? (
-                                    <input
-                                        type={type || 'text'}
-                                        name={key}
-                                        value={user[key] || ''}
-                                        onChange={handleInputChange}
-                                    />
-                                ) : key === 'dateOfBirth' ? (
-                                    new Date(user[key]).toLocaleDateString('vi-VN')
-                                ) : (
-                                    user[key]
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                <div className={cs('profile-actions')}>
-                    <button className={cs('edit-button')} onClick={() => setEditing(!editing)}>
-                        {editing ? 'Hủy' : 'Chỉnh sửa'}
-                    </button>
-                    {editing && (
-                        <button className={cs('save-button')} onClick={handleSave}>
-                            Lưu
+        <div className={cs('profilePage')}>
+            <div className={cs('profile-container')}>
+                <div className={cs('profile-header')}>
+                    <div className={cs('nav-tabs')}>
+                        <button className={cs('nav-tab')} onClick={() => navigate('/profile')}>
+                            Hồ sơ cá nhân
                         </button>
-                    )}
+                        <button className={cs('nav-tab', 'active')}>Chỉnh sửa hồ sơ</button>
+                        <button
+                            className={cs('nav-tab')}
+                            onClick={() => navigate('/userprofileblog')}
+                        >
+                            Bài viết
+                        </button>
+                        <button className={cs('nav-tab')}>Bài nộp</button>
+                        <button className={cs('nav-tab')}>Cuộc thi</button>
+                    </div>
+                </div>
+                <div className={cs('profile-content')}>
+                    <div className={cs('profile-avatar')}>
+                        <img
+                            src={
+                                user.avatar
+                                    ? `http://localhost:5180${user.avatar}`
+                                    : 'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
+                            }
+                            alt="Avatar người dùng"
+                            className={cs('avatar-image')}
+                        />
+                        {editing && (
+                            <input type="file" accept="image/*" onChange={handleFileChange} />
+                        )}
+                    </div>
+                    <div className={cs('profile-info')}>
+                        {[
+                            { key: 'userName', label: 'Tên đăng nhập' },
+                            { key: 'fullName', label: 'Họ và tên' },
+                            { key: 'email', label: 'Email' },
+                            { key: 'dateOfBirth', label: 'Ngày sinh', type: 'date' },
+                            { key: 'phoneNumber', label: 'Số điện thoại' },
+                            { key: 'address', label: 'Địa chỉ' },
+                        ].map(({ key, label, type }) => (
+                            <div key={key} className={cs('info-row')}>
+                                <div className={cs('info-label')}>{label}</div>
+                                <div className={cs('info-value')}>
+                                    {editing ? (
+                                        <input
+                                            type={type || 'text'}
+                                            name={key}
+                                            value={user[key] || ''}
+                                            onChange={handleInputChange}
+                                        />
+                                    ) : key === 'dateOfBirth' ? (
+                                        new Date(user[key]).toLocaleDateString('vi-VN')
+                                    ) : (
+                                        user[key]
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className={cs('profile-actions')}>
+                        <button className={cs('edit-button')} onClick={() => setEditing(!editing)}>
+                            {editing ? 'Hủy' : 'Chỉnh sửa'}
+                        </button>
+                        {editing && (
+                            <button className={cs('save-button')} onClick={handleSave}>
+                                Lưu
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
