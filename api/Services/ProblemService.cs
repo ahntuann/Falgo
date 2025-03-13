@@ -68,6 +68,11 @@ namespace api.Services
             };
         }
 
+        public async Task<Problem> GetProblemByIdAsync(string problemId)
+        {
+            return await _problemRepository.GetProblemByIdAsync(problemId);
+        }
+
         public async Task<ProblemDetailDto?> GetProblemDetailByIdAsync(string problemId)
         {
             var problem = await _problemRepository.GetProblemByIdAsync(problemId);

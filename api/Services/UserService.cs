@@ -6,8 +6,13 @@ using System.Net.Mail;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using api.Dtos.User;
 using api.Interface;
+using api.Model;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace api.Services
 {
@@ -16,11 +21,19 @@ namespace api.Services
         private readonly IContestRegistationRepository _contestRegisRepo;
         private readonly IUserRepository _userRepo;
         private readonly IContestRepository _contestRepo;
-        public UserService(IContestRegistationRepository contestRegisRepo, IUserRepository userRepo, IContestRepository contestRepo)
+        private readonly IWebHostEnvironment _env;
+        public UserService(IContestRegistationRepository contestRegisRepo, IUserRepository userRepo, IContestRepository contestRepo,
+                        IWebHostEnvironment env)
         {
             _contestRegisRepo = contestRegisRepo;
             _userRepo = userRepo;
             _contestRepo = contestRepo;
+            _env = env;
+        }
+
+        public async Task<AppUser> GetUserByIdAsync(string userId)
+        {
+            return await _userRepo.GetUserByIdAsync(userId);
         }
 
         public async Task<bool?> IsUserRegisContest(string userId, string contestId)
@@ -50,18 +63,93 @@ namespace api.Services
             smtp.EnableSsl = true;
             smtp.Port = 587;
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtp.Credentials = new NetworkCredential(from,password);
+            smtp.Credentials = new NetworkCredential(from, password);
             try
             {
                 smtp.Send(mail);
                 Console.WriteLine("Gửi email thành công!");
-                
-            }catch(Exception ex)
+
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine("Lỗi khi gửi email: " + ex.Message);
             }
         }
 
+        public async Task<UserProfileDto> GetUserProfile(string userId)
+        {
+            var user = await _userRepo.GetUserByIdAsync(userId);
+            
+            if (user == null)
+                return null;
+
+
+            int totalSolved = await _userRepo.GetUserSolvedCountAsync(userId);
+            int totalSubmissions = await _userRepo.GetUserSubmissionCountAsync(userId);
+
+            return new UserProfileDto
+            {
+                UserName = user.UserName,
+                FullName = user.FullName,
+                Email = user.Email,
+                DateOfBirth = user.DateOfBirth,
+                PhoneNumber = user.PhoneNumber,
+                CreatedAt = user.CreatedAt,
+                TotalSubmissions = totalSubmissions,
+                TotalSolved = totalSolved,
+                Avatar = user.Avatar,
+                Address = user.Address
+            };
+        }
+        
+        public async Task<bool> UpdateUserAsync(string userId, UpdateUserDto updateUserDto)
+        {
+            return await _userRepo.UpdateUserAsync(userId, updateUserDto);
+        }
+
+       public async Task<AvatarUpdateResult> UpdateUserAvatarAsync(string userId, IFormFile avatar)
+        {
+            var user = await _userRepo.GetUserByIdAsync(userId);
+            
+            if (user == null)
+                return new AvatarUpdateResult { Success = false };
+            
+            // Tạo đường dẫn lưu file
+            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "avatars");
+            
+            // Đảm bảo thư mục tồn tại
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+            
+            // Tạo tên file duy nhất để tránh trùng lặp
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + avatar.FileName;
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            
+            // Lưu file vào thư mục
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await avatar.CopyToAsync(fileStream);
+            }
+            
+            // Đường dẫn lưu vào database
+            string avatarUrl = "/images/avatars/" + uniqueFileName;
+            
+            // Cập nhật đường dẫn avatar trong database
+            user.Avatar = avatarUrl;
+            
+            // Lưu thay đổi vào database
+            bool updated = await _userRepo.UpdateUser(user);
+            
+            return new AvatarUpdateResult
+            {
+                Success = updated,
+                AvatarUrl = updated ? avatarUrl : null
+            };
+        }
+
+
+
+
     }
-    
+
 }

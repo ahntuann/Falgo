@@ -16,5 +16,7 @@ namespace api.Interface
         public Task<List<Submission?>> GetAllSubmissionAcceptedByUserAndProLanguageAsync(string userId, string proLanguageId);
         public Task<List<Submission?>> GetAllSubmissionNotAcceptedByUserAndProLanguageAsync(string userId, string proLanguageId);
         public Task<List<Submission>> GetFilteredSubmissionsAsync(SubmissionListQueryObject query, string userId);
+        public Task<Submission> CreateASubmissionAsync(Submission submission);
+        Task<bool> HasUserSolvedProblemAsync(string userId, string problemId);
     }
 }

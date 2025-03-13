@@ -15,5 +15,6 @@ namespace api.Interface
         Task<List<string>> GetAllCategoriesAsync();
         Task<ProblemDetailDto?> GetProblemDetailByIdAsync(string problemId);
         public Task<ProblemSolvingDto?> GetProblemSolvingByIdAsync(string problemId);
+        public Task<Problem> GetProblemByIdAsync(string problemId);
     }
 }

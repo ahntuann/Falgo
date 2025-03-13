@@ -88,8 +88,7 @@ function Dashboard() {
                             <pre>{JSON.stringify(filteredDataUser, null, 2)}</pre>
                         </div>
                     )}
-                </div>
-                <div className={cx('statCard')}>
+
                     <h3>Tổng số bài nộp: {totalSubmissions}</h3>
                     <DateFilterSubmissions onFilterSubmissions={setFilteredDataSubmissions} />
                     {filteredDataSubmissions && (
@@ -103,10 +102,34 @@ function Dashboard() {
                     <h3>TỔng số bài tập: {totalProblems}</h3>
                     <ProblemFilter />
                 </div>
-
                 <h3>Cuộc thi mới nhất</h3>
-                {contest !== undefined &&
-                    contest.map((contest, i) => <ContestDashboard key={i} contest={contest} />)}
+                <table className={cx('table')}>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên cuộc thi</th>
+                            <th>thời gian thi</th>
+                            <th>điểm</th>
+                            <th>độ khó</th>
+                            <th>ngày kết thúc</th>
+                            <th>đăng ký</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {contest !== undefined &&
+                            contest.map((contest, i) => (
+                                <tr>
+                                    <td>{contest.contestId}</td>
+                                    <td>{contest.contestName}</td>
+                                    <td>{contest.dueTime}</td>
+                                    <td>{contest.totalPoint}</td>
+                                    <td>{contest.level}</td>
+                                    <td>{new Date(contest.endDate).toLocaleString()}</td>
+                                    <td>{contest.numRegis}</td>
+                                </tr>
+                            ))}{' '}
+                    </tbody>
+                </table>
             </div>
         </AdminLayout>
     );

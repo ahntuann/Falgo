@@ -13,9 +13,11 @@ namespace api.Services
     public class SubmissionService : ISubmissionService
     {
         private readonly ISubmissionRepository _subRepo;
-        public SubmissionService(ISubmissionRepository subRepo)
+        private readonly IUserRepository _userRepo;
+        public SubmissionService(ISubmissionRepository subRepo, IUserRepository userRepo)
         {
             _subRepo = subRepo;
+            _userRepo = userRepo;
         }
         public async Task<PageResult<SubmissionListDto>> GetAllSubmissionByProblem(SubmissionListQueryObject query, string userId)
         {
@@ -83,5 +85,42 @@ namespace api.Services
                 .ToList();
             return languages;
         }
+
+        public async Task<Submission> CreateASubmissionAsync(Submission submission)
+        {
+            return await _subRepo.CreateASubmissionAsync(submission);
+        }
+
+        public async Task<Submission> CreateUserSubmissionAsync(Submission submission)
+        {
+            var newSubmission = await _subRepo.CreateASubmissionAsync(submission);
+            
+            await UpdateUserStatisticsAsync(submission);
+            
+            return newSubmission;
+        }
+
+            private async Task UpdateUserStatisticsAsync(Submission submission)
+            {
+                var user = await _userRepo.GetUserByIdAsync(submission.AppUserId);
+                if (user != null)
+                {
+                    user.TotalSubmissions++;
+                    
+                    if (submission.Status == "Accepted")
+                    {
+                        bool alreadySolved = await _subRepo.HasUserSolvedProblemAsync(
+                            submission.AppUserId, 
+                            submission.ProblemId);
+                            
+                        if (!alreadySolved)
+                        {
+                            user.TotalSolved++;
+                            user.LastSolvedAt = DateTime.UtcNow;
+                        }
+                    }
+                    await _userRepo.UpdateUserAsync(user);
+                }
+            }
     }
 }

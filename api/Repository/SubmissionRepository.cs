@@ -67,7 +67,7 @@ namespace api.Repository
 
         public async Task<List<Submission>> GetFilteredSubmissionsAsync(SubmissionListQueryObject query, string userId)
         {
-            var submissionQuery = _context.Submissions.Include(s => s.AppUser).Include(s => s.ProgrammingLanguage).OrderByDescending(s => s.Point).OrderByDescending(s => s.SubmittedAt).AsQueryable();
+            var submissionQuery = _context.Submissions.Include(s => s.AppUser).Include(s => s.ProgrammingLanguage).OrderByDescending(s => s.SubmittedAt).OrderByDescending(s => s.Point).AsQueryable();
             if (!string.IsNullOrWhiteSpace(query.ProblemId))
             {
                 submissionQuery = submissionQuery.Where(s => s.Problem.ProblemId == query.ProblemId);
@@ -89,6 +89,47 @@ namespace api.Repository
                 submissionQuery = submissionQuery.Where(s => s.AppUser.Id == userId);
             }
             return await submissionQuery.ToListAsync();
+        }
+
+        public async Task<Submission> CreateASubmissionAsync(Submission submission)
+        {
+            if (submission == null)
+                throw new ArgumentNullException(nameof(submission));
+
+            try
+            {
+                submission.SubmissionId = Guid.NewGuid().ToString();
+                if (submission.ProgrammingLanguage != null)
+                {
+                    _context.Entry(submission.ProgrammingLanguage).State = EntityState.Unchanged;
+                }
+                if (submission.Problem != null)
+                {
+                    _context.Entry(submission.Problem).State = EntityState.Unchanged;
+                }
+                if (submission.AppUser != null)
+                {
+                    _context.Entry(submission.AppUser).State = EntityState.Unchanged;
+                }
+
+                await _context.Submissions.AddAsync(submission);
+
+                await _context.SaveChangesAsync();
+
+                return submission;
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex);
+                return null;
+            }
+        }
+        public async Task<bool> HasUserSolvedProblemAsync(string userId, string problemId)
+        {
+        return await _context.Submissions
+        .AnyAsync(s => s.AppUserId == userId 
+                 && s.ProblemId == problemId 
+                 && s.Status == "Accepted");
         }
     }
 }

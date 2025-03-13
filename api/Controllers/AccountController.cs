@@ -253,26 +253,45 @@ public async Task<IActionResult> GitHubLoginCallback()
         }
 
     [HttpPost("change-password")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
-        {
-            var user = await _userManager.FindByNameAsync(changePasswordDto.Username);
-            if (user == null || user.Email != changePasswordDto.Email)
-            return BadRequest("Thông tin không đúng!");
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+    {
+    var user = await _userManager.FindByNameAsync(changePasswordDto.Username);
+    if (user == null || user.Email != changePasswordDto.Email)
+        return BadRequest(new { message = "Thông tin không đúng!" });
 
-            // Kiểm tra OTP trong MemoryCache
-            string savedOtp = _otpService.GetOtp(changePasswordDto.Email);
-            if (string.IsNullOrEmpty(savedOtp) || savedOtp != changePasswordDto.OtpCode)
-            return BadRequest("Mã xác nhận không hợp lệ hoặc đã hết hạn!");
+    string savedOtp = _otpService.GetOtp(changePasswordDto.Email);
+    if (string.IsNullOrEmpty(savedOtp) || savedOtp != changePasswordDto.OtpCode)
+        return BadRequest(new { message = "Mã xác nhận không hợp lệ hoặc đã hết hạn!" });
 
-            // Đổi mật khẩu
-            var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
-            if (!result.Succeeded) return BadRequest("Mật khẩu cũ không đúng!");
+    var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
+    if (!result.Succeeded) return BadRequest(new { message = "Mật khẩu cũ không đúng!" });
 
-            // Xóa OTP sau khi dùng
-            _otpService.DeleteOtp(changePasswordDto.Email);
+    _otpService.DeleteOtp(changePasswordDto.Email);
 
-            return Ok("Đổi mật khẩu thành công!");
-        }
+    return Ok(new { message = "Đổi mật khẩu thành công!" });
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPassword forgotPassword)
+    {
+    var user = await _userManager.FindByNameAsync(forgotPassword.Username);
+    if (user == null || user.Email != forgotPassword.Email)
+        return BadRequest("Thông tin không đúng!");
+
+    string savedOtp = _otpService.GetOtp(forgotPassword.Email);
+    if (string.IsNullOrEmpty(savedOtp) || savedOtp != forgotPassword.OtpCode)
+        return BadRequest("Mã xác nhận không hợp lệ hoặc đã hết hạn!");
+
+    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+    var result = await _userManager.ResetPasswordAsync(user, token, forgotPassword.NewPassword);
+    if (!result.Succeeded) return BadRequest("Đổi mật khẩu thất bại!");
+
+    _otpService.DeleteOtp(forgotPassword.Email);
+
+    return Ok("Đổi mật khẩu thành công!");
+    }
+
+
 
 
     }

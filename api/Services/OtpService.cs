@@ -19,15 +19,21 @@ namespace api.Services
         {
             var cacheEntryOptions = new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(180) // Lưu OTP trong 180 giây
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(90) 
             };
             _cache.Set(email, otp, cacheEntryOptions);
+            Console.WriteLine($"[DEBUG] OTP mới cho {email}: {otp}");
         }
 
         public string GetOtp(string email)
         {
-            _cache.TryGetValue(email, out string otp);
+            if (_cache.TryGetValue(email, out string otp))
+            {
+            Console.WriteLine($"[DEBUG] OTP hiện tại cho {email}: {otp}");
             return otp;
+            }
+            Console.WriteLine($"[DEBUG] Không tìm thấy OTP cho {email}");
+            return null;
         }
 
         public void DeleteOtp(string email)

@@ -84,6 +84,7 @@ function Home() {
                                 <ProblemItem
                                     key={i}
                                     detail={problem.detail}
+                                    problemId={problem.problemId}
                                     itemNumber={i}
                                     isMostAttempted={problemDailyFocus === 0}
                                     isDoned={problemDailyFocus === 2}

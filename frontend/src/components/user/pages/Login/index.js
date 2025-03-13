@@ -110,7 +110,7 @@ const Login = () => {
                         <Link to="/register" className="create-account-link">
                             Tạo tài khoản mới
                         </Link>
-                        <Link to="/reset-password" className="forgot-password-link">
+                        <Link to="/forgot-password" className="forgot-password-link">
                             Quên mật khẩu?
                         </Link>
                     </div>

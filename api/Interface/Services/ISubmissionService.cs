@@ -15,5 +15,7 @@ namespace api.Interface
         public Task<List<string>> GetAllSubmitterUsernameAsync(string problemId);
         public Task<List<string>> GetAllSubmissionStatusAsync(string problemId);
         public Task<List<string>> GetAllSubmissionLanguageAsync(string problemId);
+        public Task<Submission> CreateASubmissionAsync(Submission submission);
+        public Task<Submission> CreateUserSubmissionAsync(Submission submission);
     }
 }
