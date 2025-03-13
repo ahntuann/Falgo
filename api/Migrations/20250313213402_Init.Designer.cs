@@ -12,8 +12,8 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250214014528_init")]
-    partial class init
+    [Migration("20250313213402_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,19 +54,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5feebd43-96d7-4b4d-bdf5-ee8e0277db6b",
+                            Id = "30b0fabd-6564-4caf-bb60-196af4fb7e6d",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "336503e6-3dd5-410d-9533-26f09e6b0cb1",
+                            Id = "d57699c8-3277-42d3-b3b9-c98f2bc22cbb",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         },
                         new
                         {
-                            Id = "8117d1c6-7746-451a-a6d9-3007fe4b8eaa",
+                            Id = "9c4a3b9d-e8a7-41e6-9d48-a9f684331dbd",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -302,11 +302,10 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TagBlog")
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -332,6 +331,62 @@ namespace api.Migrations
                     b.ToTable("Blogs");
                 });
 
+            modelBuilder.Entity("api.Model.BlogLike", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("BlogID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LikedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("BlogID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("BlogLike");
+                });
+
+            modelBuilder.Entity("api.Model.BlogShare", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("BlogID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SharedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SharedPlatform")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("BlogID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("BlogShare");
+                });
+
             modelBuilder.Entity("api.Model.CommentBlog", b =>
                 {
                     b.Property<int>("ID")
@@ -340,23 +395,37 @@ namespace api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<string>("Avatar")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("BlogId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreateOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("content")
+                    b.Property<string>("GuestName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("title")
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
                     b.HasIndex("BlogId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("CommentBlog");
                 });
@@ -665,13 +734,53 @@ namespace api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("api.Model.BlogLike", b =>
+                {
+                    b.HasOne("api.Model.Blog", "Blog")
+                        .WithMany("BlogLike")
+                        .HasForeignKey("BlogID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("api.Model.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID");
+
+                    b.Navigation("Blog");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("api.Model.BlogShare", b =>
+                {
+                    b.HasOne("api.Model.Blog", "Blog")
+                        .WithMany("BlogShare")
+                        .HasForeignKey("BlogID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("api.Model.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID");
+
+                    b.Navigation("Blog");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("api.Model.CommentBlog", b =>
                 {
                     b.HasOne("api.Model.Blog", "Blog")
                         .WithMany("CommentBlog")
                         .HasForeignKey("BlogId");
 
+                    b.HasOne("api.Model.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Blog");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("api.Model.ContestProblem", b =>
@@ -763,6 +872,10 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Model.Blog", b =>
                 {
+                    b.Navigation("BlogLike");
+
+                    b.Navigation("BlogShare");
+
                     b.Navigation("CommentBlog");
                 });
 

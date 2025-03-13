@@ -19,6 +19,8 @@ using System.Text.Json;
 using api.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
+using api.Interface.Repository;
+using api.Interface.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -163,6 +165,12 @@ builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
 builder.Services.AddScoped<ISubmissionService, SubmissionService>();
 builder.Services.AddScoped<ISubmissionsAdminRepository, SubmissionsAdminRepository>();
 builder.Services.AddScoped<OtpService>();
+builder.Services.AddScoped<IBlogLikeRepository, BlogLikeRepository>();
+builder.Services.AddScoped<IBlogLikeService, BlogLikeService>();
+builder.Services.AddScoped<IBlogShareRepository, BlogShareRepository>();
+builder.Services.AddScoped<IBlogShareService, BlogShareService>();
+builder.Services.AddScoped<IBlogCommentRepository, BlogCommentRepository>();
+builder.Services.AddScoped<IBlogCommentService, BlogCommentService>();
 
 // Logging
 builder.Logging.AddConsole();

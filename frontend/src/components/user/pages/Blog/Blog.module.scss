@@ -30,9 +30,9 @@
             text-align: center;
             font-size: 2rem;
             margin-bottom: 16px;
-            min-width: 807.4px; // Thay đổi giá trị này theo nhu cầu
+            min-width: 807.4px;
         }
-        
+
         .blog_title_search {
             .title {
                 color: #209fb2;
@@ -88,6 +88,9 @@
         }
     }
 
+    .category-list button {
+        text-align: left;
+    }
     .category-list button,
     .reset-button {
         display: block;
@@ -129,12 +132,19 @@
             font-size: 14px;
             padding: auto;
         }
+        .DateInput {
+            width: 100%;
+        }
+    }
+    .reset-button {
+        margin-top: 13px;
+        margin-bottom: -4px;
     }
     .blog-list {
         width: 100%;
         max-width: 807.4px;
-        min-height: 340px;
-        .no-blogs{
+        min-height: 400px;
+        .no-blogs {
             color: white;
         }
     }
@@ -151,10 +161,17 @@
         .category-item {
             font-size: 13.5px;
         }
-        
+
         .category-item:hover {
             background-color: #0056b3;
         }
+    }
+    .content {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
     }
 
     .thumbnail {
@@ -167,15 +184,10 @@
         border: 1px solid black;
     }
 
-    .content {
-        flex: 1;
-    }
-
     .actions {
         margin-top: 15px;
         padding: 10px;
         border-top: 1px solid #ddd;
-
     }
 
     .sort-controls {

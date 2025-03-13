@@ -29,12 +29,12 @@ const CreateBlog = () => {
     });
 
     const categoryOptions = [
-        'Mẹo lập trình',
-        'Hướng dẫn',
-        'Xu hướng lập trình',
-        'Kinh Nghiệm',
+        'Câu hỏi',
         'Thử thách',
-        'Câu Hỏi',
+        'Hướng dẫn',
+        'Kinh nghiệm',
+        'Mẹo lập trình',
+        'Xu hướng lập trình',
     ];
 
     const handleCategoryChange = (e) => {

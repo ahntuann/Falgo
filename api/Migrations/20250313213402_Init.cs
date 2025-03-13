@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace api.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -236,7 +236,7 @@ namespace api.Migrations
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DatePublic = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    TagBlog = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -358,19 +358,81 @@ namespace api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BlogLike",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BlogID = table.Column<int>(type: "int", nullable: false),
+                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    LikedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BlogLike", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_BlogLike_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BlogLike_Blogs_BlogID",
+                        column: x => x.BlogID,
+                        principalTable: "Blogs",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BlogShare",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BlogID = table.Column<int>(type: "int", nullable: false),
+                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    SharedPlatform = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SharedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BlogShare", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_BlogShare_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BlogShare_Blogs_BlogID",
+                        column: x => x.BlogID,
+                        principalTable: "Blogs",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CommentBlog",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GuestName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BlogId = table.Column<int>(type: "int", nullable: true)
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BlogId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CommentBlog", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_CommentBlog_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_CommentBlog_Blogs_BlogId",
                         column: x => x.BlogId,
@@ -405,9 +467,9 @@ namespace api.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "336503e6-3dd5-410d-9533-26f09e6b0cb1", null, "Guest", "GUEST" },
-                    { "5feebd43-96d7-4b4d-bdf5-ee8e0277db6b", null, "User", "USER" },
-                    { "8117d1c6-7746-451a-a6d9-3007fe4b8eaa", null, "Admin", "ADMIN" }
+                    { "30b0fabd-6564-4caf-bb60-196af4fb7e6d", null, "User", "USER" },
+                    { "9c4a3b9d-e8a7-41e6-9d48-a9f684331dbd", null, "Admin", "ADMIN" },
+                    { "d57699c8-3277-42d3-b3b9-c98f2bc22cbb", null, "Guest", "GUEST" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -450,14 +512,39 @@ namespace api.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BlogLike_BlogID",
+                table: "BlogLike",
+                column: "BlogID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BlogLike_UserID",
+                table: "BlogLike",
+                column: "UserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Blogs_UserId",
                 table: "Blogs",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BlogShare_BlogID",
+                table: "BlogShare",
+                column: "BlogID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BlogShare_UserID",
+                table: "BlogShare",
+                column: "UserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CommentBlog_BlogId",
                 table: "CommentBlog",
                 column: "BlogId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CommentBlog_UserId",
+                table: "CommentBlog",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContestProblems_ProblemId",
@@ -517,6 +604,12 @@ namespace api.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "BlogLike");
+
+            migrationBuilder.DropTable(
+                name: "BlogShare");
 
             migrationBuilder.DropTable(
                 name: "CommentBlog");
