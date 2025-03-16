@@ -135,7 +135,7 @@ const UserSubmissions = () => {
                             Bài viết
                         </button>
                         <button className={cs('nav-tab', 'active')}>Bài nộp</button>
-                        <button className={cs('nav-tab')} onClick={() => navigate('/contests')}>
+                        <button className={cs('nav-tab')} onClick={() => navigate('/usercontest')}>
                             Cuộc thi
                         </button>
                     </div>

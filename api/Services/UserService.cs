@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using api.Dtos.Submission;
 using api.Helpers;
+using api.Dtos.ContesRegistation;
 
 namespace api.Services
 {
@@ -158,6 +159,26 @@ namespace api.Services
             return await _submissionService.GetUserSubmissionsWithProblemInfoAsync(userId, query);
         }
 
+        public async Task<List<UserContestDto>> GetUserContestsAsync(string userId)
+        {
+            var user = await _userRepo.GetUserByIdAsync(userId);
+            
+            if (user == null)
+                return null;
+            
+            var contests = await _contestRegisRepo.GetContestsByUserIdAsync(userId);
+            
+            return contests.Select(c => new UserContestDto
+            {
+                ContestId = c.ContestId,
+                ContestName = c.ContestName,
+                CreatedAt = c.CreatedAt,
+                EndDate = c.EndDate,
+                Level = c.Level,
+                TotalPoint = c.TotalPoint,
+                DueTime = c.DueTime
+            }).ToList();
+        }
 
     }
 

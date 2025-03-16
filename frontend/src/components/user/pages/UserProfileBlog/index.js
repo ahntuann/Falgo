@@ -289,7 +289,9 @@ const UserProfileBlog = () => {
                         >
                             Bài nộp
                         </button>
-                        <button className={cs('nav-tab')}>Cuộc thi</button>
+                        <button className={cs('nav-tab')} onClick={() => navigate('/usercontest')}>
+                            Cuộc thi
+                        </button>
                     </div>
                 </div>
 

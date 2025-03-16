@@ -15,3 +15,4 @@ export { default as SubmissionList } from './SubmissionList';
 export { default as ForgotPassword } from './ForgotPassword';
 export { default as UserProfileBlog } from './UserProfileBlog';
 export { default as UserSubmissions } from './UserSubmissions';
+export { default as UserContest } from './UserContest';

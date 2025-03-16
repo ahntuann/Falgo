@@ -159,6 +159,23 @@ namespace api.Controllers
             return Ok(submissions);
         }
 
+        [HttpGet("{userId}/contests")]
+        public async Task<IActionResult> GetUserContests(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("User ID is required");
+
+            var contests = await _userService.GetUserContestsAsync(userId);
+
+            if (contests == null)
+                return NotFound("User not found");
+
+            if (contests.Count == 0)
+                return Ok(new { message = "User has not participated in any contests", contests });
+
+            return Ok(contests);
+        }
+
 
     }
 }
