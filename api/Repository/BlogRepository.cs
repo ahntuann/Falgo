@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.BlogSpace;
@@ -28,11 +29,17 @@ namespace api.Repository
 
         public async Task<Blog?> DeleteAync(int id)
         {
-            var BlogModel = await _Context.Blogs.FirstOrDefaultAsync(x => x.ID == id);
+            // var BlogModel = await _Context.Blogs.FirstOrDefaultAsync(x => x.ID == id);
+            var BlogModel = await _Context.Blogs.Include(b => b.BlogLike).Include(b => b.BlogShare).Include(b => b.CommentBlog).FirstOrDefaultAsync(b => b.ID == id);
             if (BlogModel == null)
             {
                 return null;
             }
+
+            _Context.BlogLike.RemoveRange(BlogModel.BlogLike);
+            _Context.BlogShare.RemoveRange(BlogModel.BlogShare);
+            _Context.CommentBlog.RemoveRange(BlogModel.CommentBlog);
+
             _Context.Blogs.Remove(BlogModel);
             await _Context.SaveChangesAsync();
             return BlogModel;
@@ -40,7 +47,11 @@ namespace api.Repository
 
         public async Task<List<Blog>> GetAllAsync()
         {
-            return await _Context.Blogs.ToListAsync();
+            return await _Context.Blogs
+                .Include(b => b.CommentBlog)  // Load danh sách bình luận
+                .Include(b => b.BlogLike)     // Load danh sách lượt thích
+                .Include(b => b.BlogShare)    // Load danh sách chia sẻ
+                .ToListAsync();
         }
 
         public async Task<Blog?> GetByIDAsync(int id)
@@ -68,7 +79,7 @@ namespace api.Repository
             existingBlog.ImageBlog = BlogDto.ImageBlog;
             existingBlog.CategoryBlog = BlogDto.CategoryBlog;
             existingBlog.Status = BlogDto.Status;
-
+            existingBlog.Note = BlogDto.Note;
 
             await _Context.SaveChangesAsync();
 

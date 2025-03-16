@@ -165,8 +165,16 @@ function BlogManagement() {
             !window.confirm(
                 `Bạn có chắc chắn muốn đổi trạng thái bài viết thành "${newStatus}" không?`,
             )
-        )
+        ) {
             return;
+        }
+
+        let reason = '';
+
+        if (newStatus === 'Từ chối') {
+            reason = prompt('Hãy nhập lý do từ chối:', 'Vi phạm cộng đồng!!!');
+            if (reason === null) return;
+        }
 
         try {
             const token = localStorage.getItem('accessToken');
@@ -175,7 +183,7 @@ function BlogManagement() {
                 alert('Không tìm thấy bài viết để cập nhật!');
                 return;
             }
-            const updatedBlog = { ...blogToUpdate, status: newStatus };
+            const updatedBlog = { ...blogToUpdate, status: newStatus, note: reason };
             console.log('updatedBlog ', updatedBlog);
             const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
                 method: 'PUT',
@@ -190,7 +198,7 @@ function BlogManagement() {
                 alert(`Bài viết đã được cập nhật trạng thái: ${newStatus}`);
                 setFilteredBlogs((prevBlogs) =>
                     prevBlogs.map((blog) =>
-                        blog.id === blogId ? { ...blog, status: newStatus } : blog,
+                        blog.id === blogId ? { ...blog, status: newStatus, note: reason } : blog,
                     ),
                 );
             } else {

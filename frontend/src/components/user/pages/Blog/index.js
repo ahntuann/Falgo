@@ -8,8 +8,6 @@ import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
 import { useContext } from 'react';
 import AuthContext from '~/context/AuthContext';
 import { Link } from 'react-router-dom';
-import { use } from 'react';
-import { date } from 'yup';
 
 const cs = classNames.bind(styles);
 
@@ -25,13 +23,21 @@ const Blog = () => {
         console.log(filteredBlogs);
     }, [filteredBlogs]);
 
+    // const [categories] = useState([
+    //     'Mẹo lập trình',
+    //     'Hướng dẫn',
+    //     'Xu hướng lập trình',
+    //     'Kinh Nghiệm',
+    //     'Thử thách',
+    //     'Câu Hỏi',
+    // ]);
     const [categories] = useState([
-        'Mẹo lập trình',
-        'Hướng dẫn',
-        'Xu hướng lập trình',
-        'Kinh Nghiệm',
-        'Thử thách',
-        'Câu Hỏi',
+        { name: 'Câu hỏi', icon: '❓' },
+        { name: 'Thử thách', icon: '🔥' },
+        { name: 'Hướng dẫn', icon: '📖' },
+        { name: 'Kinh nghiệm', icon: '🧑‍💻' },
+        { name: 'Mẹo lập trình', icon: '💡' },
+        { name: 'Xu hướng lập trình', icon: '🚀' },
     ]);
     const [query, setQuery] = useState({
         search: '',
@@ -112,7 +118,7 @@ const Blog = () => {
                 fetchedBlogs = fetchedBlogs.filter(
                     (blog) =>
                         blog.title.toLowerCase().includes(searchLower) ||
-                        blog.description.toLowerCase().includes(searchLower)||
+                        blog.description.toLowerCase().includes(searchLower) ||
                         blog.categoryBlog.toLowerCase().includes(searchLower),
                 );
             }
@@ -159,22 +165,38 @@ const Blog = () => {
             search: '',
             category: '',
             sortBy: 'createOn',
-            IsDescending: false,
+            IsDescending: true,
             page: 1,
             postsPerPage: 10,
             dateFilter: '',
         });
 
-        setDateFilter({ day: '', month: '', year: '' });
+        // setDateFilter({ day: '', month: '', year: '' });
+        setDateFilter({ date: '', day: '', month: '', year: '' });
         setFilteredBlogs(originalBlogs);
     };
 
-    const handleDateChange = (e) => {
-        const { name, value } = e.target;
-        setDateFilter((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+    // const handleDateChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setDateFilter((prev) => ({
+    //         ...prev,
+    //         [name]: value,
+    //     }));
+    // };
+    const handleDateChange = (event) => {
+        const selectedDate = event.target.value; // "YYYY-MM-DD" hoặc rỗng
+        if (!selectedDate) {
+            setDateFilter({ day: '', month: '', year: '' });
+            return;
+        }
+
+        const [year, month, day] = selectedDate.split('-');
+
+        setDateFilter({
+            day: day || '',
+            month: month || '',
+            year: year || '',
+        });
     };
 
     const handleFilterByDate = () => {
@@ -395,10 +417,10 @@ const Blog = () => {
                 <div className={cs('Create_UBlog_sidebar')}>
                     <div className={cs('Create_UBlog')}>
                         <Link to={'/CreateBlog'} className={cs('Create')}>
-                            Tạo Bài
+                            Tạo bài
                         </Link>
                         <Link to={'/UserBlog'} className={cs('UBlog')}>
-                            Bài Viết
+                            Đã tạo
                         </Link>
                     </div>
                     {/* sidebar */}
@@ -409,10 +431,11 @@ const Blog = () => {
                             {categories.map((category, index) => (
                                 <button
                                     key={index}
-                                    className={cs({ active: query.category === category })}
-                                    onClick={() => handleCategoryChange(category)}
+                                    className={cs({ active: query.category === category.name })}
+                                    onClick={() => handleCategoryChange(category.name)}
                                 >
-                                    {category}
+                                    {category.name}
+                                    {category.icon}
                                 </button>
                             ))}
                         </div>
@@ -440,7 +463,7 @@ const Blog = () => {
 
                         {/* date-filter */}
                         <h3>Lọc theo ngày</h3>
-                        <div className={cs('date-filter')}>
+                        {/* <div className={cs('date-filter')}>
                             <div className={cs('DateInput')}>
                                 <select
                                     name="day"
@@ -474,7 +497,15 @@ const Blog = () => {
                                     value={dateFilter.year}
                                     onChange={handleDateChange}
                                 />
-                            </div>
+                            </div> */}
+                        {/* </div> */}
+                        <div className={cs('date-filter')}>
+                            <input
+                                type="date"
+                                value={dateFilter.date}
+                                onChange={handleDateChange}
+                                className={cs('DateInput')}
+                            />
                         </div>
                         {/* End date-filter */}
 

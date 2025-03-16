@@ -53,6 +53,8 @@ namespace api.Services
                                                             : problems.OrderBy(p => p.AcceptedCount).ToList(),
                     "p" => query.IsDescending.Equals("true") ? problems.OrderByDescending(p => p.Score).ToList()
                                                             : problems.OrderBy(p => p.Score).ToList(),
+                    "n2" => problems.OrderByDescending(p => p.Title).ToList(),
+                    "n1" => problems.OrderBy(p => p.Title).ToList(),
                     _ => problems
                 };
             }

@@ -135,43 +135,74 @@ const SubmissionList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {submissions.map((submission, i) => (
-                        <tr key={i}>
-                            <td>{submission.submitterName}</td>
-                            <td>{submission.score}</td>
-                            <td>{submission.status}</td>
-                            <td>{submission.programmingLanguage}</td>
-                            <td>{submission.executeTime}</td>
-                            <td>{submission.memoryUsed}</td>
-                            <td>
-                                {new Date(submission.submittedAt).toLocaleString('vi-VN', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    second: '2-digit',
-                                })}
-                            </td>
-                        </tr>
-                    ))}
+                    {submissions.map((submission, i) => {
+                        const isFiltered =
+                            query.UserName || query.Status || query.ProgrammingLanguage;
+                        const actualIndex = (query.PageNumber - 1) * query.PageSize + i;
+                        return (
+                            <tr key={i} className={cs({ topRank: !isFiltered && actualIndex < 3 })}>
+                                <td>{submission.submitterName}</td>
+                                <td>{submission.score}</td>
+                                <td>{submission.status}</td>
+                                <td>{submission.programmingLanguage}</td>
+                                <td>{submission.executeTime}</td>
+                                <td>{submission.memoryUsed}</td>
+                                <td>
+                                    {new Date(submission.submittedAt).toLocaleString('vi-VN', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        second: '2-digit',
+                                    })}
+                                </td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
-            </table>
+            </table>{' '}
             <div className={cs('pagination')}>
                 <button
                     disabled={query.PageNumber === 1}
                     onClick={() => setQuery({ ...query, PageNumber: query.PageNumber - 1 })}
                 >
-                    Trước
+                    &lt;
                 </button>
-                <span>
-                    Trang {query.PageNumber} trong {totalPages}
-                </span>
+
+                {query.PageNumber > 3 && (
+                    <>
+                        <button onClick={() => setQuery({ ...query, PageNumber: 1 })}>1</button>
+                        <span className={cs('dots')}>...</span>
+                    </>
+                )}
+
+                {Array.from({ length: 5 }, (_, i) => query.PageNumber - 2 + i)
+                    .filter((page) => page >= 1 && page <= totalPages)
+                    .map((page) => (
+                        <button
+                            key={page}
+                            className={page === query.PageNumber ? cs('active') : ''}
+                            onClick={() => setQuery({ ...query, PageNumber: page })}
+                        >
+                            {page}
+                        </button>
+                    ))}
+
+                {query.PageNumber < totalPages - 2 && (
+                    <>
+                        <span className={cs('dots')}>...</span>
+                        <button onClick={() => setQuery({ ...query, PageNumber: totalPages })}>
+                            {totalPages}
+                        </button>
+                    </>
+                )}
+
                 <button
                     disabled={query.PageNumber === totalPages}
                     onClick={() => setQuery({ ...query, PageNumber: query.PageNumber + 1 })}
                 >
-                    Sau
+                    &gt;
                 </button>
             </div>
         </div>

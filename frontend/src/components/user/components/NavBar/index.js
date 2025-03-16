@@ -15,7 +15,7 @@ function NavBar({ classNames }) {
         { title: 'Bài tập', path: '/problems' },
         { title: 'Cuộc thi', path: '/contest' },
         { title: 'Xếp hạng', path: '/ranking' },
-        { title: 'Bài viết', path: '/blog' },
+        { title: 'Chia sẻ', path: '/blog' },
         { title: 'Trang cá nhân', path: '/profile' },
     ];
 
