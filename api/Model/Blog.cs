@@ -28,7 +28,9 @@ namespace api.Model
 
         public DateTime CreateOn { get; set; } = DateTime.Now;
         public DateTime? DatePublic { get; set; }
-        public string TagBlog { get; set; } = string.Empty;
+        public string? Note { get; set; } = string.Empty;
         public List<CommentBlog> CommentBlog { get; set; } = new List<CommentBlog>();
-    }
+        public List<BlogLike> BlogLike { get; set; } = new List<BlogLike>();
+        public List<BlogShare> BlogShare { get; set; } = new List<BlogShare>();
+   }
 }

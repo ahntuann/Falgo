@@ -82,55 +82,63 @@ const Profile = () => {
     }
 
     return (
-        <div className={cs('profile-container')}>
-            <div className={cs('profile-header')}>
-                <div className={cs('nav-tabs')}>
-                    <button className={cs('nav-tab', 'active')}>Hồ sơ cá nhân</button>
-                    <button className={cs('nav-tab')} onClick={() => navigate('/updateprofile')}>
-                        Chỉnh sửa hồ sơ
-                    </button>
-                    <button className={cs('nav-tab')} onClick={() => navigate('/userprofileblog')}>
-                        Bài viết
-                    </button>
-                    <button className={cs('nav-tab')}>Bài nộp</button>
-                    <button className={cs('nav-tab')}>Cuộc thi</button>
+        <div className={cs('profilePage')}>
+            <div className={cs('profile-container')}>
+                <div className={cs('profile-header')}>
+                    <div className={cs('nav-tabs')}>
+                        <button className={cs('nav-tab', 'active')}>Hồ sơ cá nhân</button>
+                        <button
+                            className={cs('nav-tab')}
+                            onClick={() => navigate('/updateprofile')}
+                        >
+                            Chỉnh sửa hồ sơ
+                        </button>
+                        <button
+                            className={cs('nav-tab')}
+                            onClick={() => navigate('/userprofileblog')}
+                        >
+                            Bài viết
+                        </button>
+                        <button className={cs('nav-tab')}>Bài nộp</button>
+                        <button className={cs('nav-tab')}>Cuộc thi</button>
+                    </div>
                 </div>
-            </div>
 
-            <div className={cs('profile-content')}>
-                <div className={cs('profile-info')}>
-                    {[
-                        { key: 'userName', label: 'Tên đăng nhập' },
-                        { key: 'fullName', label: 'Họ và tên' },
-                        { key: 'email', label: 'Email' },
-                        { key: 'dateOfBirth', label: 'Ngày sinh' },
-                        { key: 'phoneNumber', label: 'Số điện thoại' },
-                        { key: 'address', label: 'Địa chỉ' },
-                        { key: 'createdAt', label: 'Ngày tham gia' },
-                        { key: 'totalSubmissions', label: 'Tổng bài nộp' },
-                        { key: 'totalSolved', label: 'Số bài đã giải' },
-                    ].map(({ key, label }, index) => (
-                        <div key={index} className={cs('info-row')}>
-                            <div className={cs('info-label')}>{label}</div>
-                            <div className={cs('info-value')}>
-                                {key === 'createdAt' || key === 'dateOfBirth'
-                                    ? formatDate(user[key])
-                                    : user[key]}
+                <div className={cs('profile-content')}>
+                    <div className={cs('profile-info')}>
+                        {[
+                            { key: 'userName', label: 'Tên đăng nhập' },
+                            { key: 'fullName', label: 'Họ và tên' },
+                            { key: 'email', label: 'Email' },
+                            { key: 'dateOfBirth', label: 'Ngày sinh' },
+                            { key: 'phoneNumber', label: 'Số điện thoại' },
+                            { key: 'address', label: 'Địa chỉ' },
+                            { key: 'createdAt', label: 'Ngày tham gia' },
+                            { key: 'totalSubmissions', label: 'Tổng bài nộp' },
+                            { key: 'totalSolved', label: 'Số bài đã giải' },
+                        ].map(({ key, label }, index) => (
+                            <div key={index} className={cs('info-row')}>
+                                <div className={cs('info-label')}>{label}</div>
+                                <div className={cs('info-value')}>
+                                    {key === 'createdAt' || key === 'dateOfBirth'
+                                        ? formatDate(user[key])
+                                        : user[key]}
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
-                <div className={cs('profile-avatar')}>
-                    <img
-                        src={
-                            user.avatar
-                                ? `http://localhost:5180${user.avatar}`
-                                : 'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
-                        }
-                        alt="Avatar người dùng"
-                        className={cs('avatar-image')}
-                    />
+                    <div className={cs('profile-avatar')}>
+                        <img
+                            src={
+                                user.avatar
+                                    ? `http://localhost:5180${user.avatar}`
+                                    : 'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
+                            }
+                            alt="Avatar người dùng"
+                            className={cs('avatar-image')}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

@@ -37,18 +37,18 @@ const BlogUpdate = () => {
                     ? blog.categoryBlog
                     : blog.categoryBlog
                     ? blog.categoryBlog.split(', ').map((cat) => cat.trim())
-                    : [], 
+                    : [],
             });
         }
     }, [blog, formData.status]);
 
     const categoryOptions = [
-        'Mẹo lập trình',
-        'Hướng dẫn',
-        'Xu hướng lập trình',
-        'Kinh Nghiệm',
+        'Câu hỏi',
         'Thử thách',
-        'Câu Hỏi',
+        'Hướng dẫn',
+        'Kinh nghiệm',
+        'Mẹo lập trình',
+        'Xu hướng lập trình',
     ];
 
     const handleChange = (e) => {
@@ -114,7 +114,10 @@ const BlogUpdate = () => {
                     src={formData.thumbnail ? formData.thumbnail : NoImage}
                     alt={formData.title}
                     className={cs('thumbnail')}
-                    onError={(e) => { e.target.onerror = null; e.target.src = NoImage; }}
+                    onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = NoImage;
+                    }}
                 />
                 <div className={cs('EditBlog')}>
                     <label>

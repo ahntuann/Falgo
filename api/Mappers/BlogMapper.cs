@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using api.Dtos;
 using api.Dtos.BlogSpace;
 using api.Model;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace api.Mappers
 {
@@ -31,7 +33,11 @@ namespace api.Mappers
 
                 CreateOn = BlogModel.CreateOn,
                 DatePublic = BlogModel.DatePublic,
-                TagBlog = BlogModel.TagBlog
+                Note = BlogModel.Note,
+                CommentBlog = BlogModel.CommentBlog.Select(cmt => cmt.ToBlogCommentDto()).ToList(),
+                BlogLike = BlogModel.BlogLike.Select(Like => Like.ToBlogLikeDto()).ToList(),
+                BlogShare = BlogModel.BlogShare.Select(share => share.ToBlogShareDto()).ToList()
+
             };
         }
         public static Blog ToBlogFromCreateDto(this CreateBlogRequestDto BlogDto)
@@ -50,7 +56,80 @@ namespace api.Mappers
                 Status = BlogDto.Status,
                 CreateOn = BlogDto.CreateOn,
                 DatePublic = BlogDto.DatePublic,
+                Note = BlogDto.Note
             };
         }
+        public static BlogLike ToBlogLikeFromCreateDto(this BlogLikeDto BlogLikeModel)
+        {
+            return new BlogLike
+            {
+                BlogID = BlogLikeModel.BlogID,
+                UserID = BlogLikeModel.UserID,
+                LikedOn = DateTime.Now
+            };
+        }
+        public static BlogShare ToBlogShareFromCreateDto(this BlogShareDto BlogShareModel)
+        {
+            return new BlogShare
+            {
+                BlogID = BlogShareModel.BlogID,
+                UserID = BlogShareModel.UserID,
+                SharedPlatform = BlogShareModel.SharedPlatform,
+                SharedOn = BlogShareModel.SharedOn
+            };
+        }
+        public static CommentBlog ToCommentBlogFromCreateDto(this CreateCommentBlogRequestDto Model)
+        {
+            return new CommentBlog
+            {
+                Avatar = Model.Avatar,
+                GuestName = Model.GuestName,
+                content = Model.content,
+                CreateOn = DateTime.Now,
+                Status = Model.Status,
+                Note = Model.Note,
+                BlogId = Model.BlogId,
+                UserId = Model.UserId
+            };
+        }
+        public static BlogCommentDto ToBlogCommentDto(this CommentBlog Model)
+        {
+            return new BlogCommentDto
+            {
+                ID = Model.ID,
+                Avatar = Model.Avatar,
+                GuestName = Model.GuestName,
+                content = Model.content,
+                CreateOn = DateTime.Now,
+                Status = Model.Status,
+                Note = Model.Note,
+
+                BlogId = Model.BlogId,
+
+                UserId = Model.UserId
+            };
+        }
+        public static BlogLikeDto ToBlogLikeDto(this BlogLike Model)
+        {
+            return new BlogLikeDto
+            {
+                ID = Model.ID,
+                BlogID = Model.BlogID,
+                UserID = Model.UserID,
+            };
+        }
+        public static BlogShareDto ToBlogShareDto(this BlogShare Model)
+        {
+            return new BlogShareDto
+            {
+                ID = Model.ID,
+                BlogID = Model.BlogID,
+                UserID = Model.UserID,
+                SharedPlatform = Model.SharedPlatform,
+                SharedOn = DateTime.Now
+            };
+        }
+
+
     }
 }

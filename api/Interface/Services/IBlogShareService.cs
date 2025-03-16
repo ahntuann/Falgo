@@ -1,0 +1,15 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using api.Model;
+
+namespace api.Interface.Services
+{
+    public interface IBlogShareService
+    {
+        Task<List<BlogShare>> GetAllBlogShare();
+        Task<BlogShare> CreateAsync(BlogShare Content);
+
+    }
+}

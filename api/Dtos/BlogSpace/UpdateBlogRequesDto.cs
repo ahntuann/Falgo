@@ -14,5 +14,6 @@ namespace api.Dtos.BlogSpace
         public string ImageBlog { get; set; } = string.Empty;
         public string CategoryBlog { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
+        public string? Note { get; set; } = string.Empty;
     }
 }
