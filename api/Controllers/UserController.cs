@@ -146,7 +146,6 @@ namespace api.Controllers
             if (string.IsNullOrEmpty(userId))
                 return BadRequest("User ID is required");
 
-            // Đảm bảo giá trị mặc định hợp lý
             if (query.PageNumber <= 0)
                 query.PageNumber = 1;
             if (query.PageSize <= 0)
