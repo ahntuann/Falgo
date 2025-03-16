@@ -24,6 +24,7 @@ namespace api.Mappers
             {
                 SubmitterName = submission.AppUser.FullName,
                 ProgrammingLanguage = submission.ProgrammingLanguage.Language,
+                ProblemTitle = submission.Problem.Title,
                 Score = submission.Point,
                 Status = submission.Status,
                 ExecuteTime = submission.ExecuteTime,

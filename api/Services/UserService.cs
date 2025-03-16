@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using api.Dtos.Submission;
+using api.Helpers;
 
 namespace api.Services
 {
@@ -22,13 +24,15 @@ namespace api.Services
         private readonly IUserRepository _userRepo;
         private readonly IContestRepository _contestRepo;
         private readonly IWebHostEnvironment _env;
+        private readonly ISubmissionService _submissionService;
         public UserService(IContestRegistationRepository contestRegisRepo, IUserRepository userRepo, IContestRepository contestRepo,
-                        IWebHostEnvironment env)
+                        IWebHostEnvironment env, ISubmissionService submissionService)
         {
             _contestRegisRepo = contestRegisRepo;
             _userRepo = userRepo;
             _contestRepo = contestRepo;
             _env = env;
+            _submissionService = submissionService;
         }
 
         public async Task<AppUser> GetUserByIdAsync(string userId)
@@ -147,7 +151,12 @@ namespace api.Services
             };
         }
 
-
+        public async Task<PageResult<SubmissionListDto>> GetUserSubmissionsAsync(string userId, SubmissionListQueryObject query)
+        {
+            query.UserId = userId;
+    
+            return await _submissionService.GetUserSubmissionsWithProblemInfoAsync(userId, query);
+        }
 
 
     }

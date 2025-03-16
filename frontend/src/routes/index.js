@@ -13,6 +13,7 @@ import {
     SubmissionList,
     UpdateProfile,
     UserProfileBlog,
+    UserSubmissions,
 } from '~/components/user/pages';
 import { AdminLogin, Dashboard } from '~/components/admin/pages';
 import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
@@ -106,6 +107,12 @@ const routes = [
     {
         component: UserProfileBlog,
         path: '/UserProfileBlog',
+        layout: DefaultLayout,
+        role: ['user'],
+    },
+    {
+        component: UserSubmissions,
+        path: '/UserSubmissions',
         layout: DefaultLayout,
         role: ['user'],
     },

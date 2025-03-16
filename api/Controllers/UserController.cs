@@ -140,6 +140,25 @@ namespace api.Controllers
             return Ok(new { avatarUrl = user.Avatar });
         }
 
+        [HttpGet("{userId}/submissions")]
+        public async Task<IActionResult> GetUserSubmissions(string userId, [FromQuery] SubmissionListQueryObject query)
+        {
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("User ID is required");
+
+            // Đảm bảo giá trị mặc định hợp lý
+            if (query.PageNumber <= 0)
+                query.PageNumber = 1;
+            if (query.PageSize <= 0)
+                query.PageSize = 10;
+
+            var submissions = await _userService.GetUserSubmissionsAsync(userId, query);
+
+            if (submissions == null)
+                return NotFound("User not found or has no submissions");
+
+            return Ok(submissions);
+        }
 
 
     }

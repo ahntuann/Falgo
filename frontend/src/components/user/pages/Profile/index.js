@@ -99,7 +99,12 @@ const Profile = () => {
                         >
                             Bài viết
                         </button>
-                        <button className={cs('nav-tab')}>Bài nộp</button>
+                        <button
+                            className={cs('nav-tab')}
+                            onClick={() => navigate('/usersubmissions')}
+                        >
+                            Bài nộp
+                        </button>
                         <button className={cs('nav-tab')}>Cuộc thi</button>
                     </div>
                 </div>

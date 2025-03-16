@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dtos.Submission;
 using api.Dtos.User;
+using api.Helpers;
 using api.Model;
 
 namespace api.Interface
@@ -15,5 +17,6 @@ namespace api.Interface
         Task<UserProfileDto> GetUserProfile(string userId);
          Task<bool> UpdateUserAsync(string userId, UpdateUserDto updateUserDto);
          Task<AvatarUpdateResult> UpdateUserAvatarAsync(string userId, IFormFile avatar);
+         Task<PageResult<SubmissionListDto>> GetUserSubmissionsAsync(string userId, SubmissionListQueryObject query);
     }
 }

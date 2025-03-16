@@ -299,5 +299,26 @@ namespace api.Controllers
                 ExecutionTime = stopwatch.ElapsedMilliseconds
             };
         }
+
+        [HttpGet("languages")]
+        public async Task<IActionResult> GetSubmissionLanguages([FromQuery] string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("User ID is required");
+
+            var query = new SubmissionListQueryObject { UserId = userId };
+            var languages = await _submissionService.GetAllSubmissionLanguagesByUserAsync(userId);
+            return Ok(languages);
+        }
+
+        [HttpGet("statuses")]
+        public async Task<IActionResult> GetSubmissionStatuses([FromQuery] string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("User ID is required");
+
+            var statuses = await _submissionService.GetAllSubmissionStatusesByUserAsync(userId);
+            return Ok(statuses);
+        }
     }
 }
