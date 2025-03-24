@@ -24,7 +24,7 @@ const ProblemDetail = () => {
                 setLoading(false);
             })
             .catch(() => {
-                setError('Không thể tải dữ liệu bài tập.');
+                setError('Bài tập không tồn tại.');
                 setLoading(false);
             });
         axios
@@ -33,9 +33,8 @@ const ProblemDetail = () => {
             .catch((err) => console.error('Error fetching languages:', err));
     }, [problemId]);
 
-    if (loading) return <div className={cs('loading')}>Đang tải...</div>;
-    if (error) return <div className={cs('error')}>{error}</div>;
-    if (!problem) return <div className={cs('not-found')}>Bài tập không tồn tại.</div>;
+    if (loading) return <div style={{ color: 'white' }}>Đang tải...</div>;
+    if (error) return <div style={{ color: 'white' }}>{error}</div>;
 
     return (
         <div className={cs('problem-detail')}>
@@ -90,12 +89,18 @@ const ProblemDetail = () => {
                 >
                     Làm bài
                 </Link>
-                <Link
-                    to={`/submissions?problemId=${problemId}&userId=${appUser?.id}`}
-                    className={cs('button', 'secondary')}
-                >
-                    Lịch sử nộp bài
-                </Link>
+                {!appUser ? (
+                    <Link to="/login" className={cs('button', 'secondary')}>
+                        Lịch sử nộp bài
+                    </Link>
+                ) : (
+                    <Link
+                        to={`/submissions?problemId=${problemId}&userId=${appUser?.id}`}
+                        className={cs('button', 'secondary')}
+                    >
+                        Lịch sử nộp bài
+                    </Link>
+                )}
                 <Link to={`/submissions/${problemId}`} className={cs('button', 'secondary')}>
                     Danh sách bài nộp
                 </Link>
