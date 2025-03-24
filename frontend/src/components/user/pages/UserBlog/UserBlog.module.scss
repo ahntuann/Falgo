@@ -30,9 +30,9 @@
             text-align: center;
             font-size: 2rem;
             margin-bottom: 16px;
-            min-width: 807.4px; // Thay đổi giá trị này theo nhu cầu
+            min-width: 807.4px;
         }
-        
+
         .blog_title_search {
             .title {
                 color: #209fb2;
@@ -61,11 +61,12 @@
         top: 60px;
         right: 148px;
         .sidebar {
+            width: 343.6px;
             border: 1px solid #ddd;
             padding: 16px;
             border-radius: 8px;
             background: #3d3248;
-            .filter-name{
+            .filter-name {
                 display: flex;
                 justify-content: space-between;
             }
@@ -91,6 +92,9 @@
         }
     }
 
+    .category-list button {
+        text-align: left;
+    }
     .category-list button,
     .reset-button {
         display: block;
@@ -100,7 +104,7 @@
         background: #646683;
         border: 1px solid #ccc;
         border-radius: 4px;
-        
+
         cursor: pointer;
         transition: 0.3s;
         color: black;
@@ -110,10 +114,11 @@
             color: white;
         }
     }
-    .reset-button{
+    .reset-button {
         margin-top: 13px;
         margin-bottom: -4px;
     }
+
     .date-filter,
     .DateInput {
         display: flex;
@@ -136,38 +141,57 @@
             font-size: 14px;
             padding: auto;
         }
+        .date-filter,
+        .DateInput {
+            width: 100%;
+        }
     }
+
     .blog-list {
         width: 100%;
         max-width: 807.4px;
-        min-height: 340px;
-        .no-blogs{
+        min-height: 400px;
+        .no-blogs {
             color: white;
         }
-        .Date{
+        .Date {
             display: flex;
             justify-content: space-between;
         }
     }
-
-    .blog-item {
-        color: white;
-        display: flex;
-        align-items: center;
-        border: 1px solid #ddd;
-        padding: 16px;
-        margin-bottom: 16px;
+    .blog_content {
+        background-color: rgb(246, 115, 115);
         border-radius: 8px;
-        background: #3d3248;
-        
-        .category-item {
-            font-size: 13.5px;
+
+        .blog-item {
+            color: white;
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            background: #3d3248;
+
+            .category-item {
+                font-size: 13.5px;
+            }
+
+            .category-item:hover {
+                background-color: #0056b3;
+            }
         }
-        
-        .category-item:hover {
-            background-color: #0056b3;
+        .content {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; 
+            max-width: 100%;
         }
-        
+        .Note {
+            color: white;
+            padding-left: 10px;
+        }
     }
 
     .thumbnail {
@@ -180,15 +204,10 @@
         border: 1px solid black;
     }
 
-    .content {
-        flex: 1;
-    }
-
     .actions {
         margin-top: 15px;
         padding: 10px;
         border-top: 1px solid #ddd;
-
     }
 
     .sort-controls {
@@ -256,20 +275,20 @@
             background-color: #c82333;
             transform: scale(1.05);
         }
-        .status{
+        .status {
             font-weight: bold;
             padding: 5px 10px;
             border-radius: 5px;
-            display: inline-block;    
+            display: inline-block;
         }
         .approved {
             color: green;
         }
-        
+
         .rejected {
             color: red;
         }
-        .report{
+        .report {
             color: orange;
         }
         .pending {

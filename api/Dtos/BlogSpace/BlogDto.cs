@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Model;
 
 
 namespace api.Dtos.BlogSpace
@@ -25,7 +26,9 @@ namespace api.Dtos.BlogSpace
 
         public DateTime CreateOn { get; set; } = DateTime.Now;
         public DateTime? DatePublic { get; set; }
-        public string TagBlog { get; set; } = string.Empty;
-        // public List<CommentBlog> CommentBlog { get; set; } = new List<CommentBlog>();
+        public string? Note { get; set; } = string.Empty;
+        public List<BlogCommentDto> CommentBlog { get; set; } = new List<BlogCommentDto>();
+        public List<BlogLikeDto> BlogLike { get; set; } = new List<BlogLikeDto>();
+        public List<BlogShareDto> BlogShare { get; set; } = new List<BlogShareDto>();
     }
 }

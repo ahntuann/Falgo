@@ -11,5 +11,6 @@ namespace api.Interface
         public Task<List<ContestRegistion?>> GetAllRegistationAsync(Contest contests);
         public Task<ContestRegistion?> CreateContestRegistionAsync(Contest contest, AppUser appUser);
         public Task<ContestRegistion?> GetContestRegistionByUserAndContestAsync(AppUser appUser, Contest contest);
+        Task<List<Contest>> GetContestsByUserIdAsync(string userId);
     }
 }

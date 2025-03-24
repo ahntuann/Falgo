@@ -122,5 +122,57 @@ namespace api.Services
                     await _userRepo.UpdateUserAsync(user);
                 }
             }
+
+            public async Task<List<string>> GetAllSubmissionLanguagesByUserAsync(string userId)
+            {
+                var query = new SubmissionListQueryObject { UserId = userId };
+                var submissions = await _subRepo.GetFilteredSubmissionsAsync(query, userId);
+                return submissions
+                    .Select(s => s.ProgrammingLanguage.Language)
+                    .Distinct()
+                    .ToList();
+            }
+
+            public async Task<List<string>> GetAllSubmissionStatusesByUserAsync(string userId)
+            {
+                var query = new SubmissionListQueryObject { UserId = userId };
+                var submissions = await _subRepo.GetFilteredSubmissionsAsync(query, userId);
+                return submissions
+                    .Select(s => s.Status)
+                    .Distinct()
+                    .ToList();
+            }
+
+            public async Task<PageResult<SubmissionListDto>> GetUserSubmissionsWithProblemInfoAsync(string userId, SubmissionListQueryObject query)
+            {
+                var submissionQuery = await _subRepo.GetFilteredSubmissionsAsync(query, userId);
+                
+                var submissions = submissionQuery.Select(submission => new SubmissionListDto
+                {
+                    SubmissionId = submission.SubmissionId,
+                    ProblemTitle = submission.Problem.Title,
+                    Status = submission.Status,
+                    Score = submission.Point,
+                    ProgrammingLanguage = submission.ProgrammingLanguage.Language,
+                    ExecuteTime = submission.ExecuteTime,
+                    MemoryUsed = submission.MemoryUsed,
+                    SubmittedAt = submission.SubmittedAt,
+                    SubmitterName = submission.AppUser.FullName
+                }).ToList();
+                
+                int totalItems = submissions.Count;
+                var result = submissions
+                    .Skip((query.PageNumber - 1) * query.PageSize)
+                    .Take(query.PageSize)
+                    .ToList();
+
+                return new PageResult<SubmissionListDto>
+                {
+                    Items = result,
+                    TotalItems = totalItems,
+                    TotalPages = (int)Math.Ceiling(totalItems / (double)query.PageSize),
+                    CurrentPage = query.PageNumber
+                };
+            }
     }
 }

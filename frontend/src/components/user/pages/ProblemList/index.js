@@ -26,6 +26,20 @@ const ProblemList = () => {
         UserId: appUser?.id || '',
     });
 
+    const categoryColorMap = {};
+
+    const getCategoryColor = (category) => {
+        if (!category) return '#A9A9A9';
+
+        if (!categoryColorMap[category]) {
+            const hash = category.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+            const hue = hash % 360;
+            categoryColorMap[category] = `hsl(${hue}, 70%, 50%)`;
+        }
+
+        return categoryColorMap[category];
+    };
+
     const debounceRef = useRef(null);
 
     useEffect(() => {
@@ -57,6 +71,15 @@ const ProblemList = () => {
         } catch (error) {
             console.error('Error fetching problems', error);
         }
+    };
+
+    const handleSortByTitle = () => {
+        setQuery((prevQuery) => {
+            const sortOrder = ['', 'n1', 'n2'];
+            const currentIndex = sortOrder.indexOf(prevQuery.SortBy);
+            const nextIndex = (currentIndex + 1) % sortOrder.length;
+            return { ...prevQuery, SortBy: sortOrder[nextIndex] };
+        });
     };
 
     const fetchCategories = async () => {
@@ -118,7 +141,9 @@ const ProblemList = () => {
                 <thead>
                     <tr>
                         <th>Mã câu hỏi</th>
-                        <th>Tên</th>
+                        <th onClick={handleSortByTitle} style={{ cursor: 'pointer' }}>
+                            Tên
+                        </th>
                         <th>Dạng câu hỏi</th>
                         <th>Tỉ lệ hoàn thành</th>
                         <th>Tổng số bài hoàn thành</th>
@@ -129,15 +154,45 @@ const ProblemList = () => {
                 <tbody>
                     {problems.map((problem, i) => (
                         <tr key={i}>
-                            <td>{problem.problemId}</td>
-                            <td>
-                                <Link to={`/problems/${problem.problemId}`}>{problem.title}</Link>
+                            <td
+                                style={{
+                                    color: '#8FF6FD',
+                                    fontWeight: 'bold',
+                                }}
+                            >
+                                {problem.problemId}
                             </td>
-                            <td>{problem.category}</td>
+                            <td>
+                                <Link
+                                    to={`/problems/${problem.problemId}`}
+                                    style={{
+                                        color: '#8FF6FD',
+                                        fontWeight: 'bold',
+                                    }}
+                                >
+                                    {problem.title}
+                                </Link>
+                            </td>
+                            <td
+                                style={{
+                                    color: getCategoryColor(problem.category),
+                                    fontWeight: 'bold',
+                                }}
+                            >
+                                {problem.category}
+                            </td>
                             <td>{problem.acceptanceRate}%</td>
                             <td>{problem.acceptedCount}</td>
                             <td>{problem.score}</td>
-                            <td>
+                            <td
+                                style={{
+                                    color:
+                                        problem.solvedStatus === 'Not passed'
+                                            ? '#ff3333'
+                                            : '#00cc00',
+                                    fontWeight: 'bold',
+                                }}
+                            >
                                 {problem.solvedStatus === 'Not passed'
                                     ? 'Chưa hoàn thành'
                                     : 'Đã hoàn thành'}
@@ -151,16 +206,42 @@ const ProblemList = () => {
                     disabled={query.PageNumber === 1}
                     onClick={() => setQuery({ ...query, PageNumber: query.PageNumber - 1 })}
                 >
-                    Trước
+                    &lt;
                 </button>
-                <span>
-                    Trang {query.PageNumber} trong {totalPages}
-                </span>
+
+                {query.PageNumber > 3 && (
+                    <>
+                        <button onClick={() => setQuery({ ...query, PageNumber: 1 })}>1</button>
+                        <span className={cs('dots')}>...</span>
+                    </>
+                )}
+
+                {Array.from({ length: 5 }, (_, i) => query.PageNumber - 2 + i)
+                    .filter((page) => page >= 1 && page <= totalPages)
+                    .map((page) => (
+                        <button
+                            key={page}
+                            className={page === query.PageNumber ? cs('active') : ''}
+                            onClick={() => setQuery({ ...query, PageNumber: page })}
+                        >
+                            {page}
+                        </button>
+                    ))}
+
+                {query.PageNumber < totalPages - 2 && (
+                    <>
+                        <span className={cs('dots')}>...</span>
+                        <button onClick={() => setQuery({ ...query, PageNumber: totalPages })}>
+                            {totalPages}
+                        </button>
+                    </>
+                )}
+
                 <button
                     disabled={query.PageNumber === totalPages}
                     onClick={() => setQuery({ ...query, PageNumber: query.PageNumber + 1 })}
                 >
-                    Sau
+                    &gt;
                 </button>
             </div>
         </div>

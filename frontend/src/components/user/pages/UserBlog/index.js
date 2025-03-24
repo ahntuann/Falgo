@@ -20,12 +20,12 @@ const UserBlog = () => {
     const [filteredBlogs, setFilteredBlogs] = useState([]);
 
     const [categories] = useState([
-        'Mẹo lập trình',
-        'Hướng dẫn',
-        'Xu hướng lập trình',
-        'Kinh Nghiệm',
-        'Thử thách',
-        'Câu Hỏi',
+        { name: 'Câu hỏi', icon: '❓' },
+        { name: 'Thử thách', icon: '🔥' },
+        { name: 'Hướng dẫn', icon: '📖' },
+        { name: 'Kinh nghiệm', icon: '🧑‍💻' },
+        { name: 'Mẹo lập trình', icon: '💡' },
+        { name: 'Xu hướng lập trình', icon: '🚀' },
     ]);
     const StatusOptions = ['Chờ duyệt', 'Duyệt Lại', 'Thông qua', 'Từ chối', 'Báo cáo'];
     const [query, setQuery] = useState({
@@ -164,24 +164,40 @@ const UserBlog = () => {
             search: '',
             category: '',
             sortBy: 'createOn',
-            IsDescending: false,
+            IsDescending: true,
             page: 1,
             postsPerPage: 10,
             dateFilter: '',
         });
 
-        setDateFilter({ day: '', month: '', year: '' });
+        // setDateFilter({ day: '', month: '', year: '' });
+        setDateFilter({ date: '', day: '', month: '', year: '' });
         setFilteredBlogs(originalBlogs);
     };
 
-    const handleDateChange = (e) => {
-        const { name, value } = e.target;
-        setDateFilter((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
+    // const handleDateChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setDateFilter((prev) => ({
+    //         ...prev,
+    //         [name]: value,
+    //     }));
+    // };
 
+    const handleDateChange = (event) => {
+        const selectedDate = event.target.value; // "YYYY-MM-DD" hoặc rỗng
+        if (!selectedDate) {
+            setDateFilter({ day: '', month: '', year: '' });
+            return;
+        }
+
+        const [year, month, day] = selectedDate.split('-');
+
+        setDateFilter({
+            day: day || '',
+            month: month || '',
+            year: year || '',
+        });
+    };
     const handleFilterByDate = () => {
         const { day, month, year } = dateFilter;
 
@@ -257,107 +273,114 @@ const UserBlog = () => {
                         <div className={cs('blog-list')}>
                             {paginatedBlogs.length > 0 ? (
                                 paginatedBlogs.map((blog) => (
-                                    <div key={blog.id} className={cs('blog-item')}>
-                                        <img
-                                            src={blog.thumbnail ? blog.thumbnail : NoImage}
-                                            alt={blog.title}
-                                            className={cs('thumbnail')}
-                                            onError={(e) => {
-                                                e.target.onerror = null;
-                                                e.target.src = NoImage;
-                                            }}
-                                        />
+                                    <div className={cs('blog_content')}>
+                                        <div key={blog.id} className={cs('blog-item')}>
+                                            <img
+                                                src={blog.thumbnail ? blog.thumbnail : NoImage}
+                                                alt={blog.title}
+                                                className={cs('thumbnail')}
+                                                onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src = NoImage;
+                                                }}
+                                            />
 
-                                        <div className={cs('content')}>
-                                            <h2>{blog.title}</h2>
-                                            <p>{blog.description}</p>
-                                            {blog.categoryBlog &&
-                                                blog.categoryBlog.trim() !== '' &&
-                                                blog.categoryBlog.trim() !== ',' && (
-                                                    <div className={cs('category-tags')}>
-                                                        {blog.categoryBlog
-                                                            .split(',')
-                                                            .map((category, index) => (
-                                                                <button
-                                                                    key={index}
-                                                                    className={cs('category-item')}
-                                                                    onClick={() =>
-                                                                        handleCategoryChange(
-                                                                            category.trim(),
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    {category.trim()}
-                                                                </button>
-                                                            ))}
-                                                    </div>
-                                                )}
+                                            <div className={cs('content')}>
+                                                <h2>{blog.title}</h2>
+                                                <p>{blog.description}</p>
+                                                {blog.categoryBlog &&
+                                                    blog.categoryBlog.trim() !== '' &&
+                                                    blog.categoryBlog.trim() !== ',' && (
+                                                        <div className={cs('category-tags')}>
+                                                            {blog.categoryBlog
+                                                                .split(',')
+                                                                .map((category, index) => (
+                                                                    <button
+                                                                        key={index}
+                                                                        className={cs(
+                                                                            'category-item',
+                                                                        )}
+                                                                        onClick={() =>
+                                                                            handleCategoryChange(
+                                                                                category.trim(),
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        {category.trim()}
+                                                                    </button>
+                                                                ))}
+                                                        </div>
+                                                    )}
 
-                                            <div className={cs('Date')}>
-                                                <p>
-                                                    Ngày đăng:{' '}
-                                                    {blog.createOn
-                                                        ? new Date(
-                                                              blog.createOn + 'Z',
-                                                          ).toLocaleDateString('vi-VN')
-                                                        : 'Không có dữ liệu'}
-                                                </p>
-                                                <p>
-                                                    Ngày công bố:{' '}
-                                                    {blog.datePublic
-                                                        ? new Date(
-                                                              blog.datePublic + 'Z',
-                                                          ).toLocaleDateString('vi-VN')
-                                                        : 'Không có dữ liệu'}
-                                                </p>
-                                            </div>
-
-                                            <div className={cs('actions')}>
-                                                <div className={cs('userPart')}>
-                                                    {userRole !== 'guest' &&
-                                                        userObject &&
-                                                        userObject.id === blog.userId && (
-                                                            <>
-                                                                <Link
-                                                                    to={'/BlogUpdate'}
-                                                                    state={{ blog }}
-                                                                    className={cs('edit')}
-                                                                >
-                                                                    Chỉnh sửa
-                                                                </Link>
-                                                                <button
-                                                                    className={cs('delete')}
-                                                                    onClick={() =>
-                                                                        handleDelete(blog.id)
-                                                                    }
-                                                                >
-                                                                    Xóa
-                                                                </button>
-                                                            </>
-                                                        )}
+                                                <div className={cs('Date')}>
+                                                    <p>
+                                                        Ngày đăng:{' '}
+                                                        {blog.createOn
+                                                            ? new Date(
+                                                                  blog.createOn + 'Z',
+                                                              ).toLocaleDateString('vi-VN')
+                                                            : 'Không có dữ liệu'}
+                                                    </p>
+                                                    <p>
+                                                        Ngày công bố:{' '}
+                                                        {blog.datePublic
+                                                            ? new Date(
+                                                                  blog.datePublic + 'Z',
+                                                              ).toLocaleDateString('vi-VN')
+                                                            : 'Không có dữ liệu'}
+                                                    </p>
                                                 </div>
-                                                <p
-                                                    className={cs('status', {
-                                                        approved: blog.status === 'Thông qua',
-                                                        rejected: blog.status === 'Từ chối',
-                                                        report: blog.status === 'Báo cáo',
-                                                        pending:
-                                                            blog.status !== 'Thông qua' &&
-                                                            blog.status !== 'Từ chối' &&
-                                                            blog.status !== 'Báo cáo',
-                                                    })}
-                                                >
-                                                    {blog.status}
-                                                </p>
-                                                <Link
-                                                    to={'/DetailBlog'}
-                                                    state={{ blog }}
-                                                    className={cs('btn-read-more')}
-                                                >
-                                                    Đọc thêm
-                                                </Link>
+
+                                                <div className={cs('actions')}>
+                                                    <div className={cs('userPart')}>
+                                                        {userRole !== 'guest' &&
+                                                            userObject &&
+                                                            userObject.id === blog.userId && (
+                                                                <>
+                                                                    <Link
+                                                                        to={'/BlogUpdate'}
+                                                                        state={{ blog }}
+                                                                        className={cs('edit')}
+                                                                    >
+                                                                        Chỉnh sửa
+                                                                    </Link>
+                                                                    <button
+                                                                        className={cs('delete')}
+                                                                        onClick={() =>
+                                                                            handleDelete(blog.id)
+                                                                        }
+                                                                    >
+                                                                        Xóa
+                                                                    </button>
+                                                                </>
+                                                            )}
+                                                    </div>
+                                                    <p
+                                                        className={cs('status', {
+                                                            approved: blog.status === 'Thông qua',
+                                                            rejected: blog.status === 'Từ chối',
+                                                            report: blog.status === 'Báo cáo',
+                                                            pending:
+                                                                blog.status !== 'Thông qua' &&
+                                                                blog.status !== 'Từ chối' &&
+                                                                blog.status !== 'Báo cáo',
+                                                        })}
+                                                    >
+                                                        {blog.status}
+                                                    </p>
+                                                    <Link
+                                                        to={'/DetailBlog'}
+                                                        state={{ blog }}
+                                                        className={cs('btn-read-more')}
+                                                    >
+                                                        Đọc thêm
+                                                    </Link>
+                                                </div>
                                             </div>
                                         </div>
+                                        {blog.status === 'Từ chối' && (
+                                            <div className={cs('Note')}>{blog.note}</div>
+                                        )}
                                     </div>
                                 ))
                             ) : (
@@ -425,10 +448,10 @@ const UserBlog = () => {
                 <div className={cs('Create_UBlog_sidebar')}>
                     <div className={cs('Create_UBlog')}>
                         <Link to={'/CreateBlog'} className={cs('Create')}>
-                            Tạo Bài
+                            Tạo bài
                         </Link>
                         <Link to={'/UserBlog'} className={cs('UBlog')}>
-                            Bài Viết
+                            Đã tạo
                         </Link>
                     </div>
                     {/* sidebar */}
@@ -439,10 +462,11 @@ const UserBlog = () => {
                             {categories.map((category, index) => (
                                 <button
                                     key={index}
-                                    className={cs({ active: query.category === category })}
-                                    onClick={() => handleCategoryChange(category)}
+                                    className={cs({ active: query.category === category.name })}
+                                    onClick={() => handleCategoryChange(category.name)}
                                 >
-                                    {category}
+                                    {category.name}
+                                    {category.icon}
                                 </button>
                             ))}
                         </div>
@@ -475,7 +499,7 @@ const UserBlog = () => {
                             <h3>Trạng thái</h3>
                         </div>
                         <div className={cs('date-filter')}>
-                            <div className={cs('DateInput')}>
+                            {/* <div className={cs('DateInput')}>
                                 <select
                                     name="day"
                                     value={dateFilter.day}
@@ -507,6 +531,14 @@ const UserBlog = () => {
                                     placeholder="năm"
                                     value={dateFilter.year}
                                     onChange={handleDateChange}
+                                />
+                            </div> */}
+                            <div className={cs('date-filter')}>
+                                <input
+                                    type="date"
+                                    value={dateFilter.date}
+                                    onChange={handleDateChange}
+                                    className={cs('DateInput')}
                                 />
                             </div>
                             <select name="status" value={query.status} onChange={handleChange}>

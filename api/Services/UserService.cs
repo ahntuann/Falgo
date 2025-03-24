@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using api.Dtos.Submission;
+using api.Helpers;
+using api.Dtos.ContesRegistation;
 
 namespace api.Services
 {
@@ -22,13 +25,15 @@ namespace api.Services
         private readonly IUserRepository _userRepo;
         private readonly IContestRepository _contestRepo;
         private readonly IWebHostEnvironment _env;
+        private readonly ISubmissionService _submissionService;
         public UserService(IContestRegistationRepository contestRegisRepo, IUserRepository userRepo, IContestRepository contestRepo,
-                        IWebHostEnvironment env)
+                        IWebHostEnvironment env, ISubmissionService submissionService)
         {
             _contestRegisRepo = contestRegisRepo;
             _userRepo = userRepo;
             _contestRepo = contestRepo;
             _env = env;
+            _submissionService = submissionService;
         }
 
         public async Task<AppUser> GetUserByIdAsync(string userId)
@@ -147,8 +152,33 @@ namespace api.Services
             };
         }
 
+        public async Task<PageResult<SubmissionListDto>> GetUserSubmissionsAsync(string userId, SubmissionListQueryObject query)
+        {
+            query.UserId = userId;
+    
+            return await _submissionService.GetUserSubmissionsWithProblemInfoAsync(userId, query);
+        }
 
-
+        public async Task<List<UserContestDto>> GetUserContestsAsync(string userId)
+        {
+            var user = await _userRepo.GetUserByIdAsync(userId);
+            
+            if (user == null)
+                return null;
+            
+            var contests = await _contestRegisRepo.GetContestsByUserIdAsync(userId);
+            
+            return contests.Select(c => new UserContestDto
+            {
+                ContestId = c.ContestId,
+                ContestName = c.ContestName,
+                CreatedAt = c.CreatedAt,
+                EndDate = c.EndDate,
+                Level = c.Level,
+                TotalPoint = c.TotalPoint,
+                DueTime = c.DueTime
+            }).ToList();
+        }
 
     }
 

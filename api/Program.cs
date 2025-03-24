@@ -25,7 +25,6 @@ using api.Interface.Services;
 using Microsoft.Extensions.FileProviders;
 using api.Helpers;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
@@ -175,6 +174,13 @@ builder.Services.AddScoped<ISubmissionsAdminRepository, SubmissionsAdminReposito
 builder.Services.AddScoped<ITestCaseRepository, TestCaseRepository>();
 builder.Services.AddScoped<ITestCaseService, TestCaseService>();
 builder.Services.AddScoped<OtpService>();
+builder.Services.AddScoped<IBlogLikeRepository, BlogLikeRepository>();
+builder.Services.AddScoped<IBlogLikeService, BlogLikeService>();
+builder.Services.AddScoped<IBlogShareRepository, BlogShareRepository>();
+builder.Services.AddScoped<IBlogShareService, BlogShareService>();
+builder.Services.AddScoped<IBlogCommentRepository, BlogCommentRepository>();
+builder.Services.AddScoped<IBlogCommentService, BlogCommentService>();
+
 // Logging
 builder.Logging.AddConsole();
 

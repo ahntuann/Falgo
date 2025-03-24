@@ -1,4 +1,4 @@
-body {
+.profilePagebody {
     background: linear-gradient(135deg, #1a1a2e, #16213e);
     color: #fff;
     font-family: 'Arial', sans-serif;
@@ -62,6 +62,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    color: #f0f0f0;
 }
 
 .info-row {

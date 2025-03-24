@@ -96,21 +96,20 @@
             td {
                 padding: 0.75rem;
                 border-bottom: 1px solid #2c3e50;
-                color: #fff; // CHỈNH THÀNH MÀU TRẮNG
+                color: #fff;
             }
 
             td a {
-                color: #fff; // CHỈNH MÀU TRẮNG CHO LINK
+                color: #fff;
                 text-decoration: none;
                 transition: color 0.3s ease;
 
                 &:hover {
-                    color: var(--primary-color); // Hiệu ứng hover
+                    color: var(--primary-color);
                 }
             }
         }
     }
-
     .pagination {
         display: flex;
         justify-content: center;
@@ -120,25 +119,54 @@
         button {
             padding: 0.5rem 1rem;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             background-color: var(--primary-color);
             color: #000;
             font-size: 1.6rem;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
 
             &:disabled {
                 background-color: #555;
                 cursor: not-allowed;
             }
+
             &:hover:not(:disabled) {
                 background-color: #5a9bff;
+                transform: scale(1.05);
+            }
+
+            &.active {
+                background-color: #007bff;
+                color: white;
+                font-weight: bold;
+                border: 2px solid #0056b3;
             }
         }
 
-        span {
+        .dots {
             font-size: 1.6rem;
+            font-weight: bold;
             color: var(--text-color);
+            padding: 0 8px;
         }
     }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.topRank {
+    font-weight: bold;
+    background: linear-gradient(to right, #ffd700, #ff8c00, #ffd700);
+    background-size: 400% 100%;
+    animation: shimmer 3s infinite linear;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }

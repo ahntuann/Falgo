@@ -112,133 +112,133 @@ namespace api.Controllers
 
         }
 
-[HttpGet("google-login")]
-    public IActionResult GoogleLogin()
-    {
-        var redirectUrl = Url.Action("GoogleLoginCallback", "Account", null, Request.Scheme);
-        var properties = _signInManager.ConfigureExternalAuthenticationProperties(GoogleDefaults.AuthenticationScheme, redirectUrl);
-        return Challenge(properties, GoogleDefaults.AuthenticationScheme);
-    }
+        [HttpGet("google-login")]
+        public IActionResult GoogleLogin()
+        {
+            var redirectUrl = Url.Action("GoogleLoginCallback", "Account", null, Request.Scheme);
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(GoogleDefaults.AuthenticationScheme, redirectUrl);
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
 
     
-    [HttpGet("signin-google")]
-    public async Task<IActionResult> GoogleLoginCallback()
-    {
-        var authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
-        if (!authenticateResult.Succeeded)
+        [HttpGet("signin-google")]
+        public async Task<IActionResult> GoogleLoginCallback()
         {
-            return BadRequest("Google login failed.");
-        }
-
-        var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims;
-        var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-        var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-
-        if (string.IsNullOrEmpty(email))
-        {
-            return BadRequest("Email not found.");
-        }
-
-        var user = await _userManager.FindByEmailAsync(email);
-        if (user == null)
-        {
-            user = new AppUser
+            var authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+            if (!authenticateResult.Succeeded)
             {
-                UserName = email.Split('@')[0],
-                Email = email,
-                FullName = name ?? "Google User",
-                CreatedAt = DateTime.UtcNow
-            };
-
-            var createUser = await _userManager.CreateAsync(user);
-            if (!createUser.Succeeded)
-            {
-                return BadRequest("Failed to create user.");
+                return BadRequest("Google login failed.");
             }
 
-            await _userManager.AddToRoleAsync(user, "User");
+            var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims;
+            var email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email not found.");
+            }
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                user = new AppUser
+                {
+                    UserName = email.Split('@')[0],
+                    Email = email,
+                    FullName = name ?? "Google User",
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                var createUser = await _userManager.CreateAsync(user);
+                if (!createUser.Succeeded)
+                {
+                    return BadRequest("Failed to create user.");
+                }
+
+                await _userManager.AddToRoleAsync(user, "User");
+            }
+
+            var token = _tokenService.CreateToken(user);
+
+            var frontendUrl = "http://localhost:3000/google-callback";
+            return Redirect($"{frontendUrl}?token={token}&id={user.Id}&userName={user.UserName}&email={user.Email}");
         }
 
-        var token = _tokenService.CreateToken(user);
-
-        var frontendUrl = "http://localhost:3000/google-callback";
-    return Redirect($"{frontendUrl}?token={token}&id={user.Id}&userName={user.UserName}&email={user.Email}");
-}
-
-[HttpGet("github-login")]
-public IActionResult GitHubLogin()
-{
-    var redirectUrl = Url.Action("GitHubLoginCallback", "Account", null, Request.Scheme);
-    var properties = _signInManager.ConfigureExternalAuthenticationProperties("GitHub", redirectUrl);
-    return Challenge(properties, "GitHub");
-}
-
-[HttpGet("signin-github")]
-public async Task<IActionResult> GitHubLoginCallback()
-{
-    var authenticateResult = await HttpContext.AuthenticateAsync("GitHub");
-    if (!authenticateResult.Succeeded)
-    {
-        return BadRequest("GitHub login failed.");
-    }
-
-    var claims = authenticateResult.Principal?.Identities?.FirstOrDefault()?.Claims;
-    var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-    var accessToken = authenticateResult.Properties.GetTokenValue("access_token");
-
-    string email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-
-    if (string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(accessToken))
-    {
-        email = await GetGitHubEmail(accessToken);
-    }
-
-    if (string.IsNullOrEmpty(email))
-    {
-        return BadRequest("Email not found.");
-    }
-
-    var user = await _userManager.FindByEmailAsync(email);
-    if (user == null)
-    {
-        user = new AppUser
+        [HttpGet("github-login")]
+        public IActionResult GitHubLogin()
         {
-            UserName = email.Split('@')[0],
-            Email = email,
-            FullName = name ?? "GitHub User",
-            CreatedAt = DateTime.UtcNow
-        };
-
-        var createUser = await _userManager.CreateAsync(user);
-        if (!createUser.Succeeded)
-        {
-            return BadRequest("Failed to create user.");
+            var redirectUrl = Url.Action("GitHubLoginCallback", "Account", null, Request.Scheme);
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("GitHub", redirectUrl);
+            return Challenge(properties, "GitHub");
         }
 
-        await _userManager.AddToRoleAsync(user, "User");
-    }
+        [HttpGet("signin-github")]
+        public async Task<IActionResult> GitHubLoginCallback()
+        {
+            var authenticateResult = await HttpContext.AuthenticateAsync("GitHub");
+            if (!authenticateResult.Succeeded)
+            {
+                return BadRequest("GitHub login failed.");
+            }
 
-    var token = _tokenService.CreateToken(user);
-    var frontendUrl = "http://localhost:3000/github-callback";
-    return Redirect($"{frontendUrl}?token={token}&id={user.Id}&userName={user.UserName}&email={user.Email}");
-}
+            var claims = authenticateResult.Principal?.Identities?.FirstOrDefault()?.Claims;
+            var name = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var accessToken = authenticateResult.Properties.GetTokenValue("access_token");
 
-    private async Task<string> GetGitHubEmail(string accessToken)
-{
-    using (var client = new HttpClient())
-    {
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-        client.DefaultRequestHeaders.UserAgent.ParseAdd("MyApp");
+            string email = claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
-        var response = await client.GetStringAsync("https://api.github.com/user/emails");
-        var emails = JsonSerializer.Deserialize<List<GitHubEmail>>(response);
-        var primaryEmail = emails?.FirstOrDefault(e => e.Primary && e.Verified)?.Email;
+            if (string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(accessToken))
+            {
+                email = await GetGitHubEmail(accessToken);
+            }
 
-        return primaryEmail ?? emails?.FirstOrDefault()?.Email;
-    }
-}
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email not found.");
+            }
 
-    [HttpPost("send-verification-code")]
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                user = new AppUser
+                {
+                    UserName = email.Split('@')[0],
+                    Email = email,
+                    FullName = name ?? "GitHub User",
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                var createUser = await _userManager.CreateAsync(user);
+                if (!createUser.Succeeded)
+                {
+                    return BadRequest("Failed to create user.");
+                }
+
+                await _userManager.AddToRoleAsync(user, "User");
+            }
+
+            var token = _tokenService.CreateToken(user);
+            var frontendUrl = "http://localhost:3000/github-callback";
+            return Redirect($"{frontendUrl}?token={token}&id={user.Id}&userName={user.UserName}&email={user.Email}");
+        }
+
+        private async Task<string> GetGitHubEmail(string accessToken)
+        {
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("MyApp");
+
+                var response = await client.GetStringAsync("https://api.github.com/user/emails");
+                var emails = JsonSerializer.Deserialize<List<GitHubEmail>>(response);
+                var primaryEmail = emails?.FirstOrDefault(e => e.Primary && e.Verified)?.Email;
+
+                return primaryEmail ?? emails?.FirstOrDefault()?.Email;
+            }
+        }
+
+        [HttpPost("send-verification-code")]
         public async Task<IActionResult> SendVerificationCode([FromBody] VerifyUserDto verifyUserDto)
         {
             var user = await _userManager.FindByNameAsync(verifyUserDto.Username);
@@ -247,49 +247,49 @@ public async Task<IActionResult> GitHubLoginCallback()
 
             string otp = new Random().Next(100000, 999999).ToString();
             _otpService.SetOtp(verifyUserDto.Email, otp);
-            await _userService.SendEmailAsync(verifyUserDto.Email, "Mã xác nhận", $"Mã OTP của bạn: {otp}");
+            await _userService.SendEmailAsync(verifyUserDto.Email, "Mã xác nhận từ Wed học tập Falgo", $"Mã OTP của bạn: {otp}");
 
             return Ok("Mã xác nhận đã được gửi!");
         }
 
-    [HttpPost("change-password")]
-    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
-    {
-    var user = await _userManager.FindByNameAsync(changePasswordDto.Username);
-    if (user == null || user.Email != changePasswordDto.Email)
-        return BadRequest(new { message = "Thông tin không đúng!" });
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+        {
+            var user = await _userManager.FindByNameAsync(changePasswordDto.Username);
+            if (user == null || user.Email != changePasswordDto.Email)
+                return BadRequest(new { message = "Thông tin không đúng!" });
 
-    string savedOtp = _otpService.GetOtp(changePasswordDto.Email);
-    if (string.IsNullOrEmpty(savedOtp) || savedOtp != changePasswordDto.OtpCode)
-        return BadRequest(new { message = "Mã xác nhận không hợp lệ hoặc đã hết hạn!" });
+            string savedOtp = _otpService.GetOtp(changePasswordDto.Email);
+            if (string.IsNullOrEmpty(savedOtp) || savedOtp != changePasswordDto.OtpCode)
+                return BadRequest(new { message = "Mã xác nhận không hợp lệ hoặc đã hết hạn!" });
 
-    var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
-    if (!result.Succeeded) return BadRequest(new { message = "Mật khẩu cũ không đúng!" });
+            var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
+            if (!result.Succeeded) return BadRequest(new { message = "Mật khẩu cũ không đúng!" });
 
-    _otpService.DeleteOtp(changePasswordDto.Email);
+            _otpService.DeleteOtp(changePasswordDto.Email);
 
-    return Ok(new { message = "Đổi mật khẩu thành công!" });
-    }
+            return Ok(new { message = "Đổi mật khẩu thành công!" });
+        }
 
-    [HttpPost("forgot-password")]
-    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPassword forgotPassword)
-    {
-    var user = await _userManager.FindByNameAsync(forgotPassword.Username);
-    if (user == null || user.Email != forgotPassword.Email)
-        return BadRequest("Thông tin không đúng!");
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPassword forgotPassword)
+        {
+            var user = await _userManager.FindByNameAsync(forgotPassword.Username);
+            if (user == null || user.Email != forgotPassword.Email)
+                return BadRequest("Thông tin không đúng!");
 
-    string savedOtp = _otpService.GetOtp(forgotPassword.Email);
-    if (string.IsNullOrEmpty(savedOtp) || savedOtp != forgotPassword.OtpCode)
-        return BadRequest("Mã xác nhận không hợp lệ hoặc đã hết hạn!");
+            string savedOtp = _otpService.GetOtp(forgotPassword.Email);
+            if (string.IsNullOrEmpty(savedOtp) || savedOtp != forgotPassword.OtpCode)
+                return BadRequest("Mã xác nhận không hợp lệ hoặc đã hết hạn!");
 
-    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-    var result = await _userManager.ResetPasswordAsync(user, token, forgotPassword.NewPassword);
-    if (!result.Succeeded) return BadRequest("Đổi mật khẩu thất bại!");
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, forgotPassword.NewPassword);
+            if (!result.Succeeded) return BadRequest("Đổi mật khẩu thất bại!");
 
-    _otpService.DeleteOtp(forgotPassword.Email);
+            _otpService.DeleteOtp(forgotPassword.Email);
 
-    return Ok("Đổi mật khẩu thành công!");
-    }
+            return Ok("Đổi mật khẩu thành công!");
+        }
 
 
 

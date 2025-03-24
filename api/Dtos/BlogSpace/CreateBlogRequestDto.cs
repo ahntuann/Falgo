@@ -21,6 +21,7 @@ namespace api.Dtos
         public string CategoryBlog { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
 
+        public string? Note { get; set; } = string.Empty;
         public DateTime CreateOn { get; set; } = DateTime.Now;
         public DateTime? DatePublic { get; set; }
     }

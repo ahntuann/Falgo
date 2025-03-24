@@ -56,5 +56,14 @@ namespace api.Repository
 
             return registations;
         }
+
+        public async Task<List<Contest>> GetContestsByUserIdAsync(string userId)
+        {
+            return await _context.ContestRegistions
+                .Where(cr => cr.AppUser.Id == userId)
+                .Include(cr => cr.Contest)
+                .Select(cr => cr.Contest)
+                .ToListAsync();
+        }
     }
 }
