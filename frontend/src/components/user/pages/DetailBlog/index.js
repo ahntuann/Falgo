@@ -21,9 +21,10 @@ const DetailBlog = () => {
     const [allBlogs, setAllBlogs] = useState([]);
 
     const [liked, setLiked] = useState();
-    const [comments, setComments] = useState([]);
+    const [comments, setComments] = useState('');
 
-    const [showPopup, setShowPopup] = useState(false);
+    const [showPopupShare, setshowPopupShare] = useState(false);
+    const [activeCommentId, setActiveCommentId] = useState(null);
 
     useEffect(() => {
         axios
@@ -40,7 +41,6 @@ const DetailBlog = () => {
         if (userRole !== 'guest') {
             if (blog) {
                 setLiked(blog.blogLike.some((like) => like.userID === userObject.id));
-                console.log(blog);
             }
         }
     }, [blog, userObject]);
@@ -87,7 +87,6 @@ const DetailBlog = () => {
                 alert(`Xóa thất bại! Server trả về: ${text}`);
             }
         } catch (error) {
-            console.error('Lỗi mạng hoặc server:', error);
             alert('Lỗi hệ thống! Vui lòng thử lại sau.');
         }
     };
@@ -118,7 +117,6 @@ const DetailBlog = () => {
 
             if (response.ok) {
                 const result = await response.json();
-                console.log('Response từ server:', result);
                 setLiked(result.liked);
 
                 const updatedBlog = { ...blog };
@@ -134,11 +132,9 @@ const DetailBlog = () => {
                 alert(result.message);
             } else {
                 const result = await response.text();
-                console.error('Lỗi server:', result);
                 alert(`Thao tác không thành công! Lỗi: ${result}`);
             }
         } catch (error) {
-            console.error('Lỗi khi like bài viết:', error);
             alert('Lỗi kết nối đến server!');
         }
     };
@@ -148,8 +144,7 @@ const DetailBlog = () => {
         //     alert('Bạn cần đăng nhập để bình luận!');
         //     return;
         // }
-
-        if (!comments.trim()) {
+        if (comments.trim() === '') {
             alert('Vui lòng nhập nội dung bình luận!');
             return;
         }
@@ -174,7 +169,6 @@ const DetailBlog = () => {
 
             if (response.ok) {
                 const result = await response.json();
-                console.log('Bình luận thành công:', result);
                 alert('Cảm ơn đã bình luận!!');
                 setBlog((prevBlog) => ({
                     ...prevBlog,
@@ -183,12 +177,9 @@ const DetailBlog = () => {
 
                 setComments('');
             } else {
-                const errorText = await response.text();
-                console.error('Lỗi khi gửi bình luận:', errorText);
                 alert('Gửi bình luận thất bại!');
             }
         } catch (error) {
-            console.error('Lỗi kết nối:', error);
             alert('Lỗi kết nối đến server!');
         }
     };
@@ -198,7 +189,7 @@ const DetailBlog = () => {
         // const blogUrl = `http://localhost:3000/DetailBlog/${blog.id}`;
         // navigator.clipboard.writeText(blogUrl);
         alert('Đã sao chép link!');
-        setShowPopup(false);
+        setshowPopupShare(false);
     };
 
     const handleShare = async (platform) => {
@@ -209,7 +200,6 @@ const DetailBlog = () => {
 
             const currentURL = window.location.href;
 
-            console.log('currentURL: ', currentURL);
             let shareURL = '';
             if (platform === 'Facebook') {
                 shareURL = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
@@ -238,21 +228,150 @@ const DetailBlog = () => {
 
             if (response.ok) {
                 alert(`Đã chia sẻ lên ${platform}`);
-                console.log(response);
                 const result = await response.json();
-                console.log('Share:', result);
 
                 setBlog((prevBlog) => ({
                     ...prevBlog,
                     blogShare: [...(prevBlog.blogShare || []), result],
                 }));
             } else {
-                console.error('Lỗi chia sẻ:', await response.text());
+                alert('Lỗi chia sẻ:', await response.text());
             }
         } catch (error) {
-            console.error('Lỗi kết nối:', error);
+            alert('Lỗi kết nối:', error);
         }
-        setShowPopup(false);
+        setshowPopupShare(false);
+    };
+
+    const updateBlogStatus = async (blogId) => {
+        let reason = '';
+
+        reason = prompt('Hãy nhập lý do từ chối:', 'Vi phạm cộng đồng!!!');
+        if (reason === null) return;
+
+        try {
+            const token = localStorage.getItem('accessToken');
+            const updatedBlog = { ...blog, status: 'Báo cáo', note: reason };
+            const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(updatedBlog),
+            });
+
+            if (response.ok) {
+                alert(`Cảm ơn đã báo cáo bài viết`);
+            } else {
+                const text = await response.text();
+                alert(`Cập nhật thất bại! Lỗi từ server: ${text}`);
+            }
+        } catch (error) {
+            alert('Có lỗi xảy ra!');
+        }
+    };
+
+    const handleEditComment = async (commentId, currentContent) => {
+        const newContent = prompt('Hãy nhập nội dung bình luận:', currentContent);
+
+        if (newContent === null || newContent === currentContent) {
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `http://localhost:5180/api/BlogCommentController/${commentId}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: '*/*',
+                    },
+                    body: JSON.stringify({ content: newContent }),
+                },
+            );
+
+            if (!response.ok) {
+                alert('Cập nhật bình luận thất bại!');
+            } else {
+                setBlog((prevBlog) => ({
+                    ...prevBlog,
+                    commentBlog: prevBlog.commentBlog.map((comment) =>
+                        comment.id === commentId ? { ...comment, content: newContent } : comment,
+                    ),
+                }));
+
+                alert('Cập nhật thành công!');
+                setActiveCommentId(null);
+            }
+        } catch (error) {
+            alert('Lỗi khi cập nhật bình luận:', error);
+        }
+    };
+
+    const handleDeleteComment = async (commentId) => {
+        if (window.confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
+            try {
+                const response = await fetch(
+                    `http://localhost:5180/api/BlogCommentController?commentId=${commentId}`,
+                    {
+                        method: 'DELETE',
+                    },
+                );
+
+                if (!response.ok) {
+                    alert('Xóa bình luận thất bại!');
+                }
+
+                blog.commentBlog = blog.commentBlog.filter((comment) => comment.id !== commentId);
+            } catch (error) {
+                alert('Lỗi khi xóa bình luận:', error);
+            }
+        }
+        setActiveCommentId(null);
+    };
+
+    const handleReportComment = async (commentId, currentContent) => {
+        let reason = '';
+
+        reason = prompt('Hãy nhập lý do từ chối:', 'Vi phạm cộng đồng!!!');
+        if (reason === null) return;
+
+        try {
+            const response = await fetch(
+                `http://localhost:5180/api/BlogCommentController/${commentId}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: '*/*',
+                    },
+                    body: JSON.stringify({
+                        content: currentContent,
+                        status: 'Báo cáo',
+                        note: reason,
+                    }),
+                },
+            );
+
+            if (response.ok) {
+                alert(`Cảm ơn đã báo cáo bài viết`);
+                setBlog((prevBlog) => ({
+                    ...prevBlog,
+                    commentBlog: prevBlog.commentBlog.map((comment) =>
+                        comment.id === commentId ? { ...comment, note: reason } : comment,
+                    ),
+                }));
+
+                setActiveCommentId(null);
+            } else {
+                const text = await response.text();
+                alert(`Cập nhật thất bại! Lỗi từ server: ${text}`);
+            }
+        } catch (error) {
+            alert('Có lỗi xảy ra!');
+        }
     };
 
     return (
@@ -348,17 +467,19 @@ const DetailBlog = () => {
                     </div>
                     <div className={cs('Share_space')}>
                         <div className={cs('Number_Share')}>{blog?.blogShare?.length || 0}</div>
-                        {/* <div className={cs('Share_Action')}> */}
 
-                        <button className={cs('Share_Action')} onClick={() => setShowPopup(true)}>
+                        <button
+                            className={cs('Share_Action')}
+                            onClick={() => setshowPopupShare(true)}
+                        >
                             🔗 Chia sẻ
                         </button>
 
-                        {showPopup && (
+                        {showPopupShare && (
                             <div className={cs('share_showPopup')}>
                                 <button
                                     className={cs('Share_Action')}
-                                    onClick={() => setShowPopup(false)}
+                                    onClick={() => setshowPopupShare(false)}
                                 >
                                     ❌ Đóng
                                 </button>
@@ -379,13 +500,26 @@ const DetailBlog = () => {
                                 </button>
                             </div>
                         )}
-                        {/* </div> */}
+                    </div>
+
+                    <div className={cs('Report_Action')}>
+                        <button
+                            className={cs('UpdateStatus')}
+                            onClick={() => updateBlogStatus(blog.id)}
+                        >
+                            🚩 Report
+                        </button>
                     </div>
                 </div>
+
                 <div className={cs('Show_Cmt')}>
                     {blog?.commentBlog
                         ?.slice()
                         .reverse()
+                        .filter(
+                            (comment) =>
+                                comment.status !== 'Từ chối' || comment.userId === userObject?.id,
+                        )
                         .map((comment) => (
                             <div key={comment.id} className={cs('comment_item')}>
                                 <img
@@ -393,17 +527,83 @@ const DetailBlog = () => {
                                     alt="Avatar"
                                     className={cs('avatar')}
                                 />
-                                <div>
+                                <div className={cs('comment_main')}>
                                     <div className={cs('comment_content')}>
                                         <p className={cs('comment_name')}>
                                             {comment.guestName || 'Ẩn danh'}
                                         </p>
                                         <p className={cs('comment_text')}>{comment.content}</p>
+                                        {comment.status === 'Báo cáo' &&
+                                            comment.userId === userObject?.id && (
+                                                <div className={cs('Note')}>
+                                                    Cảnh báo: <p>{comment.note}</p>
+                                                </div>
+                                            )}
+                                        {comment.status === 'Từ chối' &&
+                                            comment.userId === userObject?.id && (
+                                                <div className={cs('Note')}>
+                                                    Từ chối: <p>{comment.note}</p>
+                                                </div>
+                                            )}
                                     </div>
                                     <p className={cs('comment_date')}>
                                         {new Date(comment.createOn).toLocaleString()}
                                     </p>
                                 </div>
+
+                                <button
+                                    className={cs('menu_button')}
+                                    onClick={() =>
+                                        setActiveCommentId(
+                                            activeCommentId === comment.id ? null : comment.id,
+                                        )
+                                    }
+                                >
+                                    ⋮
+                                </button>
+
+                                {activeCommentId === comment.id && (
+                                    <div className={cs('Cmt_showPopup')}>
+                                        <button
+                                            className={cs('Cmts_Action')}
+                                            onClick={() => setActiveCommentId(null)}
+                                        >
+                                            ❌ Đóng
+                                        </button>
+
+                                        {(comment.userId === userObject?.id ||
+                                            comment.userId === null) && (
+                                            <div className={cs('userCmt_showPopup')}>
+                                                <button
+                                                    className={cs('Cmts_Action')}
+                                                    onClick={() =>
+                                                        handleEditComment(
+                                                            comment.id,
+                                                            comment.content,
+                                                        )
+                                                    }
+                                                >
+                                                    ✏️ Sửa
+                                                </button>
+                                                <button
+                                                    className={cs('Cmts_Action')}
+                                                    onClick={() => handleDeleteComment(comment.id)}
+                                                >
+                                                    🗑️ Xóa
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        <button
+                                            className={cs('Cmts_Action')}
+                                            onClick={() =>
+                                                handleReportComment(comment.id, comment.content)
+                                            }
+                                        >
+                                            🚩 Báo cáo
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         ))}
                 </div>

@@ -378,7 +378,7 @@ const UserBlog = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        {blog.status === 'Từ chối' && (
+                                        {blog.status === 'Từ chối' || blog.status === 'Báo cáo' && (
                                             <div className={cs('Note')}>{blog.note}</div>
                                         )}
                                     </div>

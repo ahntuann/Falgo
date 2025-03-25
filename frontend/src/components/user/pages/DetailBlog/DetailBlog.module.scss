@@ -35,14 +35,16 @@
     .ActionBarBar,
     .Like_space,
     .Share_space,
-    .cmt_Space {
+    .cmt_Space,
+    .Report_Action {
         display: flex;
         align-items: center;
         gap: 10px;
         padding: 5px;
         .Like_space,
         .Share_space,
-        .cmt_Space {
+        .cmt_Space,
+        .Report_Action {
             border: 2px solid white;
         }
         .Like_Action,
@@ -61,7 +63,7 @@
         .Share_space {
             .share_showPopup {
                 position: absolute;
-                left: 755px;
+                left: 686px;
                 display: flex;
                 gap: 10px;
             }
@@ -69,13 +71,14 @@
     }
 
     .Show_Cmt {
-        max-height: 300px; 
-        overflow-y: auto; 
+        max-height: 300px;
+        overflow-y: auto;
         padding: 10px;
         .comment_item {
             margin: 10px;
             display: flex;
             gap: 10px;
+
             .avatar {
                 width: 25px;
                 height: 25px;
@@ -91,8 +94,47 @@
                 border-radius: 10px;
                 padding: 10px;
             }
+
+            .userCmt_showPopup,
+            .Cmt_showPopup {
+                cursor: pointer;
+                display: flex;
+                left: 343px;
+                gap: 5px;
+                flex-direction: column;
+
+                .Cmts_Action {
+                    cursor: pointer;
+                    height: 20px;
+                    width: 80px;
+                }
+                .Cmt_Action {
+                    background: none;
+                    border: none;
+                    font-size: 20px;
+                }
+            }
+            .Note{
+                display: flex;
+                color: red;
+            }
+            .Note > p {
+                color: orange;
+            }
+        }
+
+        .menu_button {
+            height: 25px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     }
+
     .Show_Cmt::-webkit-scrollbar-thumb:hover {
         background: #555;
     }

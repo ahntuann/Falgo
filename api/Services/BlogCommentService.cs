@@ -32,5 +32,10 @@ namespace api.Services
         {
             return await _blogCommentRepository.CreateAsync(content);
         }
+
+        public async Task<CommentBlog?> UpdateAsync(int id, UpdateBlogCommentDto BlogcmtDto)
+        {
+            return await _blogCommentRepository.UpdateAsync(id, BlogcmtDto);
+        }
     }
 }

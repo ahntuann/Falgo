@@ -38,11 +38,13 @@ function BlogManagement() {
     const totalPages = Math.ceil(filteredBlogs.length / query.postsPerPage);
     const paginatedBlogs = filteredBlogs.slice(startIndex, endIndex);
     const role = JSON.parse(sessionStorage.getItem('admin'));
+
     useEffect(() => {
         if (!role) {
             navigate('/');
         }
     }, [role]);
+
     const fetchBlogs = async () => {
         try {
             const params = Object.fromEntries(
