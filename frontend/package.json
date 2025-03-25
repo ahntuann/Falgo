@@ -17,7 +17,7 @@
         "body-parser": "^1.20.3",
         "ckeditor4-react": "^5.2.1",
         "classnames": "^2.5.1",
-        "codemirror": "^5.65.18",
+        "codemirror": "^5.65.19",
         "cors": "^2.8.5",
         "dayjs": "^1.11.13",
         "express": "^4.21.2",
