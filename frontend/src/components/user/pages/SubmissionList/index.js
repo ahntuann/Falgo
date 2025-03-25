@@ -1,8 +1,6 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import AuthContext from '~/context/AuthContext';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './SubmissionList.module.scss';
 
@@ -10,7 +8,6 @@ const cs = classNames.bind(styles);
 
 const SubmissionList = () => {
     const { problemId } = useParams();
-    const { appUser } = useContext(AuthContext);
     const [submissions, setSubmissions] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
     const [languages, setLanguages] = useState([]);

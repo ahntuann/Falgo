@@ -10,12 +10,17 @@ import {
     fetchProblemHomePageAPI,
 } from '~/apis';
 import SkillItem from '~/components/user/components/SkillItem';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 const cs = classNames.bind(style);
 
 function Home() {
     const problemDailyNames = ['Bài tập nổi bật', 'Bạn đang làm dở', 'Đã hoàn thành'];
     const { appUser, userRole } = useContext(AuthContext);
+
+    const navigate = useNavigate();
 
     const [problemDailyFocus, setProblemDailyFocus] = useState(0);
     const [problems, setProblems] = useState([]);
@@ -64,18 +69,24 @@ function Home() {
 
             {userRole === 'user' ? (
                 <div className={cs('problemDaily', 'homeComponents')}>
-                    <div className={cs('problemDailyNames')}>
-                        {problemDailyNames.map((problem, i) => (
-                            <button
-                                key={i}
-                                className={cs('problemDailyName', 'category', {
-                                    active: i === problemDailyFocus,
-                                })}
-                                onClick={() => setProblemDailyFocus(i)}
-                            >
-                                {problem}
-                            </button>
-                        ))}
+                    <div className={cs('homeComponentsHeader')}>
+                        <div className={cs('problemDailyNames')}>
+                            {problemDailyNames.map((problem, i) => (
+                                <button
+                                    key={i}
+                                    className={cs('problemDailyName', 'category', {
+                                        active: i === problemDailyFocus,
+                                    })}
+                                    onClick={() => setProblemDailyFocus(i)}
+                                >
+                                    {problem}
+                                </button>
+                            ))}
+                        </div>
+                        <div className={cs('seeMore')} onClick={() => navigate('/problems')}>
+                            Xem thêm
+                            <FontAwesomeIcon icon={faAnglesRight} className={cs('seeMoreIcon')} />
+                        </div>
                     </div>
 
                     {problems !== undefined && problems !== null ? (
@@ -106,9 +117,14 @@ function Home() {
             ) : null}
 
             <div className={cs('contestBrief', 'homeComponents')}>
-                <div className={cs('category', 'contestBriefCategory')}>
-                    <div className={cs('contestBriefCategoryName')}>Cuộc thi lập trình</div>
-                    {/* <div className={cs('contestBriefCategoryMore')}>Xem thêm</div> */}
+                <div className={cs('homeComponentsHeader')}>
+                    <div className={cs('category', 'contestBriefCategory')}>
+                        <div className={cs('contestBriefCategoryName')}>Cuộc thi lập trình</div>
+                    </div>
+                    <div className={cs('seeMore')} onClick={() => navigate('/contest')}>
+                        Xem thêm
+                        <FontAwesomeIcon icon={faAnglesRight} className={cs('seeMoreIcon')} />
+                    </div>
                 </div>
                 <div className={cs('contests')}>
                     {contests !== undefined &&
