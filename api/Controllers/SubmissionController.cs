@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using api.Dtos.Problem;
 using api.Dtos.ProgramingLanguage;
@@ -87,6 +88,7 @@ namespace api.Controllers
                 Directory.CreateDirectory(baseURL);
 
                 ProgramingLanguageDto proLangDto = await _proLangService.GetProgramingLanguageAsync(submissionPostDto.ProgrammingLanguageId);
+                // System.Console.WriteLine(proLangDto);
                 if (proLangDto == null)
                     return BadRequest(new { Error = "Not support this programming language" });
 
@@ -233,11 +235,7 @@ namespace api.Controllers
             };
         }
 
-        private async Task<TestCaseStatusDto> ExecuteCommand(
-            string command,
-            string outputPath,
-            TestCase testCase,
-            ProblemDetailDto problemDetailDto)
+        private async Task<TestCaseStatusDto> ExecuteCommand(string command, string outputPath, TestCase testCase, ProblemDetailDto problemDetailDto)
         {
             var processInfo = new ProcessStartInfo
             {
@@ -319,6 +317,25 @@ namespace api.Controllers
 
             var statuses = await _submissionService.GetAllSubmissionStatusesByUserAsync(userId);
             return Ok(statuses);
+        }
+
+        [HttpGet("history/{problemId}/{userId}")]
+        public async Task<IActionResult> GetSubmissionHistory(string problemId, string userId, [FromQuery] SubmissionHistoryQueryObject query)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+            if (string.IsNullOrEmpty(problemId))
+            {
+                return BadRequest();
+            }
+            var result = await _submissionService.GetSubmissionHistory(userId, problemId, query);
+            if (!result.Items.Any())
+            {
+                return NotFound();
+            }
+            return Ok(result);
         }
     }
 }

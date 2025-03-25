@@ -1,10 +1,12 @@
 import classNames from 'classnames/bind';
 
 import style from './ProblemItem.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import TippyHeadless from '~/components/user/components/TippyHeadless';
 import { Link } from 'react-router-dom';
+import doneProblem from '~/assets/images/ProblemStatus/doneProblem.gif';
+import onProgressProblem from '~/assets/images/ProblemStatus/onProgressProblem.gif';
+import wrongAnswer from '~/assets/images/ProblemStatus/wrongAnswer.gif';
+import hotProblem from '~/assets/images/ProblemStatus/hotProblem.avif';
 
 const cs = classNames.bind(style);
 
@@ -27,6 +29,12 @@ function ProblemItem({
     const warningLog = ['Time Limit Exceeded', 'Partial Correct'];
     const successLog = ['Accepted'];
 
+    let problemImg;
+    if (errorLog.includes(status)) problemImg = wrongAnswer;
+    else if (successLog.includes(status)) problemImg = doneProblem;
+    else if (warningLog.includes(status)) problemImg = onProgressProblem;
+    else problemImg = hotProblem;
+
     return (
         <TippyHeadless
             customClass={cs('tippy')}
@@ -43,8 +51,8 @@ function ProblemItem({
                     {point}
                 </div>
                 <div className={cs('getInProblem')}>
-                    <Link to={`/problems/${problemId}`}>
-                        <FontAwesomeIcon icon={faPlayCircle} />
+                    <Link className={cs('problemLink')} to={`/problems/${problemId}`}>
+                        <img src={problemImg} className={cs('problemImg')} />
                     </Link>
                 </div>
                 <div className={cs('author')}>{author}</div>

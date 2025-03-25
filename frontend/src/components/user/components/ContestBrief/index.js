@@ -8,8 +8,9 @@ import AuthContext from '~/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 const cs = classNames.bind(style);
 
-function ContestBrief({ contest }) {
-    const { contestId, banner, title, totalPoint, level, endDate, dueTime, numRegis } = contest;
+function ContestBrief({ contest, classnames }) {
+    const { contestId, banner, contestName, totalPoint, level, endDate, dueTime, numRegis } =
+        contest;
     const { appUser } = useContext(AuthContext);
 
     const [isRegis, setIsRegis] = useState(false);
@@ -39,13 +40,13 @@ function ContestBrief({ contest }) {
     };
 
     return (
-        <div className={cs('wrapper')}>
+        <div className={cs('wrapper', classNames || '')}>
             <div className={cs('banner')}>
                 <img className={cs('bannerImg')} alt="banner" src={banner} />
             </div>
 
             <div className={cs('info')}>
-                <div className={cs('title')}>{title}</div>
+                <div className={cs('title')}>{contestName}</div>
                 <div
                     className={cs('level', {
                         hard: level === 'hard',
