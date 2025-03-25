@@ -1,5 +1,4 @@
 import classNames from 'classnames/bind';
-
 import style from './ContestList.module.scss';
 import { useEffect, useState } from 'react';
 import { ContestBrief } from '~/components/user/components';
@@ -22,21 +21,36 @@ function ContestList() {
         fetchAllContest('over').then((contest) => setOverContest(contest));
     }, []);
 
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPageOngoing, setCurrentPageOngoing] = useState(1);
+    const [currentPageOver, setCurrentPageOver] = useState(1);
 
-    const totalPages = Math.ceil(ongoingContests.length / ITEMS_PER_PAGE);
-    const displayedContests = ongoingContests.slice(
-        (currentPage - 1) * ITEMS_PER_PAGE,
-        currentPage * ITEMS_PER_PAGE,
+    // Ongoing contest pagination
+    const totalPagesOngoing = Math.ceil(ongoingContests.length / ITEMS_PER_PAGE);
+    const displayedOngoingContests = ongoingContests.slice(
+        (currentPageOngoing - 1) * ITEMS_PER_PAGE,
+        currentPageOngoing * ITEMS_PER_PAGE,
     );
 
-    const handlePageChange = (newPage) => {
-        if (newPage >= 1 && newPage <= totalPages) {
-            setCurrentPage(newPage);
+    // Over contest pagination
+    const totalPagesOver = Math.ceil(overContest.length / ITEMS_PER_PAGE);
+    const displayedOverContests = overContest.slice(
+        (currentPageOver - 1) * ITEMS_PER_PAGE,
+        currentPageOver * ITEMS_PER_PAGE,
+    );
+
+    const handlePageChangeOngoing = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPagesOngoing) {
+            setCurrentPageOngoing(newPage);
         }
     };
 
-    const getPageNumbers = () => {
+    const handlePageChangeOver = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPagesOver) {
+            setCurrentPageOver(newPage);
+        }
+    };
+
+    const getPageNumbers = (totalPages, currentPage) => {
         if (totalPages <= MAX_PAGE_DISPLAY) {
             return [...Array(totalPages)].map((_, i) => i + 1);
         }
@@ -53,11 +67,12 @@ function ContestList() {
 
     return (
         <div className={cs('wrapper')}>
+            {/* Ongoing Contest */}
             <div className={cs('ongoingContest', 'contests')}>
                 <div className={cs('category')}>Các kỳ thi đang diễn ra</div>
                 <div className={cs('contestList')}>
-                    {displayedContests.length > 0 ? (
-                        displayedContests.map((contest, i) => (
+                    {displayedOngoingContests.length > 0 ? (
+                        displayedOngoingContests.map((contest, i) => (
                             <ContestBrief key={i} contest={contest} />
                         ))
                     ) : (
@@ -67,17 +82,18 @@ function ContestList() {
                     )}
                 </div>
             </div>
-            {totalPages > 1 && (
+
+            {totalPagesOngoing > 1 && (
                 <div className={cs('pagination')}>
                     <button
                         className={cs('pageButton')}
-                        disabled={currentPage === 1}
-                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPageOngoing === 1}
+                        onClick={() => handlePageChangeOngoing(currentPageOngoing - 1)}
                     >
                         «
                     </button>
 
-                    {getPageNumbers().map((num, i) =>
+                    {getPageNumbers(totalPagesOngoing, currentPageOngoing).map((num, i) =>
                         num === '...' ? (
                             <span key={i} className="dots">
                                 ...
@@ -85,8 +101,8 @@ function ContestList() {
                         ) : (
                             <button
                                 key={i}
-                                className={cs('pageButton', { active: currentPage === num })}
-                                onClick={() => handlePageChange(num)}
+                                className={cs('pageButton', { active: currentPageOngoing === num })}
+                                onClick={() => handlePageChangeOngoing(num)}
                             >
                                 {num}
                             </button>
@@ -95,19 +111,22 @@ function ContestList() {
 
                     <button
                         className={cs('pageButton')}
-                        disabled={currentPage === totalPages}
-                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPageOngoing === totalPagesOngoing}
+                        onClick={() => handlePageChangeOngoing(currentPageOngoing + 1)}
                     >
                         »
                     </button>
                 </div>
             )}
 
+            {/* Over Contest */}
             <div className={cs('overContest', 'contests')}>
                 <div className={cs('category')}>Các kỳ thi đã qua</div>
                 <div className={cs('contestList')}>
-                    {overContest.length > 0 ? (
-                        overContest.map((contest, i) => <ContestBrief key={i} contest={contest} />)
+                    {displayedOverContests.length > 0 ? (
+                        displayedOverContests.map((contest, i) => (
+                            <ContestBrief key={i} contest={contest} />
+                        ))
                     ) : (
                         <div className={cs('noContestNoti')}>
                             Hiện tại chưa có contest nào đã qua
@@ -115,6 +134,42 @@ function ContestList() {
                     )}
                 </div>
             </div>
+
+            {totalPagesOver > 1 && (
+                <div className={cs('pagination')}>
+                    <button
+                        className={cs('pageButton')}
+                        disabled={currentPageOver === 1}
+                        onClick={() => handlePageChangeOver(currentPageOver - 1)}
+                    >
+                        «
+                    </button>
+
+                    {getPageNumbers(totalPagesOver, currentPageOver).map((num, i) =>
+                        num === '...' ? (
+                            <span key={i} className="dots">
+                                ...
+                            </span>
+                        ) : (
+                            <button
+                                key={i}
+                                className={cs('pageButton', { active: currentPageOver === num })}
+                                onClick={() => handlePageChangeOver(num)}
+                            >
+                                {num}
+                            </button>
+                        ),
+                    )}
+
+                    <button
+                        className={cs('pageButton')}
+                        disabled={currentPageOver === totalPagesOver}
+                        onClick={() => handlePageChangeOver(currentPageOver + 1)}
+                    >
+                        »
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

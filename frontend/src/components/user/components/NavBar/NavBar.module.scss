@@ -31,15 +31,28 @@
 
     &:hover {
         transform: scale(1.1);
-        background-color: rgba(0, 123, 255, 0.1);
+        background-color: rgba(255, 162, 0, 0.1);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 }
 
 .navBarItem.active {
     transform: scale(1.1);
-    background-color: rgba(225, 235, 246, 0.1);
+    // background-color: rgba(225, 235, 246, 0.1);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+
+    color: #ffa116;
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -7px;
+        width: 100%;
+        height: 3px;
+        background-color: #ffa116;
+    }
 }
 
 .tippy {
