@@ -19,6 +19,25 @@ namespace api.Services
             _contestRegisService = contestRegisService;
         }
 
+        public async Task<List<ContestBriefDto>> GetContestsAsync(string typeOfContest)
+        {
+            var contests = await _contestRepo.GetContestsAsync(typeOfContest);
+
+            if (contests == null)
+                return null;
+
+            Dictionary<Contest, int> contestRegisCount = new Dictionary<Contest, int>();
+
+            foreach (var contest in contests)
+            {
+                var registions = await _contestRegisService.GetAllContestRegistationAsync(contest);
+
+                contestRegisCount.Add(contest, registions.Count);
+            }
+
+            return contestRegisCount.Select(x => x.Key.ToContestBriefFromContest(x.Value)).ToList();
+        }
+
         public async Task<List<ContestBriefDto?>> GetXNewestContestAsync(int pageSize)
         {
             var contests = await _contestRepo.GetXContestsNewestAsync(pageSize);

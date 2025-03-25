@@ -24,6 +24,26 @@ namespace api.Repository
             return contest;
         }
 
+        public async Task<List<Contest>> GetContestsAsync(string typeOfContest)
+        {
+            List<Contest> contests = new List<Contest>();
+
+            if (typeOfContest == "upcomming")
+            {
+                contests = await _context.Contests
+                    .Where(x => x.EndDate > DateTime.Now)
+                    .ToListAsync();
+            }
+            else if (typeOfContest == "over")
+            {
+                contests = await _context.Contests
+                    .Where(x => x.EndDate <= DateTime.Now)
+                    .ToListAsync();
+            }
+
+            return contests;
+        }
+
         public async Task<List<Contest?>> GetXContestsNewestAsync(int pageSize)
         {
             var contests = await _context.Contests

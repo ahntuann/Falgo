@@ -15,6 +15,7 @@ import {
     UserProfileBlog,
     UserSubmissions,
     UserContest,
+    ContestList,
 } from '~/components/user/pages';
 import { AdminLogin, Dashboard } from '~/components/admin/pages';
 import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
@@ -122,6 +123,12 @@ const routes = [
         path: '/UserContest',
         layout: DefaultLayout,
         role: ['user'],
+    },
+    {
+        component: ContestList,
+        path: 'contest',
+        layout: DefaultLayout,
+        role: ['guest', 'user'],
     },
 ];
 

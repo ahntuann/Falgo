@@ -10,5 +10,6 @@ namespace api.Interface
     {
         public Task<List<Contest?>> GetXContestsNewestAsync(int pageSize);
         public Task<Contest?> GetContestByIdAsync(string id);
+        public Task<List<Contest>> GetContestsAsync(string typeOfContest);
     }
 }
