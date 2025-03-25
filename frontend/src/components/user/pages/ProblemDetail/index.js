@@ -90,7 +90,7 @@ const ProblemDetail = () => {
                     </Link>
                 ) : (
                     <Link
-                        to={`/submissions?problemId=${problemId}&userId=${appUser?.id}`}
+                        to={`/submissions/history/${problemId}`}
                         className={cs('button', 'secondary')}
                     >
                         Lịch sử nộp bài

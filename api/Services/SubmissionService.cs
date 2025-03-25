@@ -195,5 +195,15 @@ namespace api.Services
                 CurrentPage = query.PageNumber
             };
         }
+
+        public async Task<List<string>> GetAllSubmissionHistoryStatusesAsync(string userId, string problemId)
+        {
+            var query = new SubmissionHistoryQueryObject();
+            var submissions = await _subRepo.GetSubmissionsHistory(userId, problemId, query);
+            return submissions
+                .Select(s => s.Status)
+                .Distinct()
+                .ToList();
+        }
     }
 }

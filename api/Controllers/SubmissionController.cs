@@ -331,11 +331,21 @@ namespace api.Controllers
                 return BadRequest();
             }
             var result = await _submissionService.GetSubmissionHistory(userId, problemId, query);
-            if (!result.Items.Any())
-            {
-                return NotFound();
-            }
             return Ok(result);
+        }
+        [HttpGet("history/status/{problemId}/{userId}")]
+        public async Task<IActionResult> GetSubmissionHistoryStatus(string problemId, string userId)
+        {
+            if (string.IsNullOrEmpty(problemId))
+            {
+                return BadRequest();
+            }
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest();
+            }
+            var statuses = await _submissionService.GetAllSubmissionHistoryStatusesAsync(userId, problemId);
+            return Ok(statuses);
         }
     }
 }

@@ -16,6 +16,7 @@ import {
     UserSubmissions,
     UserContest,
     ContestList,
+    SubmissionHistory,
 } from '~/components/user/pages';
 import { AdminLogin, Dashboard } from '~/components/admin/pages';
 import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
@@ -129,6 +130,12 @@ const routes = [
         path: 'contest',
         layout: DefaultLayout,
         role: ['guest', 'user'],
+    },
+    {
+        component: SubmissionHistory,
+        path: '/submissions/history/:problemId',
+        layout: DefaultLayout,
+        role: ['user'],
     },
 ];
 
