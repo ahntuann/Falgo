@@ -107,7 +107,7 @@ function TestCaseSection() {
                         <div className={cs('itemDetailItem')}>
                             Thời gian thực thi:
                             <div className={cs('itemDetailItemValue')}>
-                                {testCaseCur.at(testcaseFocus)?.executionTime} ms
+                                {testCaseCur.at(testcaseFocus)?.executionTime}
                             </div>
                         </div>
                         <div className={cs('itemDetailItem')}>

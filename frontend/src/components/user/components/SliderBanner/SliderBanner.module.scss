@@ -17,6 +17,7 @@
 
 .sliderImg {
     width: 100%;
+    aspect-ratio: 4 / 1;
     object-fit: cover;
     flex-shrink: 0;
     opacity: 0;

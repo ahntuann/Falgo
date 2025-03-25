@@ -88,6 +88,7 @@ namespace api.Controllers
                 Directory.CreateDirectory(baseURL);
 
                 ProgramingLanguageDto proLangDto = await _proLangService.GetProgramingLanguageAsync(submissionPostDto.ProgrammingLanguageId);
+                // System.Console.WriteLine(proLangDto);
                 if (proLangDto == null)
                     return BadRequest(new { Error = "Not support this programming language" });
 
