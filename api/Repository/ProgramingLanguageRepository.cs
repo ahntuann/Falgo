@@ -24,6 +24,14 @@ namespace api.Repository
             return proLanguages;
         }
 
+        public async Task<string> GetLanguageNameByIdAsync(string languageId)
+        {
+            var language =  await _context.ProgrammingLanguage
+                                .AsNoTracking()
+                                .FirstOrDefaultAsync(x => x.ProgrammingLanguageId == languageId);
+            return language?.Language ?? "Unknown Language";
+        }
+
         public async Task<ProgrammingLanguage?> GetProgrammingLanguageByIdAsync(string id)
         {
             var proLang = await _context.ProgrammingLanguage

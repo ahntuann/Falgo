@@ -19,11 +19,17 @@ namespace api.Controllers
         private readonly IUserService _userService;
         private readonly IWebHostEnvironment _env;
         private readonly ISubmissionRepository _subRepo;
-        public UserController(IUserService userService, IWebHostEnvironment env, ISubmissionRepository subRepo)
+        private readonly IProgramingLanguageRepository _programingLanguageRepository;
+        private readonly IProblemRepository _problemRepository;
+        public UserController(IUserService userService, IWebHostEnvironment env, ISubmissionRepository subRepo,
+                            IProgramingLanguageRepository programingLanguageRepository,
+                            IProblemRepository problemRepository)
         {
             _userService = userService;
             _env = env;
             _subRepo = subRepo;
+            _programingLanguageRepository = programingLanguageRepository;
+            _problemRepository = problemRepository;
         }
 
         [HttpGet("isRegis")]
@@ -177,7 +183,29 @@ namespace api.Controllers
 
             return Ok(contests);
         }
+        [HttpGet("download-submission/{submissionId}")]
+        public async Task<IActionResult> DownloadSubmissionSource(string submissionId)
+        {
+            var submission = await _subRepo.GetSubmissionByIdAsync(submissionId);
+            
+            if (submission == null)
+                return null;
 
+            var sourceCodeZip = await _userService.DownloadSubmissionSourceCodeAsync(submissionId);
+            string problemTitle = await _problemRepository.GetProblemNameByIdAsync(submission.ProblemId);
+            string languageName = await _programingLanguageRepository.GetLanguageNameByIdAsync(submission.ProgrammingLanguageId);
+            
+            string cleanProblemTitle = RemoveSpecialCharacters(problemTitle);
+            if (sourceCodeZip == null)
+                return NotFound();
+
+            return File(sourceCodeZip, "application/zip", $"{submission.ProblemId}_{cleanProblemTitle}_{languageName}.zip");
+        }
+
+        private string RemoveSpecialCharacters(string input)
+        {
+            return System.Text.RegularExpressions.Regex.Replace(input, @"[^a-zA-Z0-9_]", "");
+        }
 
     }
 }

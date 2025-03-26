@@ -10,5 +10,6 @@ namespace api.Interface
     {
         public Task<List<ProgrammingLanguage>> GetAllProgramingLanguageAsync();
         public Task<ProgrammingLanguage?> GetProgrammingLanguageByIdAsync(string id);
+        public Task<string> GetLanguageNameByIdAsync(string languageId);
     }
 }

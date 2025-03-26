@@ -155,8 +155,10 @@ namespace api.Services
             {
                 SubmissionId = submission.SubmissionId,
                 ProblemTitle = submission.Problem.Title,
+                ProblemId = submission.ProblemId,
                 Status = submission.Status,
                 Score = submission.Point,
+                SourceCode = submission.SourceCode,
                 ProgrammingLanguage = submission.ProgrammingLanguage.Language,
                 ExecuteTime = submission.ExecuteTime,
                 MemoryUsed = submission.MemoryUsed,
