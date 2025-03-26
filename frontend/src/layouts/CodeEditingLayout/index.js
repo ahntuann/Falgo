@@ -6,13 +6,7 @@ import { NavBar } from '~/components/user/components';
 const cs = classNames.bind(style);
 
 function CodeEditingLayout({ children }) {
-    return (
-        <div className={cs('wrapper')}>
-            <NavBar classNames={cs('codeEditingNav')} />
-
-            {children}
-        </div>
-    );
+    return <div className={cs('wrapper')}>{children}</div>;
 }
 
 export default CodeEditingLayout;

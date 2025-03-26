@@ -126,10 +126,25 @@ namespace api.Repository
         }
         public async Task<bool> HasUserSolvedProblemAsync(string userId, string problemId)
         {
-        return await _context.Submissions
-        .AnyAsync(s => s.AppUserId == userId 
-                 && s.ProblemId == problemId 
-                 && s.Status == "Accepted");
+            return await _context.Submissions
+            .AnyAsync(s => s.AppUserId == userId
+                     && s.ProblemId == problemId
+                     && s.Status == "Accepted");
+        }
+
+        public async Task<List<Submission?>> GetSubmissionsHistory(string userId, string problemId, SubmissionHistoryQueryObject query)
+        {
+            var submissionQuery = _context.Submissions.Include(s => s.ProgrammingLanguage).Include(s => s.Problem).Where(s => s.AppUserId == userId && s.ProblemId == problemId).AsQueryable();
+            if (query.SelectedDate.HasValue)
+            {
+                var selectedDate = query.SelectedDate.Value.ToDateTime(TimeOnly.MinValue);
+                submissionQuery = submissionQuery.Where(s => s.SubmittedAt.Date == selectedDate.Date);
+            }
+            if (!string.IsNullOrEmpty(query.Status))
+            {
+                submissionQuery = submissionQuery.Where(s => s.Status.Equals(query.Status));
+            }
+            return await submissionQuery.ToListAsync();
         }
 
         public async Task<Submission> GetSubmissionByIdAsync(string submissionId)

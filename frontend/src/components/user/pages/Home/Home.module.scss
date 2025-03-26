@@ -23,6 +23,30 @@
 }
 
 // Problem Daily
+.homeComponentsHeader {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.seeMore {
+    color: var(--primary-text-color);
+    min-width: 100px;
+    margin-top: 30px;
+    font-weight: 600;
+    font-size: 1.5rem;
+    opacity: 0.7;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.seeMoreIcon {
+    margin-left: 5px;
+}
+
 .problemDaily {
     width: 100%;
 }

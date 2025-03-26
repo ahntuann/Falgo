@@ -126,3 +126,11 @@ export const submitSolutionForAProblemAPI = async (
         return reponse.data;
     } catch (error) {}
 };
+
+export const fetchAllContest = async (typeOfContest) => {
+    try {
+        const response = await axios.get(`${API_ROOT}/api/contest?TypeOfContest=${typeOfContest}`);
+
+        return response.data;
+    } catch (error) {}
+};

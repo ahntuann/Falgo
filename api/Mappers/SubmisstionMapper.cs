@@ -30,7 +30,22 @@ namespace api.Mappers
                 ExecuteTime = submission.ExecuteTime,
                 MemoryUsed = submission.MemoryUsed,
                 SubmittedAt = submission.SubmittedAt,
-                SourceCode = submission.SourceCode
+            };
+        }
+
+        public static SubmissionHistoryDto ToSubmissionHistoryDto(this Submission submission)
+        {
+            return new SubmissionHistoryDto
+            {
+                SubmissionId = submission.SubmissionId,
+                Point = submission.Point,
+                ProgrammingLanguage = submission.ProgrammingLanguage.Language,
+                ProblemTitle = submission.Problem.Title,
+                Status = submission.Status,
+                ExecuteTime = submission.ExecuteTime,
+                MemoryUsed = submission.MemoryUsed,
+                SubmittedAt = submission.SubmittedAt,
+                SourceCode = submission.SourceCode,
             };
         }
     }

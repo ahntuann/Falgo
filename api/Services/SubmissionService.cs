@@ -98,86 +98,116 @@ namespace api.Services
         public async Task<Submission> CreateUserSubmissionAsync(Submission submission)
         {
             var newSubmission = await _subRepo.CreateASubmissionAsync(submission);
-            
+
             await UpdateUserStatisticsAsync(submission);
-            
+
             return newSubmission;
         }
 
-            private async Task UpdateUserStatisticsAsync(Submission submission)
+        private async Task UpdateUserStatisticsAsync(Submission submission)
+        {
+            var user = await _userRepo.GetUserByIdAsync(submission.AppUserId);
+            if (user != null)
             {
-                var user = await _userRepo.GetUserByIdAsync(submission.AppUserId);
-                if (user != null)
+                user.TotalSubmissions++;
+
+                if (submission.Status == "Accepted")
                 {
-                    user.TotalSubmissions++;
-                    
-                    if (submission.Status == "Accepted")
+                    bool alreadySolved = await _subRepo.HasUserSolvedProblemAsync(
+                        submission.AppUserId,
+                        submission.ProblemId);
+
+                    if (!alreadySolved)
                     {
-                        bool alreadySolved = await _subRepo.HasUserSolvedProblemAsync(
-                            submission.AppUserId, 
-                            submission.ProblemId);
-                            
-                        if (!alreadySolved)
-                        {
-                            user.TotalSolved++;
-                            user.LastSolvedAt = DateTime.UtcNow;
-                        }
+                        user.TotalSolved++;
+                        user.LastSolvedAt = DateTime.UtcNow;
                     }
-                    await _userRepo.UpdateUserAsync(user);
                 }
+                await _userRepo.UpdateUserAsync(user);
             }
+        }
 
-            public async Task<List<string>> GetAllSubmissionLanguagesByUserAsync(string userId)
+        public async Task<List<string>> GetAllSubmissionLanguagesByUserAsync(string userId)
+        {
+            var query = new SubmissionListQueryObject { UserId = userId };
+            var submissions = await _subRepo.GetFilteredSubmissionsAsync(query, userId);
+            return submissions
+                .Select(s => s.ProgrammingLanguage.Language)
+                .Distinct()
+                .ToList();
+        }
+
+        public async Task<List<string>> GetAllSubmissionStatusesByUserAsync(string userId)
+        {
+            var query = new SubmissionListQueryObject { UserId = userId };
+            var submissions = await _subRepo.GetFilteredSubmissionsAsync(query, userId);
+            return submissions
+                .Select(s => s.Status)
+                .Distinct()
+                .ToList();
+        }
+
+        public async Task<PageResult<SubmissionListDto>> GetUserSubmissionsWithProblemInfoAsync(string userId, SubmissionListQueryObject query)
+        {
+            var submissionQuery = await _subRepo.GetFilteredSubmissionsAsync(query, userId);
+
+            var submissions = submissionQuery.Select(submission => new SubmissionListDto
             {
-                var query = new SubmissionListQueryObject { UserId = userId };
-                var submissions = await _subRepo.GetFilteredSubmissionsAsync(query, userId);
-                return submissions
-                    .Select(s => s.ProgrammingLanguage.Language)
-                    .Distinct()
-                    .ToList();
-            }
+                SubmissionId = submission.SubmissionId,
+                ProblemTitle = submission.Problem.Title,
+                Status = submission.Status,
+                Score = submission.Point,
+                ProgrammingLanguage = submission.ProgrammingLanguage.Language,
+                ExecuteTime = submission.ExecuteTime,
+                MemoryUsed = submission.MemoryUsed,
+                SubmittedAt = submission.SubmittedAt,
+                SubmitterName = submission.AppUser.FullName
+            }).ToList();
 
-            public async Task<List<string>> GetAllSubmissionStatusesByUserAsync(string userId)
+            int totalItems = submissions.Count;
+            var result = submissions
+                .Skip((query.PageNumber - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToList();
+
+            return new PageResult<SubmissionListDto>
             {
-                var query = new SubmissionListQueryObject { UserId = userId };
-                var submissions = await _subRepo.GetFilteredSubmissionsAsync(query, userId);
-                return submissions
-                    .Select(s => s.Status)
-                    .Distinct()
-                    .ToList();
-            }
+                Items = result,
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)query.PageSize),
+                CurrentPage = query.PageNumber
+            };
+        }
 
-            public async Task<PageResult<SubmissionListDto>> GetUserSubmissionsWithProblemInfoAsync(string userId, SubmissionListQueryObject query)
+        public async Task<PageResult<SubmissionHistoryDto>> GetSubmissionHistory(string userId, string problemId, SubmissionHistoryQueryObject query)
+        {
+            var submissionQuery = await _subRepo.GetSubmissionsHistory(userId, problemId, query);
+            var submissions = submissionQuery.Select(Submission =>
             {
-                var submissionQuery = await _subRepo.GetFilteredSubmissionsAsync(query, userId);
-                
-                var submissions = submissionQuery.Select(submission => new SubmissionListDto
-                {
-                    SubmissionId = submission.SubmissionId,
-                    ProblemTitle = submission.Problem.Title,
-                    Status = submission.Status,
-                    Score = submission.Point,
-                    SourceCode = submission.SourceCode,
-                    ProgrammingLanguage = submission.ProgrammingLanguage.Language,
-                    ExecuteTime = submission.ExecuteTime,
-                    MemoryUsed = submission.MemoryUsed,
-                    SubmittedAt = submission.SubmittedAt,
-                    SubmitterName = submission.AppUser.FullName
-                }).ToList();
-                
-                int totalItems = submissions.Count;
-                var result = submissions
-                    .Skip((query.PageNumber - 1) * query.PageSize)
-                    .Take(query.PageSize)
-                    .ToList();
+                return Submission.ToSubmissionHistoryDto();
+            }).ToList();
+            int totalItems = submissions.Count;
+            var result = submissions
+                .Skip((query.PageNumber - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToList();
+            return new PageResult<SubmissionHistoryDto>
+            {
+                Items = result,
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)query.PageSize),
+                CurrentPage = query.PageNumber
+            };
+        }
 
-                return new PageResult<SubmissionListDto>
-                {
-                    Items = result,
-                    TotalItems = totalItems,
-                    TotalPages = (int)Math.Ceiling(totalItems / (double)query.PageSize),
-                    CurrentPage = query.PageNumber
-                };
-            }
+        public async Task<List<string>> GetAllSubmissionHistoryStatusesAsync(string userId, string problemId)
+        {
+            var query = new SubmissionHistoryQueryObject();
+            var submissions = await _subRepo.GetSubmissionsHistory(userId, problemId, query);
+            return submissions
+                .Select(s => s.Status)
+                .Distinct()
+                .ToList();
+        }
     }
 }
