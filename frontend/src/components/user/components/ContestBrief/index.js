@@ -77,7 +77,11 @@ function ContestBrief({ contest, contestStatus }) {
             </div>
 
             {isRegis ? (
-                <div className={cs('register')}>Bạn đã đăng ký</div>
+                contestStatus === 'over' ? (
+                    <div className={cs('register')}>Bắt đầu thi giả lập</div>
+                ) : (
+                    <div className={cs('register')}>Bắt đầu ngay</div>
+                )
             ) : (
                 <div onClick={() => registerUser()} className={cs('register')}>
                     Đăng ký ngay

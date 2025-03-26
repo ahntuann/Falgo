@@ -149,9 +149,9 @@ namespace api.Repository
 
         public async Task<Submission> GetSubmissionByIdAsync(string submissionId)
         {
-            return await _context.Submissions.FindAsync(submissionId);
+            return await _context.Submissions.FirstOrDefaultAsync(x => x.SubmissionId == submissionId);
         }
 
-        
+
     }
 }

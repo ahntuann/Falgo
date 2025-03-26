@@ -6,7 +6,6 @@ import styles from './UserSubmissions.module.scss';
 
 const cs = classNames.bind(styles);
 
-// Mapping of English status to Vietnamese status
 const STATUS_TRANSLATIONS = {
     Accepted: 'Chấp nhận',
     'Wrong Answer': 'Sai đáp án',
@@ -48,7 +47,6 @@ const UserSubmissions = () => {
                 let url = `http://localhost:5180/api/user/${userId}/submissions?pageNumber=${currentPage}&pageSize=10`;
 
                 if (filters.status) {
-                    // Use the English status for backend request
                     const englishStatus = Object.keys(STATUS_TRANSLATIONS).find(
                         (key) => STATUS_TRANSLATIONS[key] === filters.status,
                     );
@@ -59,13 +57,11 @@ const UserSubmissions = () => {
                     url += `&programmingLanguage=${encodeURIComponent(filters.language)}`;
                 }
 
-                // Fetch submissions
                 const response = await axios.get(url);
                 console.log('Dữ liệu phản hồi:', response.data.items);
                 setSubmissions(response.data.items);
                 setTotalPages(response.data.totalPages);
 
-                // Fetch languages and statuses for filters
                 if (languages.length === 0) {
                     const langResponse = await axios.get(
                         `http://localhost:5180/api/submission/languages?userId=${userId}`,

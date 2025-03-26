@@ -38,7 +38,7 @@
     flex: 1;
     padding: 20px;
     text-align: center;
-
+    background-color: #ffffff;
     h2 {
         font-size: 22px;
         margin-bottom: 15px;
@@ -76,16 +76,16 @@
         width: 100%;
         border-collapse: collapse;
         margin-top: 10px;
-
+        background: rgb(210, 210, 210);
         th,
         td {
-            border: 1px solid #ddd;
+            border: 1px solid #000000;
             padding: 10px;
             text-align: center;
         }
 
         th {
-            background: #ccc;
+            background: #00d5ff;
             font-weight: bold;
         }
 

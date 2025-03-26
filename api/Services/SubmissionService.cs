@@ -211,5 +211,10 @@ namespace api.Services
                 .Distinct()
                 .ToList();
         }
+
+        public async Task<Submission> GetSubmissionByIdAsync(string submissionId)
+        {
+            return await _subRepo.GetSubmissionByIdAsync(submissionId);
+        }
     }
 }

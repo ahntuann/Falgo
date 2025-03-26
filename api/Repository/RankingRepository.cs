@@ -73,6 +73,7 @@ namespace api.Repository
                 .GroupBy(g => new { g.AppUserId, g.FullName, g.Avatar })
                 .Select(g => new RankingDto
                 {
+                    AppUserId = g.Key.AppUserId,
                     FullName = g.Key.FullName,
                     Avatar = g.Key.Avatar,
                     Score = g.Sum(x => x.BestScore),

@@ -73,7 +73,7 @@ function ContestList() {
                 <div className={cs('contestList')}>
                     {displayedOngoingContests.length > 0 ? (
                         displayedOngoingContests.map((contest, i) => (
-                            <ContestBrief key={i} contest={contest} />
+                            <ContestBrief key={i} contest={contest} contestStatus={'ongoing'} />
                         ))
                     ) : (
                         <div className={cs('noContestNoti')}>
@@ -125,7 +125,7 @@ function ContestList() {
                 <div className={cs('contestList')}>
                     {displayedOverContests.length > 0 ? (
                         displayedOverContests.map((contest, i) => (
-                            <ContestBrief key={i} contest={contest} />
+                            <ContestBrief key={i} contest={contest} contestStatus={'over'} />
                         ))
                     ) : (
                         <div className={cs('noContestNoti')}>
