@@ -16,6 +16,10 @@ using Microsoft.AspNetCore.Http;
 using api.Dtos.Submission;
 using api.Helpers;
 using api.Dtos.ContesRegistation;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 
 namespace api.Services
 {
@@ -26,14 +30,17 @@ namespace api.Services
         private readonly IContestRepository _contestRepo;
         private readonly IWebHostEnvironment _env;
         private readonly ISubmissionService _submissionService;
+        private readonly HttpClient _httpClient;
         public UserService(IContestRegistationRepository contestRegisRepo, IUserRepository userRepo, IContestRepository contestRepo,
-                        IWebHostEnvironment env, ISubmissionService submissionService)
+                        IWebHostEnvironment env, ISubmissionService submissionService, HttpClient httpClient)
         {
             _contestRegisRepo = contestRegisRepo;
             _userRepo = userRepo;
             _contestRepo = contestRepo;
             _env = env;
             _submissionService = submissionService;
+            _httpClient = httpClient;
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("MyApp");
         }
 
         public async Task<AppUser> GetUserByIdAsync(string userId)

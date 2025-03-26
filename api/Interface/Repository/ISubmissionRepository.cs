@@ -18,5 +18,6 @@ namespace api.Interface
         public Task<List<Submission>> GetFilteredSubmissionsAsync(SubmissionListQueryObject query, string userId);
         public Task<Submission> CreateASubmissionAsync(Submission submission);
         Task<bool> HasUserSolvedProblemAsync(string userId, string problemId);
+        Task<Submission> GetSubmissionByIdAsync(string submissionId);
     }
 }

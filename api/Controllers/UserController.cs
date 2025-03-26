@@ -18,10 +18,12 @@ namespace api.Controllers
     {
         private readonly IUserService _userService;
         private readonly IWebHostEnvironment _env;
-        public UserController(IUserService userService, IWebHostEnvironment env)
+        private readonly ISubmissionRepository _subRepo;
+        public UserController(IUserService userService, IWebHostEnvironment env, ISubmissionRepository subRepo)
         {
             _userService = userService;
             _env = env;
+            _subRepo = subRepo;
         }
 
         [HttpGet("isRegis")]

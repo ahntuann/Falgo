@@ -18,5 +18,6 @@ namespace api.Model
         public int TotalSolved { get; set; } = 0;
         public int TotalSubmissions { get; set; } = 0;
         public DateTime? LastSolvedAt { get; set; }
+        public string GitHubAccessToken { get; set; }
     }
 }

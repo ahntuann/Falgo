@@ -131,5 +131,12 @@ namespace api.Repository
                  && s.ProblemId == problemId 
                  && s.Status == "Accepted");
         }
+
+        public async Task<Submission> GetSubmissionByIdAsync(string submissionId)
+        {
+            return await _context.Submissions.FindAsync(submissionId);
+        }
+
+        
     }
 }

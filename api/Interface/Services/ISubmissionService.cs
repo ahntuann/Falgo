@@ -20,6 +20,5 @@ namespace api.Interface
         Task<List<string>> GetAllSubmissionLanguagesByUserAsync(string userId);
         Task<List<string>> GetAllSubmissionStatusesByUserAsync(string userId);
         Task<PageResult<SubmissionListDto>> GetUserSubmissionsWithProblemInfoAsync(string userId, SubmissionListQueryObject query);
-
     }
 }

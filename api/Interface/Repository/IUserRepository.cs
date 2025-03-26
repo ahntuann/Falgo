@@ -15,5 +15,7 @@ namespace api.Interface
         Task<bool> UpdateUserAsync(string userId, UpdateUserDto updateUserDto);
         Task<bool> UpdateUser(AppUser user);
         Task UpdateUserAsync(AppUser user);
+        
+
     }
 }
