@@ -1,8 +1,6 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import AuthContext from '~/context/AuthContext';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './SubmissionList.module.scss';
 
@@ -10,7 +8,6 @@ const cs = classNames.bind(styles);
 
 const SubmissionList = () => {
     const { problemId } = useParams();
-    const { appUser } = useContext(AuthContext);
     const [submissions, setSubmissions] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
     const [languages, setLanguages] = useState([]);
@@ -91,7 +88,9 @@ const SubmissionList = () => {
 
     return (
         <div className={cs('submissionList')}>
-            <h2>Danh sách bài nộp</h2>
+            {submissions?.length > 0 && (
+                <h2>Danh sách bài nộp ({submissions.at(0).problemTitle})</h2>
+            )}
             <div className={cs('filters')}>
                 <select name="UserName" value={query.UserName} onChange={handleChange}>
                     <option value="">Tất cả người dùng</option>

@@ -39,10 +39,18 @@
     font-size: 1.4rem;
 }
 
-.getInProblem {
-    font-size: 6.5rem;
-    cursor: pointer;
-    color: var(--primary-text-color);
+.problemLink {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.problemImg {
+    width: 35%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: solid #fff 1px;
+    margin: 4px 0 4px 0;
 }
 
 .author {

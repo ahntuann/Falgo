@@ -16,3 +16,5 @@ export { default as ForgotPassword } from './ForgotPassword';
 export { default as UserProfileBlog } from './UserProfileBlog';
 export { default as UserSubmissions } from './UserSubmissions';
 export { default as UserContest } from './UserContest';
+export { default as ContestList } from './ContestList';
+export { default as SubmissionHistory } from './SubmissionHistory';

@@ -45,7 +45,7 @@ function NavBar({ classNames }) {
                                 (item.title === 'Bài tập' && '/problems' === focusOn) ||
                                 (item.title === 'Cuộc thi' && '/contest' === focusOn) ||
                                 (item.title === 'Xếp hạng' && '/ranking' === focusOn) ||
-                                (item.title === 'Bài viết' && '/blog' === focusOn) ||
+                                (item.title === 'Chia sẻ' && '/blog' === focusOn) ||
                                 (item.title === 'Trang cá nhân' && '/profile' === focusOn),
                         })}
                         to={item.path}

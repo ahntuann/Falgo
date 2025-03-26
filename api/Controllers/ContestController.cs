@@ -6,6 +6,7 @@ using api.Dtos.ContesRegistation;
 using api.Helpers;
 using api.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace api.Controllers
 {
@@ -30,6 +31,12 @@ namespace api.Controllers
 
                 if (contests == null)
                     return NotFound("There are no contest.");
+
+                return Ok(contests);
+            }
+            else if (!query.TypeOfContest.IsNullOrEmpty())
+            {
+                var contests = await _contestService.GetContestsAsync(query.TypeOfContest);
 
                 return Ok(contests);
             }

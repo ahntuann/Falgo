@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using api.Dtos.Problem;
 using api.Dtos.ProgramingLanguage;
@@ -15,7 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    [Route("/api/submission")]
+    [Route("/api/[controller]")]
     [ApiController]
     public class SubmissionController : ControllerBase
     {
@@ -234,11 +235,7 @@ namespace api.Controllers
             };
         }
 
-        private async Task<TestCaseStatusDto> ExecuteCommand(
-            string command,
-            string outputPath,
-            TestCase testCase,
-            ProblemDetailDto problemDetailDto)
+        private async Task<TestCaseStatusDto> ExecuteCommand(string command, string outputPath, TestCase testCase, ProblemDetailDto problemDetailDto)
         {
             var processInfo = new ProcessStartInfo
             {
@@ -319,6 +316,35 @@ namespace api.Controllers
                 return BadRequest("User ID is required");
 
             var statuses = await _submissionService.GetAllSubmissionStatusesByUserAsync(userId);
+            return Ok(statuses);
+        }
+
+        [HttpGet("history/{problemId}/{userId}")]
+        public async Task<IActionResult> GetSubmissionHistory(string problemId, string userId, [FromQuery] SubmissionHistoryQueryObject query)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+            if (string.IsNullOrEmpty(problemId))
+            {
+                return BadRequest();
+            }
+            var result = await _submissionService.GetSubmissionHistory(userId, problemId, query);
+            return Ok(result);
+        }
+        [HttpGet("history/status/{problemId}/{userId}")]
+        public async Task<IActionResult> GetSubmissionHistoryStatus(string problemId, string userId)
+        {
+            if (string.IsNullOrEmpty(problemId))
+            {
+                return BadRequest();
+            }
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest();
+            }
+            var statuses = await _submissionService.GetAllSubmissionHistoryStatusesAsync(userId, problemId);
             return Ok(statuses);
         }
     }
