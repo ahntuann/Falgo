@@ -39,7 +39,7 @@ namespace api.Services
                 case "yearly":
                     rankingQuery = _repository.GetYearlyRanking();
                     break;
-                case "quaterly":
+                case "quarterly":
                     rankingQuery = _repository.GetQuarterlyRanking();
                     break;
                 case "overall":
@@ -57,6 +57,7 @@ namespace api.Services
                 .Select((r, index) => new RankingDto
                 {
                     Rank = index + 1,
+                    AppUserId = r.AppUserId,
                     FullName = r.FullName,
                     Avatar = r.Avatar,
                     Score = r.Score,
@@ -65,7 +66,7 @@ namespace api.Services
 
             if (!string.IsNullOrEmpty(query.FullName))
             {
-                rankedList = rankedList.Where(r => r.FullName.Contains(query.FullName)).ToList();
+                rankedList = rankedList.Where(r => r.FullName.ToLower().Contains(query.FullName.ToLower())).ToList();
             }
 
             int totalItems = rankedList.Count;
