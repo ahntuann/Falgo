@@ -12,5 +12,6 @@ namespace api.Interface
         public Task<List<Problem>> GetAllProblemAsync();
         public Task<Problem?> GetProblemByIdAsync(string problemId);
         public Task<List<Problem>> GetFilteredProblemsAsync(ProblemListQueryObject query, string userId);
+        public Task<string> GetProblemNameByIdAsync(string problemId);
     }
 }

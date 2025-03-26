@@ -6,6 +6,17 @@ import styles from './UserSubmissions.module.scss';
 
 const cs = classNames.bind(styles);
 
+// Mapping of English status to Vietnamese status
+const STATUS_TRANSLATIONS = {
+    Accepted: 'Chấp nhận',
+    'Wrong Answer': 'Sai đáp án',
+    'Time Limit Exceeded': 'Vượt quá thời gian',
+    'Memory Limit Exceeded': 'Vượt quá bộ nhớ',
+    'Runtime Error': 'Lỗi thực thi',
+    Pending: 'Đang chờ',
+    'Compilation Error': 'Lỗi biên dịch',
+};
+
 const UserSubmissions = () => {
     const navigate = useNavigate();
     const [submissions, setSubmissions] = useState([]);
@@ -37,7 +48,11 @@ const UserSubmissions = () => {
                 let url = `http://localhost:5180/api/user/${userId}/submissions?pageNumber=${currentPage}&pageSize=10`;
 
                 if (filters.status) {
-                    url += `&status=${encodeURIComponent(filters.status)}`;
+                    // Use the English status for backend request
+                    const englishStatus = Object.keys(STATUS_TRANSLATIONS).find(
+                        (key) => STATUS_TRANSLATIONS[key] === filters.status,
+                    );
+                    url += `&status=${encodeURIComponent(englishStatus)}`;
                 }
 
                 if (filters.language) {
@@ -114,6 +129,31 @@ const UserSubmissions = () => {
         setFilters({ ...filters, [type]: value });
     };
 
+    const handleDownload = async (submission) => {
+        try {
+            const response = await axios({
+                url: `http://localhost:5180/api/user/download-submission/${submission.submissionId}`,
+                method: 'GET',
+                responseType: 'blob',
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute(
+                'download',
+                `${submission.problemId}_${submission.problemTitle}_${submission.programmingLanguage}.zip`,
+            );
+            document.body.appendChild(link);
+            link.click();
+
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Không thể tải xuống mã nguồn');
+        }
+    };
+
     return (
         <div className={cs('profilePage')}>
             <div className={cs('profile-container')}>
@@ -151,9 +191,9 @@ const UserSubmissions = () => {
                                 className={cs('filter-select')}
                             >
                                 <option value="">Tất cả</option>
-                                {statuses.map((status) => (
-                                    <option key={status} value={status}>
-                                        {status}
+                                {Object.values(STATUS_TRANSLATIONS).map((vietnameseStatus) => (
+                                    <option key={vietnameseStatus} value={vietnameseStatus}>
+                                        {vietnameseStatus}
                                     </option>
                                 ))}
                             </select>
@@ -191,6 +231,7 @@ const UserSubmissions = () => {
                                         <th>Thời gian</th>
                                         <th>Bộ nhớ</th>
                                         <th>Thời điểm nộp</th>
+                                        <th>Tải về</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -224,7 +265,8 @@ const UserSubmissions = () => {
                                                             ].includes(submission.status),
                                                         })}
                                                     >
-                                                        {submission.status}
+                                                        {STATUS_TRANSLATIONS[submission.status] ||
+                                                            submission.status}
                                                     </span>
                                                 </td>
                                                 <td>{submission.score}</td>
@@ -232,11 +274,19 @@ const UserSubmissions = () => {
                                                 <td>{submission.executeTime} ms</td>
                                                 <td>{submission.memoryUsed} KB</td>
                                                 <td>{formatDateTime(submission.submittedAt)}</td>
+                                                <td>
+                                                    <button
+                                                        className={cs('download-button')}
+                                                        onClick={() => handleDownload(submission)}
+                                                    >
+                                                        Tải về
+                                                    </button>
+                                                </td>
                                             </tr>
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="7" className={cs('no-data')}>
+                                            <td colSpan="8" className={cs('no-data')}>
                                                 Không có bài nộp nào
                                             </td>
                                         </tr>

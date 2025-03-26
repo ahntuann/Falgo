@@ -20,5 +20,6 @@ namespace api.Interface
         Task<AvatarUpdateResult> UpdateUserAvatarAsync(string userId, IFormFile avatar);
         Task<PageResult<SubmissionListDto>> GetUserSubmissionsAsync(string userId, SubmissionListQueryObject query);
         Task<List<UserContestDto>> GetUserContestsAsync(string userId);
+        Task<byte[]> DownloadSubmissionSourceCodeAsync(string submissionId);
     }
 }

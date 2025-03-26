@@ -7,6 +7,10 @@ using api.Helpers;
 using api.Interface;
 using api.Mappers;
 using api.Model;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 
 namespace api.Services
 {
@@ -151,8 +155,10 @@ namespace api.Services
             {
                 SubmissionId = submission.SubmissionId,
                 ProblemTitle = submission.Problem.Title,
+                ProblemId = submission.ProblemId,
                 Status = submission.Status,
                 Score = submission.Point,
+                SourceCode = submission.SourceCode,
                 ProgrammingLanguage = submission.ProgrammingLanguage.Language,
                 ExecuteTime = submission.ExecuteTime,
                 MemoryUsed = submission.MemoryUsed,
