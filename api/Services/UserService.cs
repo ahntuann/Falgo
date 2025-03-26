@@ -16,6 +16,12 @@ using Microsoft.AspNetCore.Http;
 using api.Dtos.Submission;
 using api.Helpers;
 using api.Dtos.ContesRegistation;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using System.IO;
+using System.IO.Compression;
 
 namespace api.Services
 {
@@ -23,17 +29,29 @@ namespace api.Services
     {
         private readonly IContestRegistationRepository _contestRegisRepo;
         private readonly IUserRepository _userRepo;
+        private readonly ISubmissionRepository _subRepo;
         private readonly IContestRepository _contestRepo;
         private readonly IWebHostEnvironment _env;
         private readonly ISubmissionService _submissionService;
+        private readonly HttpClient _httpClient;
+        private readonly IProgramingLanguageRepository _programingLanguageRepository;
+        private readonly IProblemRepository _problemRepository;
         public UserService(IContestRegistationRepository contestRegisRepo, IUserRepository userRepo, IContestRepository contestRepo,
-                        IWebHostEnvironment env, ISubmissionService submissionService)
+                        IWebHostEnvironment env, ISubmissionService submissionService, 
+                        HttpClient httpClient, ISubmissionRepository submissionRepository,
+                        IProgramingLanguageRepository programingLanguageRepository,
+                        IProblemRepository problemRepository)
         {
             _contestRegisRepo = contestRegisRepo;
             _userRepo = userRepo;
             _contestRepo = contestRepo;
             _env = env;
             _submissionService = submissionService;
+            _httpClient = httpClient;
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("MyApp");
+            _subRepo = submissionRepository;
+            _programingLanguageRepository = programingLanguageRepository;
+            _problemRepository = problemRepository;
         }
 
         public async Task<AppUser> GetUserByIdAsync(string userId)
@@ -180,6 +198,63 @@ namespace api.Services
             }).ToList();
         }
 
+        public async Task<byte[]> DownloadSubmissionSourceCodeAsync(string submissionId)
+        {
+            var submission = await _subRepo.GetSubmissionByIdAsync(submissionId);
+            
+            if (submission == null)
+                return null;
+
+            string problemTitle = await _problemRepository.GetProblemNameByIdAsync(submission.ProblemId);
+            string languageName = await _programingLanguageRepository.GetLanguageNameByIdAsync(submission.ProgrammingLanguageId);
+            
+            string cleanProblemTitle = RemoveSpecialCharacters(problemTitle);
+
+            string zipFileName = $"{submission.ProblemId}_{cleanProblemTitle}_{languageName}.zip";
+
+            string tempZipPath = Path.Combine(Path.GetTempPath(), zipFileName);
+
+            using (var archive = ZipFile.Open(tempZipPath, ZipArchiveMode.Create))
+            {
+                string fileExtension = GetFileExtensionByLanguage(languageName);
+                string sourceCodeFileName = $"{submission.ProblemId}_{cleanProblemTitle}{fileExtension}";
+
+                string tempSourceCodePath = Path.Combine(Path.GetTempPath(), sourceCodeFileName);
+                
+                await File.WriteAllTextAsync(tempSourceCodePath, submission.SourceCode);
+
+                archive.CreateEntryFromFile(tempSourceCodePath, sourceCodeFileName);
+
+                File.Delete(tempSourceCodePath);
+            }
+
+            byte[] zipBytes = await File.ReadAllBytesAsync(tempZipPath);
+
+            File.Delete(tempZipPath);
+
+            return zipBytes;
+        }
+
+
+        private string RemoveSpecialCharacters(string input)
+        {
+            return System.Text.RegularExpressions.Regex.Replace(input, @"[^a-zA-Z0-9_]", "");
+        }
+
+
+        private string GetFileExtensionByLanguage(string languageName)
+        {
+            return languageName.ToLower() switch
+            {
+                "cpp" => ".cpp",
+                "java" => ".java",
+                "python" => ".py",
+                "javascript" => ".js",
+                "csharp" => ".cs",
+                _ => ".txt"
+            };
+        }
+        
     }
 
 }

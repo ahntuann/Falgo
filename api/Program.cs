@@ -146,6 +146,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient();
+
 
 // Dependency Injection
 builder.Services.AddScoped<ITokenService, TokenService>();

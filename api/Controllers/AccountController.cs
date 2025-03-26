@@ -206,7 +206,8 @@ namespace api.Controllers
                     UserName = email.Split('@')[0],
                     Email = email,
                     FullName = name ?? "GitHub User",
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    GitHubAccessToken = accessToken
                 };
 
                 var createUser = await _userManager.CreateAsync(user);
@@ -216,6 +217,11 @@ namespace api.Controllers
                 }
 
                 await _userManager.AddToRoleAsync(user, "User");
+            }
+            else
+            {
+                user.GitHubAccessToken = accessToken;
+                await _userManager.UpdateAsync(user);
             }
 
             var token = _tokenService.CreateToken(user);

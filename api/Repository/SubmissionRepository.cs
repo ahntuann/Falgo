@@ -146,5 +146,12 @@ namespace api.Repository
             }
             return await submissionQuery.ToListAsync();
         }
+
+        public async Task<Submission> GetSubmissionByIdAsync(string submissionId)
+        {
+            return await _context.Submissions.FindAsync(submissionId);
+        }
+
+        
     }
 }

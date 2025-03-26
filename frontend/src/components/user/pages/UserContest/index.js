@@ -8,46 +8,50 @@ const cs = classNames.bind(styles);
 
 const UserContest = () => {
     const navigate = useNavigate();
-    const [contests, setContests] = useState([]);
+    const [contests, setContests] = useState(() => []);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [activeFilter, setActiveFilter] = useState('all'); // 'all', 'active', 'completed'
+    const [activeFilter, setActiveFilter] = useState('all');
 
     useEffect(() => {
         const fetchUserContests = async () => {
             try {
                 setLoading(true);
-
-                // Get user from LocalStorage
                 const user = localStorage.getItem('user');
                 if (!user) {
                     setError('User không tồn tại trong LocalStorage');
                     setLoading(false);
                     return;
                 }
-
-                // Parse JSON string to object
                 const userObject = JSON.parse(user);
                 const userId = userObject.id;
 
                 console.log('Đang gọi API với userId:', userId);
-
-                // Call API with userId from LocalStorage
                 const response = await axios.get(
                     `http://localhost:5180/api/user/${userId}/contests`,
                 );
-
                 console.log('Kết quả API contests:', response.data);
-                setContests(response.data);
+
+                // Thêm kiểm tra và xử lý dữ liệu
+                const contestData = Array.isArray(response.data)
+                    ? response.data
+                    : response.data.items || response.data.data || [];
+
+                console.log('Dữ liệu cuộc thi sau khi xử lý:', contestData);
+                setContests(contestData);
             } catch (err) {
-                const errorMessage =
-                    err.response && err.response.data
-                        ? typeof err.response.data === 'string'
-                            ? err.response.data
-                            : JSON.stringify(err.response.data)
-                        : err.message;
+                console.error('Full error object:', err);
+
+                const errorMessage = err.response?.data
+                    ? typeof err.response.data === 'string'
+                        ? err.response.data
+                        : JSON.stringify(err.response.data)
+                    : err.message;
+
                 console.error('Chi tiết lỗi:', errorMessage);
                 setError(`Không thể tải thông tin cuộc thi: ${errorMessage}`);
+
+                setContests([]);
             } finally {
                 setLoading(false);
             }
@@ -56,42 +60,29 @@ const UserContest = () => {
         fetchUserContests();
     }, []);
 
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('vi-VN');
-    };
+    const formatDate = (dateString) => new Date(dateString).toLocaleDateString('vi-VN');
 
     const formatDueTime = (minutes) => {
         const hours = Math.floor(minutes / 60);
         const remainingMinutes = minutes % 60;
-
-        if (hours > 0) {
-            return `${hours} giờ ${remainingMinutes > 0 ? `${remainingMinutes} phút` : ''}`;
-        } else {
-            return `${minutes} phút`;
-        }
+        return hours > 0
+            ? `${hours} giờ ${remainingMinutes ? `${remainingMinutes} phút` : ''}`
+            : `${minutes} phút`;
     };
 
     const getFilteredContests = () => {
-        if (activeFilter === 'all') {
-            return contests;
-        } else if (activeFilter === 'active') {
-            return contests.filter((contest) => new Date(contest.endDate) > new Date());
-        } else {
-            return contests.filter((contest) => new Date(contest.endDate) <= new Date());
-        }
+        if (activeFilter === 'all') return contests;
+        return contests.filter((contest) =>
+            activeFilter === 'active'
+                ? new Date(contest.endDate) > new Date()
+                : new Date(contest.endDate) <= new Date(),
+        );
     };
 
-    const handleContestClick = (contestId) => {
-        navigate(`/contest/${contestId}`);
-    };
+    const handleContestClick = (contestId) => navigate(`/contest/${contestId}`);
 
-    if (loading) {
-        return <div className={cs('loading')}>Đang tải...</div>;
-    }
-
-    if (error) {
-        return <div className={cs('error')}>{error}</div>;
-    }
+    if (loading) return <div className={cs('loading')}>Đang tải...</div>;
+    if (error) return <div className={cs('error')}>{error}</div>;
 
     const filteredContests = getFilteredContests();
 
@@ -148,7 +139,7 @@ const UserContest = () => {
 
                 {filteredContests.length === 0 ? (
                     <div className={cs('no-contests')}>
-                        <p>Không có cuộc thi nào</p>
+                        <p>Bạn chưa đăng ký cuộc thi nào</p>
                     </div>
                 ) : (
                     <div className={cs('contests-list')}>
