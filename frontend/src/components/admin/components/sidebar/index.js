@@ -47,6 +47,14 @@ function Sidebar() {
                         Quản lý bài đăng
                     </NavLink>
                 </li>
+                <li>
+                    <NavLink
+                        to="/ContestManagement"
+                        className={({ isActive }) => cx('menuItem', { active: isActive })}
+                    >
+                        Quản lý cuộc thi
+                    </NavLink>
+                </li>
             </ul>
         </div>
     );

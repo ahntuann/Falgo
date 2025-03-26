@@ -10,6 +10,7 @@ import {
     UserManagement,
     BlogManagement,
     ProblemUpdate,
+    ContestManagement,
 } from './components/admin/pages';
 import GithubCallback from './components/user/pages/Login/GithubCallback';
 import { ProblemForm } from './components/admin/components';
@@ -31,6 +32,7 @@ function App() {
                     <Route path="/BlogManagement" element={<BlogManagement />} />
                     <Route path="/ProblemForm" element={<ProblemForm />} />
                     <Route path="/ProblemUpdate" element={<ProblemUpdate />} />
+                    <Route path="/ContestManagement" element={<ContestManagement />} />
                     {routes.map((route) => {
                         const Component = route.component;
                         const Layout = route.layout;
