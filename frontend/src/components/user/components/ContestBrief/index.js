@@ -8,7 +8,7 @@ import AuthContext from '~/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 const cs = classNames.bind(style);
 
-function ContestBrief({ contest, classnames }) {
+function ContestBrief({ contest, contestStatus }) {
     const { contestId, banner, contestName, totalPoint, level, endDate, dueTime, numRegis } =
         contest;
     const { appUser } = useContext(AuthContext);
