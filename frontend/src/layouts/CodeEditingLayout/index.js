@@ -1,7 +1,6 @@
 import classNames from 'classnames/bind';
 
 import style from './CodeEditingLayout.module.scss';
-import { NavBar } from '~/components/user/components';
 
 const cs = classNames.bind(style);
 

@@ -15,6 +15,8 @@ function ContestBrief({ contest, contestStatus }) {
 
     const [isRegis, setIsRegis] = useState(false);
 
+    const navigate = useNavigate();
+
     const navagate = useNavigate();
 
     // Check if user register contest
@@ -41,7 +43,10 @@ function ContestBrief({ contest, contestStatus }) {
 
     return (
         <div className={cs('wrapper', classNames || '')}>
-            <div className={cs('banner')}>
+            <div
+                className={cs('banner')}
+                onClick={() => navigate(`/contest/${contestId}`, { state: contest })}
+            >
                 <img className={cs('bannerImg')} alt="banner" src={banner} />
             </div>
 
