@@ -15,6 +15,6 @@ namespace api.Interface
         Task<AppUser> GetUserByIdAsync(string userId);
         Task<bool> DeleteUserAsync(string userId);
         Task<bool> UpdateUserByAdminAsync(string userId, UpdateUserDto updateUserDto);
-          
+        
     }
 }

@@ -51,39 +51,18 @@ namespace api.Repository
 
         public async Task<bool> UpdateUserByAdminAsync(string userId, UpdateUserDto updateUserDto)
         {
-            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId);
+            var user = await _context.AppUsers.FindAsync(userId);
             if (user == null) return false;
 
-            if (!string.IsNullOrEmpty(updateUserDto.FullName))
-                user.FullName = updateUserDto.FullName;
-            
-            if (!string.IsNullOrEmpty(updateUserDto.UserName))
-                user.UserName = updateUserDto.UserName;
-            
-            if (!string.IsNullOrEmpty(updateUserDto.Address))
-                user.Address = updateUserDto.Address;
-            
-            if (!string.IsNullOrEmpty(updateUserDto.Avatar))
-                user.Avatar = updateUserDto.Avatar;
-            
-            if (updateUserDto.DateOfBirth.HasValue)
-                user.DateOfBirth = updateUserDto.DateOfBirth;
-            
-            if (!string.IsNullOrEmpty(updateUserDto.PhoneNumber))
-                user.PhoneNumber = updateUserDto.PhoneNumber;
-            
-            if (!string.IsNullOrEmpty(updateUserDto.Email))
-                user.Email = updateUserDto.Email;
+            user.FullName = updateUserDto.FullName;
+            user.Address = updateUserDto.Address;
+            user.PhoneNumber = updateUserDto.PhoneNumber;
+            user.DateOfBirth = updateUserDto.DateOfBirth;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            _context.AppUsers.Update(user);
+            await _context.SaveChangesAsync();
+            return true;
         }
+
     }
 }

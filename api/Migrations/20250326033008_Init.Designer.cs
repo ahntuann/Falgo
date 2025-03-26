@@ -12,8 +12,8 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250324151332_AddGitHubAccessTokenToAppUser")]
-    partial class AddGitHubAccessTokenToAppUser
+    [Migration("20250326033008_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,19 +54,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "863550a6-dc3e-43f8-9d0b-cbd9ed620477",
+                            Id = "8fbb1a48-5d93-4cd6-94e6-3de3d1954c68",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "cf87b808-063d-4c1a-8b5a-618e3c2707a3",
+                            Id = "88576871-3a5b-492e-b3dd-f45909ee620d",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         },
                         new
                         {
-                            Id = "57e57e7d-c69e-4e53-b9a7-e7bf3da3fbd1",
+                            Id = "ffd3a3e8-2411-4f3a-b9ef-94878a6cd18e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -213,7 +213,6 @@ namespace api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GitHubAccessToken")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastLoginAt")
