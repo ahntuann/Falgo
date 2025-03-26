@@ -1,50 +1,53 @@
 .container {
-    // max-width: 600px;
     margin: 20px auto;
     padding: 20px;
     background-color: var(--background-color);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-    h2 {
-        text-align: center;
-        color: white;
+    .ql-editor {
+        color: white !important;
     }
 
-    form {
+    .ql-container {
+        min-height: 200px;
+    }
+    .ql-editor {
+        min-height: 150px;
+    }
+
+    .Infor_space {
         display: flex;
-        gap: 15px;
-        flex-direction: row;
-        img{
-            width: 50%;
-        }
-    }
-
-    .EditBlog{
-        width: 50%;
-        display: grid;
-        color: white;
-        .category_item{
+        justify-content: space-between;
+        .User_infor_space {
             display: flex;
-        }
-    }
-    label {
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
+            gap: 5px;
+            flex-direction: column;
 
-    input,
-    textarea {
-        background-color: #646683;
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
+            .title_space input,
+            .description_space input {
+                white-space: nowrap;
+                width: 100%;
+                height: 50px;
+            }
+            .DatePublic_space {
+                display: flex;
+                gap: 5px;
+            }
+        }
+        .category_space {
+            .category_space_checkbox {
+                display: flex;
+                gap: 10px;
+            }
+        }
+        .InforImg_space img {
+            height: 200px;
+            max-width: 650px;
+        }
     }
 
     button {
-        background: #007bff;
+        background: #2f00b2;
         color: white;
         border: none;
         padding: 10px;
@@ -57,17 +60,4 @@
             background: #0056b3;
         }
     }
-
-    .thumbnail {
-        display: block;
-        margin: 10px auto;
-        max-width: 100%;
-        border-radius: 5px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-        border-radius: 10px;
-        border: 1px solid white;
-    }
-
-
 }
-

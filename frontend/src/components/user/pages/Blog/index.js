@@ -23,16 +23,7 @@ const Blog = () => {
         console.log(filteredBlogs);
     }, [filteredBlogs]);
 
-    // const [categories] = useState([
-    //     'Mẹo lập trình',
-    //     'Hướng dẫn',
-    //     'Xu hướng lập trình',
-    //     'Kinh Nghiệm',
-    //     'Thử thách',
-    //     'Câu Hỏi',
-    // ]);
     const [categories] = useState([
-        { name: 'Câu hỏi', icon: '❓' },
         { name: 'Thử thách', icon: '🔥' },
         { name: 'Hướng dẫn', icon: '📖' },
         { name: 'Kinh nghiệm', icon: '🧑‍💻' },
@@ -171,20 +162,12 @@ const Blog = () => {
             dateFilter: '',
         });
 
-        // setDateFilter({ day: '', month: '', year: '' });
         setDateFilter({ date: '', day: '', month: '', year: '' });
         setFilteredBlogs(originalBlogs);
     };
 
-    // const handleDateChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setDateFilter((prev) => ({
-    //         ...prev,
-    //         [name]: value,
-    //     }));
-    // };
     const handleDateChange = (event) => {
-        const selectedDate = event.target.value; // "YYYY-MM-DD" hoặc rỗng
+        const selectedDate = event.target.value;
         if (!selectedDate) {
             setDateFilter({ day: '', month: '', year: '' });
             return;
@@ -255,7 +238,13 @@ const Blog = () => {
 
     return (
         <div className={cs('container')}>
-            {/* DataBase */}
+            <div className={cs('suggest_space')}>
+                <div className={cs('suggestMostLikeShare_space')}></div>
+                <div className={cs('suggestLikeShare_space')}>
+                    <div className={cs('suggestMostLike_space')}></div>
+                    <div className={cs('suggestMostShare_space')}></div>
+                </div>
+            </div>
             <div className={cs('blog')}>
                 <div>
                     <div className={cs('blog_title_search')}>
@@ -270,7 +259,6 @@ const Blog = () => {
                             />
                         </div>
 
-                        {/* Bloglist */}
                         <div className={cs('blog-list')}>
                             {paginatedBlogs.length > 0 ? (
                                 paginatedBlogs.map((blog) => (
@@ -357,9 +345,7 @@ const Blog = () => {
                                 <p className={cs('no-blogs')}>Không có bài viết nào.</p>
                             )}
                         </div>
-                        {/* End Bloglist */}
 
-                        {/* pagination */}
                         <div className={cs('pagination')}>
                             <button
                                 disabled={query.page === 1}
@@ -411,7 +397,6 @@ const Blog = () => {
                                 Cuối
                             </button>
                         </div>
-                        {/* End pagination */}
                     </div>
                 </div>
                 <div className={cs('Create_UBlog_sidebar')}>
@@ -419,13 +404,14 @@ const Blog = () => {
                         <Link to={'/CreateBlog'} className={cs('Create')}>
                             Tạo bài
                         </Link>
+                        <Link to={'/BlogBookMark'} className={cs('UBlog')}>
+                            Đã Lưu
+                        </Link>
                         <Link to={'/UserBlog'} className={cs('UBlog')}>
                             Đã tạo
                         </Link>
                     </div>
-                    {/* sidebar */}
                     <div className={cs('sidebar')}>
-                        {/* category */}
                         <h3>Danh mục</h3>
                         <div className={cs('category-list')}>
                             {categories.map((category, index) => (
@@ -439,9 +425,7 @@ const Blog = () => {
                                 </button>
                             ))}
                         </div>
-                        {/* End category */}
 
-                        {/* sortBy */}
                         <h3>Sắp xếp theo</h3>
                         <div className={cs('sort-controls')}>
                             <select name="sortBy" value={query.sortBy} onChange={handleChange}>
@@ -459,46 +443,9 @@ const Blog = () => {
                                 {query.IsDescending ? 'Giảm dần' : 'Tăng dần'}
                             </button>
                         </div>
-                        {/* End sortBy */}
 
-                        {/* date-filter */}
                         <h3>Lọc theo ngày</h3>
-                        {/* <div className={cs('date-filter')}>
-                            <div className={cs('DateInput')}>
-                                <select
-                                    name="day"
-                                    value={dateFilter.day}
-                                    onChange={handleDateChange}
-                                >
-                                    <option value="">Ngày</option>
-                                    {[...Array(31)].map((_, i) => (
-                                        <option key={i + 1} value={i + 1}>
-                                            {i + 1}
-                                        </option>
-                                    ))}
-                                </select>
 
-                                <select
-                                    name="month"
-                                    value={dateFilter.month}
-                                    onChange={handleDateChange}
-                                >
-                                    <option value="">Tháng</option>
-                                    {[...Array(12)].map((_, i) => (
-                                        <option key={i + 1} value={i + 1}>
-                                            {i + 1}
-                                        </option>
-                                    ))}
-                                </select>
-                                <input
-                                    type="number"
-                                    name="year"
-                                    placeholder="năm"
-                                    value={dateFilter.year}
-                                    onChange={handleDateChange}
-                                />
-                            </div> */}
-                        {/* </div> */}
                         <div className={cs('date-filter')}>
                             <input
                                 type="date"
@@ -507,18 +454,13 @@ const Blog = () => {
                                 className={cs('DateInput')}
                             />
                         </div>
-                        {/* End date-filter */}
 
-                        {/* reset-button */}
                         <button className={cs('reset-button')} onClick={handleReset}>
                             Reset
                         </button>
-                        {/* End reset-button */}
                     </div>
-                    {/* End sidebar */}
                 </div>
             </div>
-            {/* End DataBase */}
         </div>
     );
 };

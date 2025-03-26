@@ -180,6 +180,10 @@ builder.Services.AddScoped<IBlogShareRepository, BlogShareRepository>();
 builder.Services.AddScoped<IBlogShareService, BlogShareService>();
 builder.Services.AddScoped<IBlogCommentRepository, BlogCommentRepository>();
 builder.Services.AddScoped<IBlogCommentService, BlogCommentService>();
+builder.Services.AddScoped<IBlogBookmarkRepository, BlogBookmarkRepository>();
+builder.Services.AddScoped<IBlogBookmarkService, BlogBookmarkService>();
+builder.Services.AddScoped<IBlogForbiddenWordRepository, BlogForbiddenWordRepository>();
+builder.Services.AddScoped<IBlogForbiddenWordService, BlogForbiddenWordService>();
 
 // Logging
 builder.Logging.AddConsole();

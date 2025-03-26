@@ -5,20 +5,26 @@ import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
 
 import classNames from 'classnames/bind';
 import styles from './BlogUpdate.module.scss';
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import QuillImageUploader from 'quill-image-uploader';
+import { Quill } from 'react-quill';
 const cs = classNames.bind(styles);
-
+Quill.register('modules/imageUploader', QuillImageUploader);
 const BlogUpdate = () => {
     const navigate = useNavigate();
 
     const location = useLocation();
     const blog = location.state?.blog;
+    console.log({ blog });
 
     const [formData, setFormData] = useState({
+        guestName: '',
         thumbnail: '',
         title: '',
         description: '',
         content: '',
+        createOn: '',
         imageBlog: '',
         categoryBlog: [],
         status: 'Duyệt Lại',
@@ -27,11 +33,13 @@ const BlogUpdate = () => {
     useEffect(() => {
         if (blog) {
             setFormData({
+                guestName: blog.guestName || '',
                 thumbnail: blog.thumbnail || NoImage,
                 title: blog.title || '',
                 description: blog.description || '',
                 content: blog.content || '',
                 status: formData.status,
+                createOn: formData.createOn,
                 imageBlog: blog.imageBlog || '',
                 categoryBlog: Array.isArray(blog.categoryBlog)
                     ? blog.categoryBlog
@@ -42,8 +50,36 @@ const BlogUpdate = () => {
         }
     }, [blog, formData.status]);
 
+    const handleContentChange = (content) => {
+        setFormData((prev) => ({
+            ...prev,
+            content,
+        }));
+    };
+
+    const modules = {
+        toolbar: [
+            [{ header: [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link', 'image', 'video'],
+        ],
+    };
+
+    const formats = [
+        'header',
+        'bold',
+        'italic',
+        'underline',
+        'strike',
+        'list',
+        'bullet',
+        'link',
+        'image',
+        'video',
+    ];
+
     const categoryOptions = [
-        'Câu hỏi',
         'Thử thách',
         'Hướng dẫn',
         'Kinh nghiệm',
@@ -109,79 +145,101 @@ const BlogUpdate = () => {
     return (
         <div className={cs('container')}>
             <h2>Chỉnh sửa bài viết</h2>
-            <form onSubmit={handleSubmit}>
-                <img
-                    src={formData.thumbnail ? formData.thumbnail : NoImage}
-                    alt={formData.title}
-                    className={cs('thumbnail')}
-                    onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = NoImage;
-                    }}
-                />
-                <div className={cs('EditBlog')}>
-                    <label>
-                        Thumbnail URL:
-                        <input
-                            type="text"
-                            name="thumbnail"
-                            value={formData.thumbnail}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label>
-                        Tiêu đề:
-                        <input
-                            type="text"
-                            name="title"
-                            value={formData.title}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <label>
-                        Mô tả:
-                        <textarea
-                            name="description"
-                            value={formData.description}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label>
-                        Nội dung:
-                        <textarea
-                            name="content"
-                            value={formData.content}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <label>
-                        Ảnh/Video(mp4)
-                        <textarea
-                            name="imageBlog"
-                            value={formData.imageBlog}
-                            onChange={handleChange}
-                        />
-                    </label>
 
-                    <label>Phân loại:</label>
-                    <div className={cs('category_item')}>
-                        {categoryOptions.map((category) => (
-                            <label key={category}>
-                                <input
-                                    type="checkbox"
-                                    value={category}
-                                    checked={formData.categoryBlog.includes(category)}
-                                    onChange={handleCategoryChange}
-                                />
-                                {category}
-                            </label>
-                        ))}
+            <form onSubmit={handleSubmit}>
+                <div className={cs('Infor_space')}>
+                    <div className={cs('User_infor_space')}>
+                        <div className={cs('title_space')}>
+                            <input
+                                type="text"
+                                name="title"
+                                value={formData.title}
+                                onChange={handleChange}
+                                placeholder="Tiêu đề bài viết"
+                                maxLength={250}
+                                required
+                            />
+                        </div>
+
+                        <div className={cs('Creator_space')}>Tác giả: {formData.guestName}</div>
+
+                        <div className={cs('description_space')}>
+                            <input
+                                name="description"
+                                value={formData.description}
+                                onChange={handleChange}
+                                placeholder="Mô tả bài viết"
+                                maxLength={500}
+                            />
+                        </div>
+
+                        <div className={cs('category_space')}>
+                            <div className={cs('category_space_title')}>Danh mục:</div>
+                            <div className={cs('category_space_checkbox')}>
+                                {categoryOptions.map((category) => (
+                                    <label key={category}>
+                                        <input
+                                            type="checkbox"
+                                            value={category}
+                                            checked={formData.categoryBlog.includes(category)}
+                                            onChange={handleCategoryChange}
+                                        />
+                                        {category}
+                                    </label>
+                                ))}{' '}
+                            </div>
+                        </div>
+
+                        <div className={cs('DateCreate_space')}>
+                            Ngày tạo: {formData.DatePublic}
+                        </div>
                     </div>
 
-                    <button type="submit">Lưu</button>
+                    <div className={cs('InforImg_space')}>
+                        <label style={{ cursor: 'pointer' }}>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                style={{ display: 'none' }} // Ẩn input file
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
+                                    if (file) {
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => {
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                thumbnail: reader.result,
+                                            }));
+                                        };
+                                        reader.readAsDataURL(file);
+                                    }
+                                }}
+                            />
+                            <img
+                                src={formData.thumbnail ? formData.thumbnail : NoImage}
+                                alt={formData.title}
+                                className={cs('thumbnail')}
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = NoImage;
+                                }}
+                            />
+                        </label>
+                    </div>
                 </div>
+
+                <div className={cs('Content_space')}>
+                    <label>
+                        Nội dung:
+                        <ReactQuill
+                            value={formData.content}
+                            onChange={handleContentChange}
+                            modules={modules}
+                            formats={formats}
+                        />
+                    </label>
+                </div>
+                <button type="submit">Lưu</button>
             </form>
         </div>
     );

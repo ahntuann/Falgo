@@ -17,20 +17,13 @@
             padding: 8px 12px;
             border: none;
             border-radius: 4px;
-            background-color: #007bff;
+            background-color: #2f00b2;
             font-size: 1.6rem;
             cursor: pointer;
             transition: background-color 0.3s ease;
             &:hover {
-                background-color: #007bff;
+                background-color: #0056b3;
             }
-        }
-        .blog_title_search .title {
-            color: #209fb2;
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 16px;
-            min-width: 807.4px;
         }
 
         .blog_title_search {
@@ -39,6 +32,7 @@
                 text-align: center;
                 font-size: 2rem;
                 margin-bottom: 16px;
+                min-width: 807.4px;
             }
             .search-bar {
                 display: flex;
@@ -46,7 +40,7 @@
                 margin-bottom: 16px;
                 width: 100%;
                 input {
-                    background-color: #646683;
+                    background-color: #333333;
                     width: 100%;
                     padding: 10px;
                     border: 1px solid #ddd;
@@ -65,7 +59,7 @@
             border: 1px solid #ddd;
             padding: 16px;
             border-radius: 8px;
-            background: #3d3248;
+            background: #333333;
         }
         .Create_UBlog {
             display: flex;
@@ -73,8 +67,9 @@
             margin: 10px;
 
             .Create,
+            .BookmarkBlog,
             .UBlog {
-                padding: 10px 50px;
+                padding: 10px 20px;
                 background-color: #2a1570;
                 color: white;
                 text-decoration: none;
@@ -97,7 +92,7 @@
         width: 100%;
         padding: 8px;
         margin-bottom: 4px;
-        background: #646683;
+        background: #333333;
         border: 1px solid #ccc;
         border-radius: 4px;
         cursor: pointer;
@@ -105,7 +100,7 @@
         color: black;
         &:hover,
         &.active {
-            background-color: #007bff;
+            background-color: #0056b3;
             color: white;
         }
     }
@@ -122,7 +117,7 @@
         select,
         input,
         button {
-            background-color: #646683;
+            background-color: #333333;
             height: 35px;
             width: 70px;
             border: 1px solid #ccc;
@@ -142,7 +137,6 @@
     }
     .blog-list {
         width: 100%;
-        max-width: 807.4px;
         min-height: 400px;
         .no-blogs {
             color: white;
@@ -157,7 +151,7 @@
         padding: 16px;
         margin-bottom: 16px;
         border-radius: 8px;
-        background: #3d3248;
+        background: #333333;
         .category-item {
             font-size: 13.5px;
         }
@@ -177,17 +171,11 @@
     .thumbnail {
         width: 150px;
         height: 150px;
-        object-fit: cover;
+        object-fit: contain;
         margin-right: 16px;
         border-radius: 8px;
         border-radius: 10px;
         border: 1px solid black;
-    }
-
-    .actions {
-        margin-top: 15px;
-        padding: 10px;
-        border-top: 1px solid #ddd;
     }
 
     .sort-controls {
@@ -196,7 +184,7 @@
         justify-content: space-between;
         gap: 10px;
         select {
-            background-color: #646683;
+            background-color: #333333;
             flex: 1 1 auto;
             text-align: center;
             padding: 8px 12px;
@@ -218,13 +206,19 @@
     }
 
     .btn-read-more {
-        background-color: #007bff;
+        background-color: #2f00b2;
         color: black;
 
         &:hover {
             background-color: #0056b3;
             transform: scale(1.05);
         }
+    }
+
+    .actions {
+        margin-top: 15px;
+        padding: 10px;
+        border-top: 1px solid #ddd;
     }
 
     .actions,
@@ -235,7 +229,7 @@
         gap: 10px;
 
         .edit {
-            background-color: #ffc107;
+            background-color: #ff9d5f;
             color: black;
             border: none;
         }
@@ -247,7 +241,7 @@
         }
 
         .edit:hover {
-            background-color: #e0a800;
+            background-color: #863908;
             transform: scale(1.05);
         }
 
@@ -277,7 +271,7 @@
             padding: 0.5rem 1rem;
             border: none;
             border-radius: 4px;
-            background-color: #007bff;
+            background-color: #2f00b2;
             font-size: 1.6rem;
             cursor: pointer;
             transition: background-color 0.3s ease;

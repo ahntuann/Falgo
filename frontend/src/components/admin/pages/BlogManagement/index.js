@@ -414,6 +414,9 @@ function BlogManagement() {
                                     </button>
                                 </div>
                             </div>
+                            {blog.status === 'Báo cáo' && (
+                                <div className={cs('Note')}>{blog.note}</div>
+                            )}
                         </div>
                     ))
                 ) : (

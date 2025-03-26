@@ -16,6 +16,7 @@ import {
     UserSubmissions,
     UserContest,
     ContestList,
+    BlogBookMark,
 } from '~/components/user/pages';
 import { AdminLogin, Dashboard } from '~/components/admin/pages';
 import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
@@ -55,7 +56,7 @@ const routes = [
         component: Blog,
         path: '/Blog',
         layout: DefaultLayout,
-        role: ['user', 'guest'],
+        role: ['user', 'guest', 'admin'],
     },
 
     {
@@ -68,7 +69,7 @@ const routes = [
         component: DetailBlog,
         path: '/DetailBlog',
         layout: DefaultLayout,
-        role: ['user', 'guest'],
+        role: ['user', 'guest', 'admin'],
     },
     {
         component: UserBlog,
@@ -80,13 +81,13 @@ const routes = [
         component: BlogUpdate,
         path: '/BlogUpdate',
         layout: DefaultLayout,
-        role: ['user'],
+        role: ['user', 'admin'],
     },
     {
         component: CreateBlog,
         path: '/CreateBlog',
         layout: DefaultLayout,
-        role: ['user'],
+        role: ['user', 'admin'],
     },
     {
         component: CodeEditing,
@@ -129,6 +130,12 @@ const routes = [
         path: 'contest',
         layout: DefaultLayout,
         role: ['guest', 'user'],
+    },
+    {
+        component: BlogBookMark,
+        path: '/BlogBookMark',
+        layout: DefaultLayout,
+        role: ['user'],
     },
 ];
 

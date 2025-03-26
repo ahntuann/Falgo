@@ -30,6 +30,9 @@ namespace api.Data
         public DbSet<CommentBlog> CommentBlog { get; set; }
         public DbSet<BlogLike> BlogLike { get; set; }
         public DbSet<BlogShare> BlogShare { get; set; }
+        public DbSet<BlogBookmark> BlogBookmark { get; set; }
+        public DbSet<BlogForbiddenWord> BlogForbiddenWord { get; set; }
+
         //EndBlogData
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

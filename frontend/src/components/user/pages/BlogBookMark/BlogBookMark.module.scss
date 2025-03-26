@@ -34,13 +34,11 @@
                 margin-bottom: 16px;
                 min-width: 807.4px;
             }
-
             .search-bar {
                 display: flex;
                 justify-content: center;
                 margin-bottom: 16px;
                 width: 100%;
-                min-width: 807.4px;
                 input {
                     background-color: #333333;
                     width: 100%;
@@ -62,10 +60,6 @@
             padding: 16px;
             border-radius: 8px;
             background: #333333;
-            .filter-name {
-                display: flex;
-                justify-content: space-between;
-            }
         }
         .Create_UBlog {
             display: flex;
@@ -101,7 +95,6 @@
         background: #333333;
         border: 1px solid #ccc;
         border-radius: 4px;
-
         cursor: pointer;
         transition: 0.3s;
         color: black;
@@ -110,10 +103,6 @@
             background-color: #0056b3;
             color: white;
         }
-    }
-    .reset-button {
-        margin-top: 13px;
-        margin-bottom: -4px;
     }
 
     .date-filter,
@@ -138,57 +127,46 @@
             font-size: 14px;
             padding: auto;
         }
-        .date-filter,
         .DateInput {
             width: 100%;
         }
     }
-
+    .reset-button {
+        margin-top: 13px;
+        margin-bottom: -4px;
+    }
     .blog-list {
         width: 100%;
-        max-width: 807.4px;
+        // max-width: 807.4px;
         min-height: 400px;
         .no-blogs {
             color: white;
         }
-        .Date {
-            display: flex;
-            justify-content: space-between;
+    }
+
+    .blog-item {
+        color: white;
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        padding: 16px;
+        margin-bottom: 16px;
+        border-radius: 8px;
+        background: #333333;
+        .category-item {
+            font-size: 13.5px;
+        }
+
+        .category-item:hover {
+            background-color: #0056b3;
         }
     }
-    .blog_content {
-        background-color: rgb(246, 115, 115);
-        border-radius: 8px;
-
-        .blog-item {
-            color: white;
-            display: flex;
-            align-items: center;
-            border: 1px solid #ddd;
-            padding: 16px;
-            margin-bottom: 16px;
-            border-radius: 8px;
-            background: #333333;
-
-            .category-item {
-                font-size: 13.5px;
-            }
-
-            .category-item:hover {
-                background-color: #0056b3;
-            }
-        }
-        .content {
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
-        }
-        .Note {
-            color: white;
-            padding-left: 10px;
-        }
+    .content {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
     }
 
     .thumbnail {
@@ -271,25 +249,6 @@
         .delete:hover {
             background-color: #c82333;
             transform: scale(1.05);
-        }
-        .status {
-            font-weight: bold;
-            padding: 5px 10px;
-            border-radius: 5px;
-            display: inline-block;
-        }
-        .approved {
-            color: green;
-        }
-
-        .rejected {
-            color: red;
-        }
-        .report {
-            color: orange;
-        }
-        .pending {
-            color: yellow;
         }
     }
 
