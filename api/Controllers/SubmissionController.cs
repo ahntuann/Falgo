@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    [Route("/api/submission")]
+    [Route("/api/[controller]")]
     [ApiController]
     public class SubmissionController : ControllerBase
     {
