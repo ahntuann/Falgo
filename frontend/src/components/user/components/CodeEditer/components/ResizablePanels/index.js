@@ -49,14 +49,16 @@ const ResizablePanels = () => {
     }, []);
 
     const getContainerHeight = () => {
-        const navBarHeight = 60;
-        return window.innerHeight - navBarHeight - 50 - 40;
+        // const navBarHeight = 60;
+        return window.innerHeight - 50 - 40;
     };
 
     return (
         <div className={cs('container')} ref={containerRef}>
             <div className={cs('topPanel')} style={{ height: `${topHeight}px` }}>
-                <CodeEditerSection />
+                <div style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
+                    <CodeEditerSection />
+                </div>
             </div>
             <div className={cs('resizeBar')} onMouseDown={handleMouseDown}>
                 <FontAwesomeIcon className={cs('resizeBarIcon')} icon={faAngleDown} />
