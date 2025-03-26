@@ -53,7 +53,7 @@ namespace api.Services
             }).ToList();
             int totalItems = problems.Count;
             var result = problems.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToList();
-            Console.WriteLine("totalItems1:  "+query.ProblemTitle);
+           // Console.WriteLine("totalItems1:  "+query.ProblemTitle);
             return new PageResult<ViewProblemManagementDto>
             {
                 Items = result,

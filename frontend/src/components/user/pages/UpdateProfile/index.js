@@ -100,7 +100,6 @@ const UpdateProfile = () => {
 
             if (selectedFile) {
                 const formData = new FormData();
-                formData.append('avatar', selectedFile);
 
                 try {
                     // Sử dụng endpoint mới: update-avatar/{userId}
