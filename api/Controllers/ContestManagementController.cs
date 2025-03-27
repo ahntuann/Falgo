@@ -14,14 +14,14 @@ using CloudinaryDotNet.Actions;
 using api.Dtos.Contest;
 namespace api.Controllers
 {
-     [Route("/api/ContestManagement")]
+    [Route("/api/ContestManagement")]
     [ApiController]
     public class ContestManagement : ControllerBase
     {
-       private readonly Cloudinary _cloudinary;
+        private readonly Cloudinary _cloudinary;
         private readonly IContestService _contestService;
         private readonly IContestRegistationService _contestRegisService;
-        public ContestManagement(IContestService contestService, IContestRegistationService contestRegisService, Cloudinary cloudinary,IConfiguration config)
+        public ContestManagement(IContestService contestService, IContestRegistationService contestRegisService, Cloudinary cloudinary, IConfiguration config)
         {
             _contestService = contestService;
             _contestRegisService = contestRegisService;
@@ -31,14 +31,14 @@ namespace api.Controllers
             config["Cloudinary:ApiSecret"]
         );
 
-        _cloudinary = new Cloudinary(account);
-           
+            _cloudinary = new Cloudinary(account);
+
         }
-       
-     [HttpGet]
+
+        [HttpGet]
         public async Task<IActionResult> GetAllContest([FromQuery] ContestManagementQueryObject query)
         {
-            var contest= await _contestService.GetxContestAsync(query);
+            var contest = await _contestService.GetxContestAsync(query);
             if (query.PageNumber > contest.TotalPages)
             {
                 return NotFound();
@@ -62,23 +62,23 @@ namespace api.Controllers
             await _contestService.addContest(contest);
             return Ok();
         }
-       
-    
-    [HttpPost("Upload")]
-    public async Task<string> UploadImage(IFormFile file)
-    {
-        if (file == null || file.Length == 0) return "No file selected.";
 
-        using var stream = file.OpenReadStream();
-        var uploadParams = new ImageUploadParams
+
+        [HttpPost("Upload")]
+        public async Task<string> UploadImage(IFormFile file)
         {
-            File = new FileDescription(file.FileName, stream),
-            PublicId = $"uploads/{Guid.NewGuid()}"
-        };
+            if (file == null || file.Length == 0) return "No file selected.";
 
-        var result = await _cloudinary.UploadAsync(uploadParams);
-        return result.SecureUrl.ToString();
-    }
+            using var stream = file.OpenReadStream();
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(file.FileName, stream),
+                PublicId = $"uploads/{Guid.NewGuid()}"
+            };
+
+            var result = await _cloudinary.UploadAsync(uploadParams);
+            return result.SecureUrl.ToString();
+        }
 
 
     }

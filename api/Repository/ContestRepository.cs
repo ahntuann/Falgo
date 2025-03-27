@@ -20,9 +20,9 @@ namespace api.Repository
 
         public async Task<Contest?> GetContestByIdAsync(string id)
         {
-            return  await _context.Contests.FirstOrDefaultAsync(x => x.ContestId == id);
+            return await _context.Contests.FirstOrDefaultAsync(x => x.ContestId == id);
 
-           
+
         }
 
         public async Task<List<Contest>> GetContestsAsync(string typeOfContest)
@@ -54,36 +54,46 @@ namespace api.Repository
 
             return contests;
         }
-         public async Task<List<Contest?>> GetAllContestAsync(ContestManagementQueryObject query)
-        {  
-            var contests=  _context.Contests.AsQueryable();
-             if (!string.IsNullOrWhiteSpace(query.ContestTitle))
+        public async Task<List<Contest?>> GetAllContestAsync(ContestManagementQueryObject query)
+        {
+            var contests = _context.Contests.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.ContestTitle))
             {
                 var titleLower = query.ContestTitle.ToLower();
                 contests = contests.Where(p => p.ContestName.ToLower().Contains(titleLower));
             }
-           
-          
+
+
             return await contests.ToListAsync();
         }
-        public async Task UpdateTotalPoint(int totalPoint,string contestId)
+        public async Task UpdateTotalPoint(int totalPoint, string contestId)
         {
-          // var contest = await _context.Contests.FirstOrDefaultAsync(c => c.ContestId == contestId);
-          Console.WriteLine(totalPoint);
-     await _context.Contests
-        .Where(c => c.ContestId == contestId)
-        .ExecuteUpdateAsync(s => s.SetProperty(c => c.TotalPoint, totalPoint));
-        _context.SaveChanges();
+            // var contest = await _context.Contests.FirstOrDefaultAsync(c => c.ContestId == contestId);
+            Console.WriteLine(totalPoint);
+            await _context.Contests
+               .Where(c => c.ContestId == contestId)
+               .ExecuteUpdateAsync(s => s.SetProperty(c => c.TotalPoint, totalPoint));
+            _context.SaveChanges();
         }
         public async Task DeleteContestAsync(string ContestId)
         {
            await _context.Contests.Where(P => P.ContestId==ContestId).ExecuteDeleteAsync();
                await _context.SaveChangesAsync();
         }
+
         public async Task addContest(Contest contest)
         {
-            await _context.Contests.AddAsync(contest);
-            await _context.SaveChangesAsync();
+            try
+            {
+
+                await _context.Contests.AddAsync(contest);
+                await _context.SaveChangesAsync();
+            }
+            catch (System.Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 }
