@@ -19,5 +19,7 @@ namespace api.Model
         public int TotalSubmissions { get; set; } = 0;
         public DateTime? LastSolvedAt { get; set; }
         public string? GitHubAccessToken { get; set; }
+          public ICollection<Answer> Answers { get; set; }
+            public ICollection<Question> Questions { get; set; }
     }
 }

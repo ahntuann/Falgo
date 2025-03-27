@@ -13,7 +13,12 @@ function UserManagement() {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortSubmitted, setSortSubmitted] = useState('');
     const [sortSolved, setSortSolved] = useState('');
-
+    const role = JSON.parse(sessionStorage.getItem('admin'));
+    useEffect(() => {
+        if (!role) {
+            navigate('/');
+        }
+    }, [role]);
     useEffect(() => {
         fetchUsers();
     }, []);

@@ -13,6 +13,12 @@ function ContestManagement() {
     useEffect(() => {
         fetchContests();
     }, []);
+    const role = JSON.parse(sessionStorage.getItem('admin'));
+    useEffect(() => {
+        if (!role) {
+            navigate('/');
+        }
+    }, [role]);
     const navigate = useNavigate();
     const [totalPages, setTotalPages] = useState(1);
     const [query, setQuery] = useState({

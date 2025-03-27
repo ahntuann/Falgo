@@ -11,6 +11,7 @@ const cs = classNames.bind(styles);
 
 function BlogManagement() {
     const navigate = useNavigate();
+
     const [originalBlogs, setOriginalBlogs] = useState([]);
     const [filteredBlogs, setFilteredBlogs] = useState([]);
     const debounceRef = useRef(null);

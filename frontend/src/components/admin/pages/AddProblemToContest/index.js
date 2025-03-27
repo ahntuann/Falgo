@@ -10,6 +10,12 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 const cx = classNames.bind(styles);
 function AddProblemToContest() {
+    const role = JSON.parse(sessionStorage.getItem('admin'));
+    useEffect(() => {
+        if (!role) {
+            navigate('/');
+        }
+    }, [role]);
     const navigate = useNavigate();
     const location = useLocation();
     const [contest, setContest] = useState(location.state?.contest || {});

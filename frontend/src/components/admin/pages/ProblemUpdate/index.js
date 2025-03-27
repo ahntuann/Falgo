@@ -18,7 +18,12 @@ const ProblemUpdate = () => {
             output: '',
         })),
     );
-
+    const role = JSON.parse(sessionStorage.getItem('admin'));
+    useEffect(() => {
+        if (!role) {
+            navigate('/');
+        }
+    }, [role]);
     const handleChange = (e) => {
         setProblem({ ...problem, [e.target.name]: e.target.value });
     };
