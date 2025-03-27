@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -11,9 +12,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250326105442_AddGitHubAccessTokenToAppUser")]
+    partial class AddGitHubAccessTokenToAppUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,19 +54,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "da47625f-8f4c-4450-9431-4e4f3f481f70",
+                            Id = "6f579bd5-5db6-4ac2-b1cf-fd78d62a6e7c",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "88576871-3a5b-492e-b3dd-f45909ee620d",
+                            Id = "3b644a5a-a361-49af-879b-db4ab34beee8",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         },
                         new
                         {
-                            Id = "ffd3a3e8-2411-4f3a-b9ef-94878a6cd18e",
+                            Id = "0ea0411c-9bb8-4d36-8161-2db67bd36a90",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });

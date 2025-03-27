@@ -7,6 +7,7 @@ namespace api.Dtos.User
 {
     public class RankingDto
     {
+        public string AppUserId { get; set; } = string.Empty;
         public int Rank { get; set; }
         public string FullName { get; set; } = string.Empty;
         public string Avatar { get; set; } = string.Empty;

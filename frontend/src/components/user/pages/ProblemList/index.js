@@ -15,6 +15,7 @@ const ProblemList = () => {
     const [problems, setProblems] = useState([]);
     const [categories, setCategories] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
+    const [totalProblems, setTotalProblems] = useState([]);
     const [query, setQuery] = useState({
         ProblemTitle: '',
         ProblemCategory: '',
@@ -66,6 +67,7 @@ const ProblemList = () => {
             const response = await axios.get('http://localhost:5180/api/problem', {
                 params: filteredQuery,
             });
+            setTotalProblems(response.data.totalItems);
             setProblems(response.data.items);
             setTotalPages(response.data.totalPages);
         } catch (error) {
@@ -97,7 +99,7 @@ const ProblemList = () => {
 
     return (
         <div className={cs('problemList')}>
-            <h2>Danh sách bài tập</h2>
+            <h2>Danh sách bài tập ({totalProblems} câu hỏi)</h2>
             <div className={cs('filters')}>
                 <input
                     type="text"
@@ -143,6 +145,18 @@ const ProblemList = () => {
                         <th>Mã câu hỏi</th>
                         <th onClick={handleSortByTitle} style={{ cursor: 'pointer' }}>
                             Tên
+                            <span style={{ marginLeft: '5px' }}>
+                                <span
+                                    style={{ color: query.SortBy === 'n1' ? '#00cc00' : '#A9A9A9' }}
+                                >
+                                    ▲
+                                </span>
+                                <span
+                                    style={{ color: query.SortBy === 'n2' ? '#00cc00' : '#A9A9A9' }}
+                                >
+                                    ▼
+                                </span>
+                            </span>
                         </th>
                         <th>Dạng câu hỏi</th>
                         <th>Tỉ lệ hoàn thành</th>

@@ -24,7 +24,7 @@ namespace api.Controllers
         public async Task<IActionResult> GetMonthlyRanking([FromQuery] RankingQueryObject query)
         {
             var result = await _rankingService.GetRanking(query);
-            if (!result.Items.Any())
+            if (!result.Items.Any() && string.IsNullOrEmpty(query.FullName))
             {
                 switch (query.Type?.ToLower())
                 {
@@ -34,7 +34,7 @@ namespace api.Controllers
                         return Ok("Dữ liệu xếp hạng tuần này chưa có");
                     case "yearly":
                         return Ok("Dữ liệu xếp hạng năm này chưa có");
-                    case "quaterly":
+                    case "quarterly":
                         return Ok("Dữ liệu xếp hạng quý này chưa có");
                     case "overall":
                         return Ok("Dữ liệu xếp hạng chưa có");
