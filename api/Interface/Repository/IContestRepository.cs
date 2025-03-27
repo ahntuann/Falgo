@@ -14,5 +14,6 @@ namespace api.Interface
         public  Task<List<Contest>> GetAllContestAsync(ContestManagementQueryObject query);
         public  Task DeleteContestAsync(string ContestId);
         public  Task addContest(Contest contest);
+         public  Task UpdateTotalPoint(int totalPoint,string contestId);
     }
 }

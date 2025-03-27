@@ -13,6 +13,7 @@ import {
     ContestManagement,
     UpdateUserByAdmin,
     AddContest,
+    AddProblemToContest,
 } from './components/admin/pages';
 import GithubCallback from './components/user/pages/Login/GithubCallback';
 import { ProblemForm } from './components/admin/components';
@@ -37,6 +38,7 @@ function App() {
                     <Route path="/ContestManagement" element={<ContestManagement />} />
                     <Route path="/user-update/:userId" element={<UpdateUserByAdmin />} />
                     <Route path="/AddContest" element={<AddContest />} />
+                    <Route path="/AddProblemToContest" element={<AddProblemToContest />} />
                     {routes.map((route) => {
                         const Component = route.component;
                         const Layout = route.layout;

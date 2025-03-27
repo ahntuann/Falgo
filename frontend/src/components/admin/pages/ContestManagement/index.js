@@ -27,10 +27,11 @@ function ContestManagement() {
     };
     const handleUpdate = (id) => {
         console.log('Edit problem:', id);
+        navigate('/AddProblemToContest', { state: { contest } });
     };
 
     const handleDelete = async (contestId) => {
-        const isConfirmed = window.confirm('Are you sure you want to delete this contest?');
+        const isConfirmed = window.confirm('Bạn có chắc muốn xóa cuộc thi này không?');
 
         if (!isConfirmed) return; // If user cancels, stop execution
 
@@ -40,7 +41,7 @@ function ContestManagement() {
             );
             fetchContests();
         } catch (error) {
-            console.error('Error deleting contest:', error);
+            console.error('lỗi khi xóa contest:', error);
         }
     };
     const debounceRef = useRef(null);
@@ -123,7 +124,9 @@ function ContestManagement() {
                                 <td>
                                     <button
                                         className={cx('edit-btn')}
-                                        onClick={() => handleUpdate(contest.contestId)}
+                                        onClick={() =>
+                                            navigate('/AddProblemToContest', { state: { contest } })
+                                        }
                                     >
                                         Edit
                                     </button>

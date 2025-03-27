@@ -51,8 +51,8 @@ export default function AddContest() {
 
             return response.data;
         } catch (error) {
-            console.error('Upload failed:', error.response?.data || error.message);
-            alert('Upload failed. Check your authorization.');
+            console.error('lỗi khi đăng cuộc thi:', error.response?.data || error.message);
+            alert('lỗi khi đăng cuộc thi.');
             return null;
         }
     };
@@ -61,7 +61,7 @@ export default function AddContest() {
         e.preventDefault();
         if (!bannerFile) {
             console.error('No filee selected!'); // Debugging step
-            alert('Please select a banner image.');
+            alert('Hãy chọn ảnh cho cuộc thi.');
             return;
         }
         setLoading(true);

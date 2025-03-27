@@ -66,6 +66,15 @@ namespace api.Repository
           
             return await contests.ToListAsync();
         }
+        public async Task UpdateTotalPoint(int totalPoint,string contestId)
+        {
+          // var contest = await _context.Contests.FirstOrDefaultAsync(c => c.ContestId == contestId);
+          Console.WriteLine(totalPoint);
+     await _context.Contests
+        .Where(c => c.ContestId == contestId)
+        .ExecuteUpdateAsync(s => s.SetProperty(c => c.TotalPoint, totalPoint));
+        _context.SaveChanges();
+        }
         public async Task DeleteContestAsync(string ContestId)
         {
            await _context.Contests.Where(P => P.ContestId==ContestId).ExecuteDeleteAsync();

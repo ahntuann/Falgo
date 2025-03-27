@@ -7,3 +7,4 @@ export { default as UpdateUserByAdmin } from './UpdateUserByAdmin';
 export { default as UserManagement } from './UserManagement';
 export { default as ContestManagement } from './ContestManagement';
 export { default as AddContest } from './AddContest';
+export { default as AddProblemToContest } from './AddProblemToContest';

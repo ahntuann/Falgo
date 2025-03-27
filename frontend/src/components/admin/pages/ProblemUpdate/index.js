@@ -41,7 +41,7 @@ const ProblemUpdate = () => {
             navigate('/ProblemsManagement');
         } catch (error) {
             console.error('Error:', error);
-            setError('An error occurred while saving.');
+            setError('Có lỗi xảy ra khi cập nhật.');
         } finally {
             setLoading(false);
         }

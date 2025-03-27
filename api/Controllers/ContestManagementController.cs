@@ -45,7 +45,7 @@ namespace api.Controllers
             }
             return Ok(contest);
         }
-        [HttpDelete]
+        [HttpDelete("delete")]
         public async Task<IActionResult> DeleteContest([FromQuery] string contestId)
         {
             await _contestService.deleteContest(contestId);
