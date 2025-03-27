@@ -125,8 +125,10 @@ const UpdateProfile = () => {
                     if (response.data.success) {
                         alert('Cập nhật ảnh đại diện thành công!');
                         setUser({ ...user, avatar: response.data.avatarUrl });
+                        window.location.reload();
                     } else {
                         alert('Không thể cập nhật ảnh đại diện!');
+                        window.location.reload();
                     }
                 } catch (error) {
                     console.error('Lỗi khi upload avatar:', error);

@@ -109,12 +109,10 @@ const SubmissionList = () => {
 
     return (
         <div className={cs('submissionList')}>
-            {submissions?.length > 0 && (
-                <h2>
-                    Danh sách bài nộp ({submissions.at(0).problemTitle} - {totalSubmissions} bài
-                    nộp)
-                </h2>
-            )}
+            <h2>
+                Danh sách bài nộp ({submissions?.length > 0 && submissions.at(0).problemTitle} -{' '}
+                {submissions?.length > 0 ? totalSubmissions : 0} bài nộp )
+            </h2>
             <div className={cs('filters')}>
                 <select name="UserName" value={query.UserName} onChange={handleChange}>
                     <option value="">Tất cả người dùng</option>
