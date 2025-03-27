@@ -30,5 +30,6 @@ namespace api.Dtos.BlogSpace
         public List<BlogCommentDto> CommentBlog { get; set; } = new List<BlogCommentDto>();
         public List<BlogLikeDto> BlogLike { get; set; } = new List<BlogLikeDto>();
         public List<BlogShareDto> BlogShare { get; set; } = new List<BlogShareDto>();
+        public List<BlogBookmarkDto> BlogBookmark { get; set; } = new List<BlogBookmarkDto>();
     }
 }

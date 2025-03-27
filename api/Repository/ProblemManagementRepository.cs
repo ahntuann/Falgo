@@ -71,12 +71,19 @@ namespace api.Repository
             .ExecuteDeleteAsync();
             await _context.SaveChangesAsync();
         }
-        public async Task<List<Problem>> GetExistProblemAsync(string contestId)
+        public async Task<List<Problem>> GetExistProblemAsync(ContestProblemQueryObject query)
         {
-             return await _context.Problems
+             var Problem=  _context.Problems
         .Where(p => !_context.ContestProblems
-            .Any(cp => cp.ContestId == contestId && cp.ProblemId == p.ProblemId))
-        .ToListAsync();
+            .Any(cp => cp.ContestId == query.ContestId && cp.ProblemId == p.ProblemId))
+        .AsQueryable();
+        // var problemsQuery = _context.Problems.AsQueryable();
+             if (!string.IsNullOrWhiteSpace(query.ProblemTitle))
+            {
+                var titleLower = query.ProblemTitle.ToLower();
+                Problem = Problem.Where(p => p.Title.ToLower().Contains(titleLower));
+            }
+            return await Problem.ToListAsync();
         }
         public async Task UpdateProblemAsync(Problem problem)
         {

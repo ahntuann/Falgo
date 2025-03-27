@@ -20,6 +20,7 @@ namespace api.Interface
         Task<bool> CommitCodeToRepository(string accessToken, string repoName, string filePath, string content);
         Task<List<LanguageUsage>> GetTopProgrammingLanguagesAsync(string userId);
         Task<List<CategoryPercentage>> GetProblemCategoryPercentageAsync(string userId);
+        public  Task<List<AppUser>> GetUserbyUserId(List<string> userIds);
 
     }
 }

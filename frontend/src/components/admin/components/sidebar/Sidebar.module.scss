@@ -9,6 +9,29 @@
         width: 120px;
     }
 }
+.button {
+    background-color: #ff4d4d; // Red background
+    color: white; // White text
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    position: absolute;
+    bottom: 20px;
+    left: 10%;
+    transform: translateX(-50%);
+    &:hover {
+        background-color: #cc0000; // Darker red on hover
+        transform: scale(1.05); // Slightly enlarge button
+    }
+
+    &:active {
+        background-color: #a30000; // Even darker when clicked
+        transform: scale(0.95);
+    }
+}
 
 .toggleButton {
     background: none;
@@ -56,4 +79,9 @@
             background-color: #f39c12;
         }
     }
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; // Full height of the viewport
 }

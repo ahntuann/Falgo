@@ -10,6 +10,12 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 const cx = classNames.bind(styles);
 function AddProblemToContest() {
+    const role = JSON.parse(sessionStorage.getItem('admin'));
+    useEffect(() => {
+        if (!role) {
+            navigate('/');
+        }
+    }, [role]);
     const navigate = useNavigate();
     const location = useLocation();
     const [contest, setContest] = useState(location.state?.contest || {});
@@ -20,13 +26,12 @@ function AddProblemToContest() {
     const [totalPages, setTotalPages] = useState(1);
     const [query, setQuery] = useState({
         ContestId: contest.contestId,
+        ProblemTitle: '',
         ProblemId: '',
         PageNumber: 1,
         PageSize: 15,
     });
-    useEffect(() => {
-        console.log('Updated query state:', query);
-    }, [query]);
+
     const debounceRef = useRef(null);
     useEffect(() => {
         fetchCategories();

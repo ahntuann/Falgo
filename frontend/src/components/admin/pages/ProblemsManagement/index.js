@@ -20,6 +20,12 @@ function ProblemsManagement() {
         PageNumber: 1,
         PageSize: 15,
     });
+    const role = JSON.parse(sessionStorage.getItem('admin'));
+    useEffect(() => {
+        if (!role) {
+            navigate('/');
+        }
+    }, [role]);
     const debounceRef = useRef(null);
     useEffect(() => {
         fetchCategories();
@@ -68,6 +74,9 @@ function ProblemsManagement() {
         console.log('Edit problem:', id);
     };
     const handleDelete = async (problemId) => {
+        const isConfirmed = window.confirm('Bạn có chắc muốn xóa cuộc thi này không?');
+
+        if (!isConfirmed) return;
         try {
             const requestData = { problemId };
             await axios.delete(
@@ -112,11 +121,7 @@ function ProblemsManagement() {
                             <tr key={i}>
                                 <td>{problem.problemId}</td>
                                 <td>
-                                    <ReactQuill
-                                        value={problem.title}
-                                        readOnly={true}
-                                        theme="bubble"
-                                    />
+                                    <div dangerouslySetInnerHTML={{ __html: problem.title }} />
                                 </td>
                                 <td>{problem.category}</td>
                                 <td>{problem.acceptanceRate}%</td>

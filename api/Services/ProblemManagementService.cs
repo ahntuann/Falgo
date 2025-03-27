@@ -114,7 +114,7 @@ namespace api.Services
         }
         public async Task<PageResult<ViewProblemManagementDto>> GetExistProblemAsync(ContestProblemQueryObject query)
         {
-        var problems= await _ProblemRepo.GetExistProblemAsync(query.ContestId);  
+        var problems= await _ProblemRepo.GetExistProblemAsync(query);  
          var problemIds = problems.Select(p => p.ProblemId).ToList();
             var allSubmissions = await _submissionRepository.GetSubmissionsByProblemIdsAsync(problemIds);
             var submissionsLookup = allSubmissions.ToLookup(s => s.Problem.ProblemId);

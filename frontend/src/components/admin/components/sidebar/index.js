@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Sidebar.module.scss';
 
@@ -7,7 +7,11 @@ const cx = classNames.bind(styles);
 
 function Sidebar() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        sessionStorage.removeItem('admin'); // Remove admin data
+        navigate('/'); // Redirect to login page or home
+    };
     return (
         <div className={cx('sidebar', { collapsed: !isSidebarOpen })}>
             <button className={cx('toggleButton')} onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
@@ -49,6 +53,14 @@ function Sidebar() {
                 </li>
                 <li>
                     <NavLink
+                        to="/BlogCommentManagement"
+                        className={({ isActive }) => cx('menuItem', { active: isActive })}
+                    >
+                        Quản lý bình luận bài đăng
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink
                         to="/ContestManagement"
                         className={({ isActive }) => cx('menuItem', { active: isActive })}
                     >
@@ -56,6 +68,9 @@ function Sidebar() {
                     </NavLink>
                 </li>
             </ul>
+            <button className={cx('button')} onClick={() => handleLogout()}>
+                Logout
+            </button>
         </div>
     );
 }

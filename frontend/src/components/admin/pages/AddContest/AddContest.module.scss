@@ -25,20 +25,26 @@
     margin-top: 10px;
 }
 
+.inputt,
 .input,
 .select,
 .file-input {
-    padding: 8px;
-    border: 1px solid #ccc;
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 2px solid #ccc;
     border-radius: 5px;
-    margin-top: 5px;
-    font-size: 16px;
-}
+    transition: border-color 0.3s, box-shadow 0.3s;
 
-.editor {
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        outline: none;
+    }
+
+    &:hover {
+        border-color: #888;
+    }
 }
 
 .submit-btn {

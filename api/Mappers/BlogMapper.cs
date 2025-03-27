@@ -36,10 +36,24 @@ namespace api.Mappers
                 Note = BlogModel.Note,
                 CommentBlog = BlogModel.CommentBlog.Select(cmt => cmt.ToBlogCommentDto()).ToList(),
                 BlogLike = BlogModel.BlogLike.Select(Like => Like.ToBlogLikeDto()).ToList(),
-                BlogShare = BlogModel.BlogShare.Select(share => share.ToBlogShareDto()).ToList()
+                BlogShare = BlogModel.BlogShare.Select(share => share.ToBlogShareDto()).ToList(),
+                BlogBookmark = BlogModel.BlogBookmark.Select(Bookmark => Bookmark.ToBlogBookmarkDto()).ToList()
 
             };
         }
+
+        public static BlogForbiddenWordDto ToBlogForbiddenWordDto(this BlogForbiddenWord Model)
+        {
+            return new BlogForbiddenWordDto
+            {
+                ID = Model.ID,
+                Word = Model.Word,
+                IsActive = Model.IsActive,
+                action = Model.action,
+
+            };
+        }
+
         public static Blog ToBlogFromCreateDto(this CreateBlogRequestDto BlogDto)
         {
             return new Blog
@@ -68,6 +82,14 @@ namespace api.Mappers
                 LikedOn = DateTime.Now
             };
         }
+        public static BlogBookmark ToBlogBookmarkFromCreateDto(this BlogBookmarkDto BlogBookmarkModel)
+        {
+            return new BlogBookmark
+            {
+                BlogID = BlogBookmarkModel.BlogID,
+                UserID = BlogBookmarkModel.UserID,
+            };
+        }
         public static BlogShare ToBlogShareFromCreateDto(this BlogShareDto BlogShareModel)
         {
             return new BlogShare
@@ -90,6 +112,15 @@ namespace api.Mappers
                 Note = Model.Note,
                 BlogId = Model.BlogId,
                 UserId = Model.UserId
+            };
+        }
+        public static BlogForbiddenWord ToBlogForbiddenWordFromCreateDto(this CreateUpdateBlogForbiddenWordRequestDto model)
+        {
+            return new BlogForbiddenWord
+            {
+                Word = model.Word,
+                IsActive = model.IsActive,
+                action = model.action
             };
         }
         public static BlogCommentDto ToBlogCommentDto(this CommentBlog Model)
@@ -129,7 +160,15 @@ namespace api.Mappers
                 SharedOn = DateTime.Now
             };
         }
-
+        public static BlogBookmarkDto ToBlogBookmarkDto(this BlogBookmark Model)
+        {
+            return new BlogBookmarkDto
+            {
+                ID = Model.ID,
+                BlogID = Model.BlogID,
+                UserID = Model.UserID,
+            };
+        }
 
     }
 }

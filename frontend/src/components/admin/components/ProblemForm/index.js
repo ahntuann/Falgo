@@ -9,6 +9,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 const ProblemForm = () => {
+    const navigate = useNavigate();
     const [showForm, setShowForm] = useState(false);
     const modules = {
         toolbar: [
@@ -17,7 +18,12 @@ const ProblemForm = () => {
             ['link', 'image'], // "image" can be removed if not needed
         ],
     };
-
+    const role = JSON.parse(sessionStorage.getItem('admin'));
+    useEffect(() => {
+        if (!role) {
+            navigate('/');
+        }
+    }, [role]);
     const [problem, setProblem] = useState({
         problemId: '',
         category: '',
@@ -85,7 +91,10 @@ const ProblemForm = () => {
                     },
                 },
             );
+            alert('Thêm Bài tập thành công!');
+            navigate('/ProblemsManagement');
         } catch (error) {
+            alert(error.response.data);
             console.error('Error:', error);
         }
     };

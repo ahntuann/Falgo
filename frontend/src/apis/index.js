@@ -26,6 +26,8 @@ export const fetchContestBriefAPI = async ({ isNewest, pageSize }) => {
 };
 
 export const fetchCheckIfUserRegisContestAPI = async (userId, contestId) => {
+    console.log(userId, contestId);
+
     try {
         const response = await axios.get(
             `${API_ROOT}/api/user/isRegis?UserId=${userId}&ContestId=${contestId}`,
