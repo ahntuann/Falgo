@@ -7,10 +7,8 @@ import classNames from 'classnames/bind';
 import styles from './BlogUpdate.module.scss';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import QuillImageUploader from 'quill-image-uploader';
-import { Quill } from 'react-quill';
 const cs = classNames.bind(styles);
-Quill.register('modules/imageUploader', QuillImageUploader);
+
 const BlogUpdate = () => {
     const navigate = useNavigate();
 
@@ -156,7 +154,7 @@ const BlogUpdate = () => {
                                 value={formData.title}
                                 onChange={handleChange}
                                 placeholder="Tiêu đề bài viết"
-                                maxLength={250}
+                                maxLength={200}
                                 required
                             />
                         </div>
@@ -200,7 +198,7 @@ const BlogUpdate = () => {
                             <input
                                 type="file"
                                 accept="image/*"
-                                style={{ display: 'none' }} // Ẩn input file
+                                style={{ display: 'none' }}
                                 onChange={(e) => {
                                     const file = e.target.files[0];
                                     if (file) {

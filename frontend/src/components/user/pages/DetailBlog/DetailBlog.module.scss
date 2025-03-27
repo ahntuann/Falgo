@@ -6,6 +6,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
+    color: white;
     .ql-editor {
         color: white !important;
     }
@@ -27,6 +28,21 @@
                 gap: 5px;
                 flex-direction: column;
 
+                .title_space,
+                .description_space {
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 3; /* Giới hạn hiển thị 2 dòng */
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: normal;
+                    word-break: break-word; /* Cắt từ nếu quá dài */
+                    max-height: 3.2em; /* Điều chỉnh tùy theo font-size */
+                }
+                .description_space{
+                    -webkit-line-clamp: 3; /* Giới hạn hiển thị 2 dòng */
+
+                }
                 .title_space input,
                 .description_space input {
                     white-space: nowrap;
@@ -260,10 +276,25 @@
                     .LinkTo_space {
                         width: 100%;
                         display: flex;
+                        align-items: center;
+                        gap: 10px;
+
                         .suggest_img {
-                            width: 80px; /* Giảm kích thước ảnh */
+                            width: 80px;
                             height: 60px;
                             border-radius: 4px;
+                            flex-shrink: 0;
+                        }
+
+                        .btn-read-more {
+                            flex: 1;
+                            display: -webkit-box;
+                            -webkit-box-orient: vertical;
+                            -webkit-line-clamp: 2;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: normal;
+                            word-break: break-word;
                         }
                     }
                 }

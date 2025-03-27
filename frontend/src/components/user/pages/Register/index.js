@@ -35,9 +35,9 @@ const Register = () => {
                 .matches(/[^a-zA-Z0-9]/, 'Phải có ít nhất một ký tự đặc biệt')
                 .required('Mật khẩu được yêu cầu'),
             email: Yup.string().email('Invalid email').required('Phải nhập Email'),
-            phoneNumber: Yup.string().required('Phải nhập'),
-            address: Yup.string().required('Phải nhập'),
-            dob: Yup.date().required('Phải nhập').nullable(),
+            phoneNumber: Yup.string().required('Phải nhập số điện thoại'),
+            address: Yup.string().required('Phải nhập địa chỉ'),
+            dob: Yup.date().required('Phải nhập ngày sinh nhật').nullable(),
         }),
         onSubmit: async (values) => {
             const formattedDateOfBirth = moment(values.dob).toISOString();
@@ -59,7 +59,7 @@ const Register = () => {
                 console.log('Error response:', error.response);
                 if (error.response && error.response.data) {
                     if (error.response.data === 'Username/Email is already in use.') {
-                        alert('Tên đăng nhập hoặc mật khẩu đã được sử dụng. Hãy nhập lại.');
+                        alert('Tên đăng nhập hoặc Email đã được sử dụng. Hãy nhập lại.');
                     } else {
                         alert(`Đăng ký không thành công: ${error.response.data}`);
                     }
@@ -81,8 +81,12 @@ const Register = () => {
                             name="fullName"
                             placeholder="Họ và tên"
                             onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                             value={formik.values.fullName}
                         />
+                        {formik.errors.fullName && formik.touched.fullName && (
+                            <p className="error-message">{formik.errors.fullName}</p>
+                        )}
                     </div>
                     <div className="input-group">
                         <input
@@ -90,8 +94,12 @@ const Register = () => {
                             name="username"
                             placeholder="Tên đăng nhập"
                             onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                             value={formik.values.username}
                         />
+                        {formik.errors.username && formik.touched.username && (
+                            <p className="error-message">{formik.errors.username}</p>
+                        )}
                     </div>
                     <div className="input-group password-group">
                         <input
@@ -99,6 +107,7 @@ const Register = () => {
                             name="password"
                             placeholder="Mật khẩu"
                             onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                             value={formik.values.password}
                         />
                         <span className="eye-icon" onClick={togglePasswordVisibility}>
@@ -116,8 +125,12 @@ const Register = () => {
                             name="email"
                             placeholder="Email"
                             onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                             value={formik.values.email}
                         />
+                        {formik.errors.email && formik.touched.email && (
+                            <p className="error-message">{formik.errors.email}</p>
+                        )}
                     </div>
                     <div className="input-group">
                         <input
@@ -125,8 +138,12 @@ const Register = () => {
                             name="phoneNumber"
                             placeholder="Số điện thoại"
                             onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                             value={formik.values.phoneNumber}
                         />
+                        {formik.errors.phoneNumber && formik.touched.phoneNumber && (
+                            <p className="error-message">{formik.errors.phoneNumber}</p>
+                        )}
                     </div>
                     <div className="input-group">
                         <input
@@ -134,16 +151,24 @@ const Register = () => {
                             name="address"
                             placeholder="Địa chỉ"
                             onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                             value={formik.values.address}
                         />
+                        {formik.errors.address && formik.touched.address && (
+                            <p className="error-message">{formik.errors.address}</p>
+                        )}
                     </div>
                     <div className="input-group">
                         <input
                             type="date"
                             name="dob"
                             onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
                             value={formik.values.dob}
                         />
+                        {formik.errors.dob && formik.touched.dob && (
+                            <p className="error-message">{formik.errors.dob}</p>
+                        )}
                     </div>
                     <button type="submit" className="register-button">
                         Đăng ký

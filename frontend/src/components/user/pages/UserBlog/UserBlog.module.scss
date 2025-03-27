@@ -2,7 +2,7 @@
     max-width: 1200px;
     margin: auto;
     padding: 16px;
-
+    color: white;
     .category-tags {
         display: flex;
         gap: 5px;
@@ -101,7 +101,6 @@
         background: #333333;
         border: 1px solid #ccc;
         border-radius: 4px;
-
         cursor: pointer;
         transition: 0.3s;
         color: black;
@@ -299,6 +298,7 @@
         align-items: center;
         justify-content: center;
         margin-top: 20px;
+        margin-bottom: 20px;
 
         .paginationnumber button {
             background: white;

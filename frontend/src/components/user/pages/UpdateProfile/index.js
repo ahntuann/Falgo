@@ -70,8 +70,19 @@ const UpdateProfile = () => {
     };
 
     const handleSave = async () => {
+        // Kiểm tra xem có trường nào bị bỏ trống không
+        if (
+            !user.fullName ||
+            !user.email ||
+            !user.dateOfBirth ||
+            !user.phoneNumber ||
+            !user.address
+        ) {
+            setError('Vui lòng điền đầy đủ thông tin trước khi lưu!');
+            return;
+        }
+
         try {
-            // Kiểm tra nếu user.id không tồn tại, lấy lại từ localStorage
             let userId = user.id;
             if (!userId) {
                 const storedUser = localStorage.getItem('user');
@@ -103,7 +114,6 @@ const UpdateProfile = () => {
                 formData.append('avatar', selectedFile);
 
                 try {
-                    // Sử dụng endpoint mới: update-avatar/{userId}
                     const response = await axios.post(
                         `http://localhost:5180/api/user/update-avatar/${userId}`,
                         formData,
@@ -114,7 +124,6 @@ const UpdateProfile = () => {
 
                     if (response.data.success) {
                         alert('Cập nhật ảnh đại diện thành công!');
-                        // Cập nhật lại user state với URL avatar mới
                         setUser({ ...user, avatar: response.data.avatarUrl });
                     } else {
                         alert('Không thể cập nhật ảnh đại diện!');
@@ -128,6 +137,7 @@ const UpdateProfile = () => {
             }
 
             setEditing(false);
+            setError(null); // Xóa lỗi khi cập nhật thành công
         } catch (error) {
             setError('Có lỗi xảy ra khi cập nhật thông tin!');
         }
@@ -190,12 +200,19 @@ const UpdateProfile = () => {
                                 <div className={cs('info-label')}>{label}</div>
                                 <div className={cs('info-value')}>
                                     {editing ? (
-                                        <input
-                                            type={type || 'text'}
-                                            name={key}
-                                            value={user[key] || ''}
-                                            onChange={handleInputChange}
-                                        />
+                                        <>
+                                            <input
+                                                type={type || 'text'}
+                                                name={key}
+                                                value={user[key] || ''}
+                                                onChange={handleInputChange}
+                                            />
+                                            {!user[key] && (
+                                                <div className={cs('error-message')}>
+                                                    Không được để trống
+                                                </div>
+                                            )}
+                                        </>
                                     ) : key === 'dateOfBirth' ? (
                                         new Date(user[key]).toLocaleDateString('vi-VN')
                                     ) : (

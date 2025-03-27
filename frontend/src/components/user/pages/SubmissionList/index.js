@@ -10,6 +10,7 @@ const SubmissionList = () => {
     const { problemId } = useParams();
     const [submissions, setSubmissions] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
+    const [totalSubmissions, setTotalSubmissions] = useState([]);
     const [languages, setLanguages] = useState([]);
     const [statuses, setStatuses] = useState([]);
     const [submittersName, setSubmittersName] = useState([]);
@@ -40,6 +41,7 @@ const SubmissionList = () => {
             });
             setSubmissions(response.data.items);
             setTotalPages(response.data.totalPages);
+            setTotalSubmissions(response.data.totalItems);
         } catch (error) {
             console.error('Error fetching submissions', error);
         }
@@ -89,7 +91,10 @@ const SubmissionList = () => {
     return (
         <div className={cs('submissionList')}>
             {submissions?.length > 0 && (
-                <h2>Danh sách bài nộp ({submissions.at(0).problemTitle})</h2>
+                <h2>
+                    Danh sách bài nộp ({submissions.at(0).problemTitle} - {totalSubmissions} bài
+                    nộp)
+                </h2>
             )}
             <div className={cs('filters')}>
                 <select name="UserName" value={query.UserName} onChange={handleChange}>

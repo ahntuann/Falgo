@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 
 import style from './CodeEditing.module.scss';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { CodeEditer } from '~/components/user/components';
@@ -16,6 +16,8 @@ function CodeEditing() {
     const searchParams = new URLSearchParams(location.search);
     const briefInfoProblem = Object.fromEntries(searchParams.entries());
 
+    const navigate = useNavigate();
+
     const [problem, setProblem] = useState(null);
 
     useEffect(() => {
@@ -28,7 +30,11 @@ function CodeEditing() {
         <div className={cs('wrapper')}>
             <div className={cs('info')}>
                 <div className={cs('problemInfo')}>
-                    <FontAwesomeIcon className={cs('problemInfoIcon')} icon={faAngleLeft} />
+                    <FontAwesomeIcon
+                        className={cs('problemInfoIcon')}
+                        icon={faAngleLeft}
+                        onClick={() => navigate(`/problems/${briefInfoProblem.id}`)}
+                    />
                     {problem !== null && problem !== undefined && <div>{problem.title}</div>}
                     <FontAwesomeIcon className={cs('helpIcon')} icon={faCircleQuestion} />
                 </div>

@@ -51,19 +51,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e29aef0d-533d-4752-9c53-4ff3efabb047",
+                            Id = "6f579bd5-5db6-4ac2-b1cf-fd78d62a6e7c",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "4b896ee8-832b-4470-a6df-59ff5d697c48",
+                            Id = "3b644a5a-a361-49af-879b-db4ab34beee8",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         },
                         new
                         {
-                            Id = "e07f4af4-90a1-42b2-a5cb-d0d37d4b4d4c",
+                            Id = "0ea0411c-9bb8-4d36-8161-2db67bd36a90",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -207,6 +207,9 @@ namespace api.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GitHubAccessToken")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastLoginAt")

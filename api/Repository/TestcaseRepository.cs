@@ -29,7 +29,15 @@ namespace api.Repository
         public async Task CreateTestCaseAsync(List<TestCase> tests)
         {
             await _context.TestCases.AddRangeAsync(tests);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
+        }
+
+        public Task<TestCase> GetTestCaseById(string testcaseId)
+        {
+            var testcase = _context.TestCases
+                .FirstOrDefaultAsync(x => x.TestCaseId == testcaseId);
+
+            return testcase;
         }
     }
 }

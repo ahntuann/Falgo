@@ -19,8 +19,58 @@ const Blog = () => {
     const [originalBlogs, setOriginalBlogs] = useState([]);
     const [filteredBlogs, setFilteredBlogs] = useState([]);
 
+    const [blogMostLikeAndShare, setBlogMostLikeAndShare] = useState(null);
+    const [blogMostLike, setBlogMostLike] = useState(null);
+    const [blogMostShare, setBlogMostShare] = useState(null);
+
     useEffect(() => {
-        console.log(filteredBlogs);
+        const now = new Date();
+        const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+        const validBlogs = filteredBlogs
+            .map((blog) => ({
+                ...blog,
+                likes: blog.blogLike?.length || 0,
+                shares: blog.blogShare?.length || 0,
+            }))
+            .filter((blog) => {
+                const blogDate = new Date(blog.datePublic);
+                return (
+                    blogDate >= firstDayOfMonth &&
+                    blogDate <= lastDayOfMonth &&
+                    (blog.likes > 0 || blog.shares > 0)
+                );
+            });
+
+        if (validBlogs.length === 0) {
+            setBlogMostLikeAndShare(null);
+            setBlogMostLike(null);
+            setBlogMostShare(null);
+            return;
+        }
+
+        setBlogMostLikeAndShare(
+            validBlogs.reduce(
+                (max, blog) =>
+                    blog.likes + blog.shares > (max?.likes + max?.shares || 0) ? blog : max,
+                validBlogs[0],
+            ),
+        );
+
+        setBlogMostLike(
+            validBlogs.reduce(
+                (max, blog) => (blog.likes > (max?.likes || 0) ? blog : max),
+                validBlogs[0],
+            ),
+        );
+
+        setBlogMostShare(
+            validBlogs.reduce(
+                (max, blog) => (blog.shares > (max?.shares || 0) ? blog : max),
+                validBlogs[0],
+            ),
+        );
     }, [filteredBlogs]);
 
     const [categories] = useState([
@@ -56,6 +106,62 @@ const Blog = () => {
         month: '',
         year: '',
     });
+
+    useEffect(() => {
+        const now = new Date();
+        const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+        const validBlogs = availableblog
+            .map((blog) => ({
+                ...blog,
+                likes: blog.blogLike?.length || 0,
+                shares: blog.blogShare?.length || 0,
+            }))
+            .filter((blog) => {
+                const blogDate = new Date(blog.datePublic);
+                return (
+                    blogDate >= firstDayOfMonth &&
+                    blogDate <= lastDayOfMonth &&
+                    (blog.likes > 0 || blog.shares > 0)
+                );
+            });
+
+        if (validBlogs.length === 0) {
+            setBlogMostLikeAndShare(null);
+            setBlogMostLike(null);
+            setBlogMostShare(null);
+            return;
+        }
+
+        const blogMostLikeAndShare = validBlogs.reduce(
+            (max, blog) =>
+                blog.likes + blog.shares > (max?.likes + max?.shares || 0) ? blog : max,
+            validBlogs[0],
+        );
+
+        const remainingBlogs = validBlogs.filter((blog) => blog.id !== blogMostLikeAndShare.id);
+
+        const blogMostLike = remainingBlogs.length
+            ? remainingBlogs.reduce(
+                  (max, blog) => (blog.likes > (max?.likes || 0) ? blog : max),
+                  remainingBlogs[0],
+              )
+            : null;
+
+        const remainingAfterLike = remainingBlogs.filter((blog) => blog.id !== blogMostLike?.id);
+
+        const blogMostShare = remainingAfterLike.length
+            ? remainingAfterLike.reduce(
+                  (max, blog) => (blog.shares > (max?.shares || 0) ? blog : max),
+                  remainingAfterLike[0],
+              )
+            : null;
+
+        setBlogMostLikeAndShare(blogMostLikeAndShare);
+        setBlogMostLike(blogMostLike);
+        setBlogMostShare(blogMostShare);
+    }, [availableblog, filteredBlogs]);
 
     useEffect(() => {
         if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -203,7 +309,6 @@ const Blog = () => {
 
     const handleDelete = async (blogId) => {
         if (!window.confirm('Bạn có chắc chắn muốn xóa bài viết này không?')) return;
-        console.log('ID nhận được trong handleDelete:', blogId);
 
         try {
             const token = localStorage.getItem('accessToken');
@@ -238,17 +343,9 @@ const Blog = () => {
 
     return (
         <div className={cs('container')}>
-            <div className={cs('suggest_space')}>
-                <div className={cs('suggestMostLikeShare_space')}></div>
-                <div className={cs('suggestLikeShare_space')}>
-                    <div className={cs('suggestMostLike_space')}></div>
-                    <div className={cs('suggestMostShare_space')}></div>
-                </div>
-            </div>
             <div className={cs('blog')}>
                 <div>
                     <div className={cs('blog_title_search')}>
-                        <h2 className={cs('title')}>Danh sách bài viết</h2>
                         <div className={cs('search-bar')}>
                             <input
                                 type="text"
@@ -258,6 +355,286 @@ const Blog = () => {
                                 onChange={handleChange}
                             />
                         </div>
+                        {(blogMostLikeAndShare || blogMostLike || blogMostShare) && (
+                            <div className={cs('suggest_space')}>
+                                <h2 className={cs('title')}>Bài viết nổi bật</h2>
+                                {blogMostLikeAndShare && (
+                                    <div key={blogMostLikeAndShare.id} className={cs('blog-item')}>
+                                        <img
+                                            src={
+                                                blogMostLikeAndShare.thumbnail
+                                                    ? blogMostLikeAndShare.thumbnail
+                                                    : NoImage
+                                            }
+                                            alt={blogMostLikeAndShare.title}
+                                            className={cs('thumbnail')}
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = NoImage;
+                                            }}
+                                        />
+
+                                        <div className={cs('content')}>
+                                            <h2>{blogMostLikeAndShare.title}</h2>
+                                            <p>{blogMostLikeAndShare.description}</p>
+                                            {blogMostLikeAndShare.categoryBlog &&
+                                                blogMostLikeAndShare.categoryBlog.trim() !== '' &&
+                                                blogMostLikeAndShare.categoryBlog.trim() !==
+                                                    ',' && (
+                                                    <div className={cs('category-tags')}>
+                                                        {blogMostLikeAndShare.categoryBlog
+                                                            .split(',')
+                                                            .map((category, index) => (
+                                                                <button
+                                                                    key={index}
+                                                                    className={cs('category-item')}
+                                                                    onClick={() =>
+                                                                        handleCategoryChange(
+                                                                            category.trim(),
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    {category.trim()}
+                                                                </button>
+                                                            ))}
+                                                    </div>
+                                                )}
+                                            <p>
+                                                Ngày đăng:{' '}
+                                                {blogMostLikeAndShare.createOn
+                                                    ? new Date(
+                                                          blogMostLikeAndShare.createOn + 'Z',
+                                                      ).toLocaleDateString('vi-VN')
+                                                    : 'Không có dữ liệu'}
+                                            </p>
+
+                                            <div className={cs('actions')}>
+                                                <div className={cs('userPart')}>
+                                                    {userRole !== 'guest' &&
+                                                        userObject &&
+                                                        userObject.id ===
+                                                            blogMostLikeAndShare.userId && (
+                                                            <div>
+                                                                <Link
+                                                                    to={'/BlogUpdate'}
+                                                                    state={{
+                                                                        blog: blogMostLikeAndShare,
+                                                                    }}
+                                                                    className={cs('edit')}
+                                                                >
+                                                                    Chỉnh sửa
+                                                                </Link>
+                                                                <button
+                                                                    className={cs('delete')}
+                                                                    onClick={() =>
+                                                                        handleDelete(
+                                                                            blogMostLikeAndShare.id,
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Xóa
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                </div>
+                                                <Link
+                                                    to={'/DetailBlog'}
+                                                    state={{
+                                                        blog: blogMostLikeAndShare,
+                                                    }}
+                                                    className={cs('btn-read-more')}
+                                                >
+                                                    Đọc thêm
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {blogMostLike && (
+                                    <div key={blogMostLike.id} className={cs('blog-item')}>
+                                        <img
+                                            src={
+                                                blogMostLike.thumbnail
+                                                    ? blogMostLike.thumbnail
+                                                    : NoImage
+                                            }
+                                            alt={blogMostLike.title}
+                                            className={cs('thumbnail')}
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = NoImage;
+                                            }}
+                                        />
+
+                                        <div className={cs('content')}>
+                                            <h2>{blogMostLike.title}</h2>
+                                            <p>{blogMostLike.description}</p>
+                                            {blogMostLike.categoryBlog &&
+                                                blogMostLike.categoryBlog.trim() !== '' &&
+                                                blogMostLike.categoryBlog.trim() !== ',' && (
+                                                    <div className={cs('category-tags')}>
+                                                        {blogMostLike.categoryBlog
+                                                            .split(',')
+                                                            .map((category, index) => (
+                                                                <button
+                                                                    key={index}
+                                                                    className={cs('category-item')}
+                                                                    onClick={() =>
+                                                                        handleCategoryChange(
+                                                                            category.trim(),
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    {category.trim()}
+                                                                </button>
+                                                            ))}
+                                                    </div>
+                                                )}
+                                            <p>
+                                                Ngày đăng:{' '}
+                                                {blogMostLike.createOn
+                                                    ? new Date(
+                                                          blogMostLike.createOn + 'Z',
+                                                      ).toLocaleDateString('vi-VN')
+                                                    : 'Không có dữ liệu'}
+                                            </p>
+
+                                            <div className={cs('actions')}>
+                                                <div className={cs('userPart')}>
+                                                    {userRole !== 'guest' &&
+                                                        userObject &&
+                                                        userObject.id === blogMostLike.userId && (
+                                                            <div>
+                                                                <Link
+                                                                    to={'/BlogUpdate'}
+                                                                    state={{
+                                                                        blog: blogMostLike,
+                                                                    }}
+                                                                    className={cs('edit')}
+                                                                >
+                                                                    Chỉnh sửa
+                                                                </Link>
+                                                                <button
+                                                                    className={cs('delete')}
+                                                                    onClick={() =>
+                                                                        handleDelete(
+                                                                            blogMostLike.id,
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Xóa
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                </div>
+                                                <Link
+                                                    to={'/DetailBlog'}
+                                                    state={{
+                                                        blog: blogMostLike,
+                                                    }}
+                                                    className={cs('btn-read-more')}
+                                                >
+                                                    Đọc thêm
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {blogMostShare && (
+                                    <div key={blogMostShare.id} className={cs('blog-item')}>
+                                        <img
+                                            src={
+                                                blogMostShare.thumbnail
+                                                    ? blogMostShare.thumbnail
+                                                    : NoImage
+                                            }
+                                            alt={blogMostShare.title}
+                                            className={cs('thumbnail')}
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = NoImage;
+                                            }}
+                                        />
+
+                                        <div className={cs('content')}>
+                                            <h2>{blogMostShare.title}</h2>
+                                            <p>{blogMostShare.description}</p>
+                                            {blogMostShare.categoryBlog &&
+                                                blogMostShare.categoryBlog.trim() !== '' &&
+                                                blogMostShare.categoryBlog.trim() !== ',' && (
+                                                    <div className={cs('category-tags')}>
+                                                        {blogMostShare.categoryBlog
+                                                            .split(',')
+                                                            .map((category, index) => (
+                                                                <button
+                                                                    key={index}
+                                                                    className={cs('category-item')}
+                                                                    onClick={() =>
+                                                                        handleCategoryChange(
+                                                                            category.trim(),
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    {category.trim()}
+                                                                </button>
+                                                            ))}
+                                                    </div>
+                                                )}
+                                            <p>
+                                                Ngày đăng:{' '}
+                                                {blogMostShare.createOn
+                                                    ? new Date(
+                                                          blogMostShare.createOn + 'Z',
+                                                      ).toLocaleDateString('vi-VN')
+                                                    : 'Không có dữ liệu'}
+                                            </p>
+
+                                            <div className={cs('actions')}>
+                                                <div className={cs('userPart')}>
+                                                    {userRole !== 'guest' &&
+                                                        userObject &&
+                                                        userObject.id === blogMostShare.userId && (
+                                                            <div>
+                                                                <Link
+                                                                    to={'/BlogUpdate'}
+                                                                    state={{
+                                                                        blog: blogMostShare,
+                                                                    }}
+                                                                    className={cs('edit')}
+                                                                >
+                                                                    Chỉnh sửa
+                                                                </Link>
+                                                                <button
+                                                                    className={cs('delete')}
+                                                                    onClick={() =>
+                                                                        handleDelete(
+                                                                            blogMostShare.id,
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Xóa
+                                                                </button>
+                                                            </div>
+                                                        )}
+                                                </div>
+                                                <Link
+                                                    to={'/DetailBlog'}
+                                                    state={{
+                                                        blog: blogMostShare,
+                                                    }}
+                                                    className={cs('btn-read-more')}
+                                                >
+                                                    Đọc thêm
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        <h2 className={cs('title')}>Danh sách bài viết</h2>
 
                         <div className={cs('blog-list')}>
                             {paginatedBlogs.length > 0 ? (
@@ -311,7 +688,7 @@ const Blog = () => {
                                                     {userRole !== 'guest' &&
                                                         userObject &&
                                                         userObject.id === blog.userId && (
-                                                            <>
+                                                            <div>
                                                                 <Link
                                                                     to={'/BlogUpdate'}
                                                                     state={{ blog }}
@@ -327,7 +704,7 @@ const Blog = () => {
                                                                 >
                                                                     Xóa
                                                                 </button>
-                                                            </>
+                                                            </div>
                                                         )}
                                                 </div>
                                                 <Link

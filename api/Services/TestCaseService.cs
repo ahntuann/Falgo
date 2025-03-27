@@ -20,5 +20,10 @@ namespace api.Services
         {
             return await _testCaseRepo.GetAllTestCaseByProblemIdAsync(problemId);
         }
+
+        public Task<TestCase> GetTestCaseById(string testcaseId)
+        {
+            return _testCaseRepo.GetTestCaseById(testcaseId);
+        }
     }
 }

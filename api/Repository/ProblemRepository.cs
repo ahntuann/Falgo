@@ -55,5 +55,10 @@ namespace api.Repository
             return await problemsQuery.ToListAsync();
         }
 
+        public async Task<string> GetProblemNameByIdAsync(string problemId)
+        {
+            var problem = await _context.Problems.AsNoTracking().FirstOrDefaultAsync(p => p.ProblemId == problemId);
+            return  problem?.Title ?? "Unknown Problem";
+        }
     }
 }

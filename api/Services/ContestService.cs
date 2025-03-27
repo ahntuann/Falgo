@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos.Contest;
+using api.Helpers;
 using api.Interface;
 using api.Mappers;
 using api.Model;
@@ -55,6 +56,29 @@ namespace api.Services
             }
 
             return contestRegisCount.Select(x => x.Key.ToContestBriefFromContest(x.Value)).ToList();
+        }
+        public async Task<PageResult<ContestBriefDto>> GetxContestAsync(ContestManagementQueryObject query)
+        {
+            var contests = await _contestRepo.GetAllContestAsync(query);
+            
+             Dictionary<Contest, int> contestRegisCount = new Dictionary<Contest, int>();
+
+            foreach (var contest in contests)
+            {
+                var registions = await _contestRegisService.GetAllContestRegistationAsync(contest);
+
+                contestRegisCount.Add(contest, registions.Count);
+            }
+        int totalItems = contestRegisCount.Count;
+            var result = contestRegisCount.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToList();
+           // Console.WriteLine("totalItems1:  "+query.ProblemTitle);
+            return new PageResult<ContestBriefDto>
+            {
+                Items = result.Select(x => x.Key.ToContestBriefFromContest(x.Value)).ToList(),
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)query.PageSize),
+                CurrentPage = query.PageNumber
+            };
         }
     }
 }

@@ -16,10 +16,14 @@ import {
     UserSubmissions,
     UserContest,
     ContestList,
+    SubmissionHistory,
+    Ranking,
+    PublicProfile,
     BlogBookMark,
 } from '~/components/user/pages';
-import { AdminLogin, Dashboard } from '~/components/admin/pages';
-import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
+import { AdminLogin } from '~/components/admin/pages';
+import { DefaultLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
+import ContestDetail from '~/components/user/pages/ContestDetail';
 
 const routes = [
     {
@@ -130,6 +134,30 @@ const routes = [
         path: 'contest',
         layout: DefaultLayout,
         role: ['guest', 'user'],
+    },
+    {
+        component: SubmissionHistory,
+        path: '/submissions/history/:problemId',
+        layout: DefaultLayout,
+        role: ['user'],
+    },
+    {
+        component: Ranking,
+        path: '/ranking',
+        layout: DefaultLayout,
+        role: ['guest', 'user'],
+    },
+    {
+        component: PublicProfile,
+        path: '/profile/public/:userId',
+        layout: DefaultLayout,
+        role: ['guest', 'user'],
+    },
+    {
+        component: ContestDetail,
+        path: '/contest/:contestId',
+        layout: DefaultLayout,
+        role: ['user'],
     },
     {
         component: BlogBookMark,

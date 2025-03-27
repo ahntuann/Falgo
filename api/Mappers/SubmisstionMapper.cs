@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Dtos.Submission;
+using api.Dtos.User;
 using api.Model;
 
 namespace api.Mappers

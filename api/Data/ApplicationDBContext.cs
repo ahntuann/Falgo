@@ -20,7 +20,7 @@ namespace api.Data
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<ContestRegistion> ContestRegistions { get; set; }
         public DbSet<TestCase> TestCases { get; set; }
-        public DbSet<TestCaseStatus> TestCaseStatuses { get; set; }
+        public DbSet<TestCaseStatus> TestCaseStatus { get; set; }
         public DbSet<ContestProblem> ContestProblems { get; set; }
         public DbSet<Contest> Contests { get; set; }
         public DbSet<ProgrammingLanguage> ProgrammingLanguage { get; set; }
@@ -38,38 +38,36 @@ namespace api.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<TestCaseStatus>()
+                .HasKey(tc => new { tc.TestCaseId, tc.SubmissionId });
 
-            modelBuilder.Entity<ContestProblem>(entity =>
-            {
-                entity.HasKey(cp => new { cp.ContestId, cp.ProblemId });
-            });
+            modelBuilder.Entity<TestCaseStatus>()
+                .HasOne(tc => tc.Submission)
+                .WithMany(s => s.TestCaseStatuses)
+                .HasForeignKey(tc => tc.SubmissionId);
 
+            modelBuilder.Entity<TestCaseStatus>()
+                .HasOne(tc => tc.TestCase)
+                .WithMany(t => t.TestCaseStatuses)
+                .HasForeignKey(tc => tc.TestCaseId);
+
+            modelBuilder.Entity<ContestProblem>()
+                .HasKey(cp => new { cp.ContestId, cp.ProblemId });
 
             modelBuilder.Entity<ContestRegistion>()
                 .HasKey(cr => new { cr.Id, cr.ContestId });
 
-
             List<IdentityRole> roles = new List<IdentityRole>
     {
-        new IdentityRole
-        {
-            Name = "User",
-            NormalizedName = "USER"
-        },
-        new IdentityRole
-        {
-            Name = "Guest",
-            NormalizedName = "GUEST"
-        },
-        new IdentityRole
-        {
-            Name = "Admin",
-            NormalizedName = "ADMIN"
-        }
+        new IdentityRole { Name = "User", NormalizedName = "USER" },
+        new IdentityRole { Name = "Guest", NormalizedName = "GUEST" },
+        new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" }
     };
 
             modelBuilder.Entity<IdentityRole>().HasData(roles);
         }
+
+
 
 
     }

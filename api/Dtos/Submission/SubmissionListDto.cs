@@ -9,6 +9,7 @@ namespace api.Dtos.Submission
     {
         public string? SubmitterName { get; set; }
         public  string SubmissionId { get; set; }
+        public string?  ProblemId { get; set; }
         public string? ProgrammingLanguage { get; set; }
         public string? ProblemTitle { get; set; }
         public int Score { get; set; }

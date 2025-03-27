@@ -40,7 +40,7 @@ const UserBlog = () => {
 
     const startIndex = (query.page - 1) * query.postsPerPage;
     const endIndex = startIndex + query.postsPerPage;
-    const userBlogs = filteredBlogs.filter((blog) => blog.userId === userObject.id);
+    const userBlogs = filteredBlogs.filter((blog) => blog.userId === userObject.id).reverse();
     const totalPages = Math.ceil(userBlogs.length / query.postsPerPage);
     const paginatedBlogs = userBlogs.slice(startIndex, endIndex);
     const debounceRef = useRef(null);
@@ -268,6 +268,57 @@ const UserBlog = () => {
                                 onChange={handleChange}
                             />
                         </div>
+                        <div className={cs('pagination')}>
+                            <button
+                                disabled={query.page === 1}
+                                onClick={() => setQuery((prev) => ({ ...prev, page: 1 }))}
+                            >
+                                Đầu
+                            </button>
+
+                            <button
+                                disabled={query.page === 1}
+                                onClick={() =>
+                                    setQuery((prev) => ({ ...prev, page: prev.page - 1 }))
+                                }
+                            >
+                                Trước
+                            </button>
+
+                            <div className={cs('paginationnumber')}>
+                                {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                                    (page) =>
+                                        page === query.page ? (
+                                            <span key={page} className={cs('current-page')}>
+                                                {page}
+                                            </span>
+                                        ) : (
+                                            <button
+                                                key={page}
+                                                onClick={() => setQuery({ ...query, page })}
+                                            >
+                                                {page}
+                                            </button>
+                                        ),
+                                )}
+                            </div>
+
+                            <button
+                                disabled={query.page >= totalPages}
+                                onClick={() =>
+                                    setQuery((prev) => ({ ...prev, page: prev.page + 1 }))
+                                }
+                            >
+                                Sau
+                            </button>
+
+                            <button
+                                disabled={query.page === totalPages}
+                                onClick={() => setQuery((prev) => ({ ...prev, page: totalPages }))}
+                            >
+                                Cuối
+                            </button>
+                        </div>
                         {/* Bloglist */}
                         <div className={cs('blog-list')}>
                             {paginatedBlogs.length > 0 ? (
@@ -389,7 +440,6 @@ const UserBlog = () => {
                         </div>
                         {/* End Bloglist */}
 
-                        {/* pagination */}
                         <div className={cs('pagination')}>
                             <button
                                 disabled={query.page === 1}
@@ -441,7 +491,6 @@ const UserBlog = () => {
                                 Cuối
                             </button>
                         </div>
-                        {/* End pagination */}
                     </div>
                 </div>
 
@@ -457,9 +506,8 @@ const UserBlog = () => {
                             Đã tạo
                         </Link>
                     </div>
-                    {/* sidebar */}
+
                     <div className={cs('sidebar')}>
-                        {/* category */}
                         <h3>Danh mục</h3>
                         <div className={cs('category-list')}>
                             {categories.map((category, index) => (
@@ -473,9 +521,7 @@ const UserBlog = () => {
                                 </button>
                             ))}
                         </div>
-                        {/* End category */}
 
-                        {/* sortBy */}
                         <h3>Sắp xếp theo</h3>
                         <div className={cs('sort-controls')}>
                             <select name="sortBy" value={query.sortBy} onChange={handleChange}>
@@ -494,48 +540,12 @@ const UserBlog = () => {
                                 {query.IsDescending ? 'Giảm dần' : 'Tăng dần'}
                             </button>
                         </div>
-                        {/* End sortBy */}
 
-                        {/* date-filter */}
                         <div className={cs('filter-name')}>
                             <h3>Lọc theo ngày</h3>
                             <h3>Trạng thái</h3>
                         </div>
                         <div className={cs('date-filter')}>
-                            {/* <div className={cs('DateInput')}>
-                                <select
-                                    name="day"
-                                    value={dateFilter.day}
-                                    onChange={handleDateChange}
-                                >
-                                    <option value="">Ngày</option>
-                                    {[...Array(31)].map((_, i) => (
-                                        <option key={i + 1} value={i + 1}>
-                                            {i + 1}
-                                        </option>
-                                    ))}
-                                </select>
-
-                                <select
-                                    name="month"
-                                    value={dateFilter.month}
-                                    onChange={handleDateChange}
-                                >
-                                    <option value="">Tháng</option>
-                                    {[...Array(12)].map((_, i) => (
-                                        <option key={i + 1} value={i + 1}>
-                                            {i + 1}
-                                        </option>
-                                    ))}
-                                </select>
-                                <input
-                                    type="number"
-                                    name="year"
-                                    placeholder="năm"
-                                    value={dateFilter.year}
-                                    onChange={handleDateChange}
-                                />
-                            </div> */}
                             <div className={cs('date-filter')}>
                                 <input
                                     type="date"

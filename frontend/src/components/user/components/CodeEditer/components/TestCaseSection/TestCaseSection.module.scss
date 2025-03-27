@@ -9,7 +9,7 @@
     font-size: 1.3rem;
     display: flex;
     align-items: center;
-    background-color: #2b0957;
+    background-color: #151515;
     padding: 0 var(--code-editing-padding);
 }
 
@@ -33,11 +33,11 @@
 }
 
 .testcaseList::-webkit-scrollbar-track {
-    background: #9c7fe3;
+    background: #4a4a4a;
 }
 
 .testcaseList::-webkit-scrollbar-thumb {
-    background: #6638bc;
+    background: #2c2c2c;
     border-radius: 4px;
 }
 
@@ -47,12 +47,12 @@
     font-size: 1.5rem;
 
     &:hover {
-        background-color: #2d2d46;
+        background-color: #38383b;
     }
 }
 
 .testcaseItem.active {
-    background-color: #2d2d46;
+    background-color: #38383b;
     cursor: pointer;
 }
 
@@ -87,11 +87,11 @@
 }
 
 .testcaseItemDetail::-webkit-scrollbar-track {
-    background: #9c7fe3;
+    background: #4a4a4a;
 }
 
 .testcaseItemDetail::-webkit-scrollbar-thumb {
-    background: #6638bc;
+    background: #2c2c2c;
     border-radius: 4px;
 }
 

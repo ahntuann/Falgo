@@ -7,6 +7,10 @@ using api.Helpers;
 using api.Interface;
 using api.Mappers;
 using api.Model;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 
 namespace api.Services
 {
@@ -151,8 +155,10 @@ namespace api.Services
             {
                 SubmissionId = submission.SubmissionId,
                 ProblemTitle = submission.Problem.Title,
+                ProblemId = submission.ProblemId,
                 Status = submission.Status,
                 Score = submission.Point,
+                SourceCode = submission.SourceCode,
                 ProgrammingLanguage = submission.ProgrammingLanguage.Language,
                 ExecuteTime = submission.ExecuteTime,
                 MemoryUsed = submission.MemoryUsed,
@@ -194,6 +200,21 @@ namespace api.Services
                 TotalPages = (int)Math.Ceiling(totalItems / (double)query.PageSize),
                 CurrentPage = query.PageNumber
             };
+        }
+
+        public async Task<List<string>> GetAllSubmissionHistoryStatusesAsync(string userId, string problemId)
+        {
+            var query = new SubmissionHistoryQueryObject();
+            var submissions = await _subRepo.GetSubmissionsHistory(userId, problemId, query);
+            return submissions
+                .Select(s => s.Status)
+                .Distinct()
+                .ToList();
+        }
+
+        public async Task<Submission> GetSubmissionByIdAsync(string submissionId)
+        {
+            return await _subRepo.GetSubmissionByIdAsync(submissionId);
         }
     }
 }

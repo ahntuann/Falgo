@@ -262,7 +262,57 @@ const BlogBookMark = () => {
                                 onChange={handleChange}
                             />
                         </div>
+                        <div className={cs('pagination')}>
+                            <button
+                                disabled={query.page === 1}
+                                onClick={() => setQuery((prev) => ({ ...prev, page: 1 }))}
+                            >
+                                Đầu
+                            </button>
 
+                            <button
+                                disabled={query.page === 1}
+                                onClick={() =>
+                                    setQuery((prev) => ({ ...prev, page: prev.page - 1 }))
+                                }
+                            >
+                                Trước
+                            </button>
+
+                            <div className={cs('paginationnumber')}>
+                                {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                                    (page) =>
+                                        page === query.page ? (
+                                            <span key={page} className={cs('current-page')}>
+                                                {page}
+                                            </span>
+                                        ) : (
+                                            <button
+                                                key={page}
+                                                onClick={() => setQuery({ ...query, page })}
+                                            >
+                                                {page}
+                                            </button>
+                                        ),
+                                )}
+                            </div>
+
+                            <button
+                                disabled={query.page >= totalPages}
+                                onClick={() =>
+                                    setQuery((prev) => ({ ...prev, page: prev.page + 1 }))
+                                }
+                            >
+                                Sau
+                            </button>
+
+                            <button
+                                disabled={query.page === totalPages}
+                                onClick={() => setQuery((prev) => ({ ...prev, page: totalPages }))}
+                            >
+                                Cuối
+                            </button>
+                        </div>
                         {/* Bloglist */}
                         <div className={cs('blog-list')}>
                             {paginatedBlogs.length > 0 ? (

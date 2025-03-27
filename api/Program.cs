@@ -146,6 +146,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient();
+
 
 // Dependency Injection
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -184,6 +186,10 @@ builder.Services.AddScoped<IBlogBookmarkRepository, BlogBookmarkRepository>();
 builder.Services.AddScoped<IBlogBookmarkService, BlogBookmarkService>();
 builder.Services.AddScoped<IBlogForbiddenWordRepository, BlogForbiddenWordRepository>();
 builder.Services.AddScoped<IBlogForbiddenWordService, BlogForbiddenWordService>();
+builder.Services.AddScoped<IRankingRepository, RankingRepository>();
+builder.Services.AddScoped<IRankingService, RankingService>();
+builder.Services.AddScoped<ITestCaseStatusRepository, TestCaseStatusRepository>();
+builder.Services.AddScoped<ITestCaseStatusService, TestCaseStatusService>();
 
 // Logging
 builder.Logging.AddConsole();
