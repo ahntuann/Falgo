@@ -23,5 +23,19 @@ namespace api.Mappers
                 NumRegis = numRegis
             };
         }
+        public static Contest ToContestFromContestDto(this ContestDto contest)
+        {
+            return new Contest
+            {
+                ContestId=contest.ContestId,
+                ContestName = contest.ContestName,
+                DueTime = contest.DueTime,
+                TotalPoint = contest.TotalPoint,
+                Level = contest.Level,
+                EndDate = contest.EndDate,
+                Banner = contest.Banner,
+                CreatedAt =DateTime.Now,
+            };
+        }
     }
 }

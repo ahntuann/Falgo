@@ -20,9 +20,9 @@ namespace api.Repository
 
         public async Task<Contest?> GetContestByIdAsync(string id)
         {
-            var contest = await _context.Contests.FirstOrDefaultAsync(x => x.ContestId == id);
+            return  await _context.Contests.FirstOrDefaultAsync(x => x.ContestId == id);
 
-            return contest;
+           
         }
 
         public async Task<List<Contest>> GetContestsAsync(string typeOfContest)
@@ -65,6 +65,15 @@ namespace api.Repository
            
           
             return await contests.ToListAsync();
+        }
+        public async Task DeleteContestAsync(string ContestId)
+        {
+           await _context.Contests.Where(P => P.ContestId==ContestId).ExecuteDeleteAsync();
+        }
+        public async Task addContest(Contest contest)
+        {
+            await _context.Contests.AddAsync(contest);
+            await _context.SaveChangesAsync();
         }
     }
 }

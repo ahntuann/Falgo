@@ -80,5 +80,17 @@ namespace api.Services
                 CurrentPage = query.PageNumber
             };
         }
+        public async Task deleteContest(string ContestId)
+        {
+            await _contestRepo.DeleteContestAsync(ContestId);
+        }
+        public async Task<Contest?> getContestById(string id)
+        {
+           return await _contestRepo.GetContestByIdAsync(id);
+        }
+        public async Task addContest(ContestDto contest)
+        {
+            await _contestRepo.addContest(contest.ToContestFromContestDto());
+        }
     }
 }
