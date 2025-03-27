@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './PublicProfile.module.scss';
-
 const cs = classNames.bind(styles);
 
 const STATUS_TRANSLATIONS = {
@@ -48,7 +47,7 @@ const PublicProfile = () => {
         currentPage: 1,
     });
     const [contests, setContests] = useState([]);
-
+    const [skills, setSkills] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { userId } = useParams();
@@ -57,13 +56,11 @@ const PublicProfile = () => {
         try {
             setLoading(true);
 
-            // Fetch user profile
             const profileResponse = await axios.get(
                 `http://localhost:5180/api/user/profile/${userId}`,
             );
             setUser(profileResponse.data);
 
-            // Calculate accuracy
             const totalSubmissions = profileResponse.data.totalSubmissions || 0;
             const totalSolved = profileResponse.data.totalSolved || 0;
             const incorrectSubmissions = totalSubmissions - totalSolved;
@@ -76,19 +73,16 @@ const PublicProfile = () => {
                 accuracyPercentage: accuracyPercentage,
             });
 
-            // Fetch top languages
             const languagesResponse = await axios.get(
                 `http://localhost:5180/api/user/${userId}/top-languages`,
             );
             setTopLanguages(languagesResponse.data.data);
 
-            // Fetch problem categories
             const categoriesResponse = await axios.get(
                 `http://localhost:5180/api/user/${userId}/problem-categories`,
             );
             setProblemCategories(categoriesResponse.data.data);
 
-            // Fetch user submissions
             const submissionsResponse = await axios.get(
                 `http://localhost:5180/api/user/${userId}/submissions?PageNumber=${page}&PageSize=10`,
             );
@@ -98,7 +92,6 @@ const PublicProfile = () => {
                 currentPage: page,
             });
 
-            // Fetch user contests
             const contestsResponse = await axios.get(
                 `http://localhost:5180/api/user/${userId}/contests`,
             );
