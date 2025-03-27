@@ -41,5 +41,21 @@ namespace api.Repository
             await _Context.SaveChangesAsync();
             return content;
         }
+        public async Task<CommentBlog?> UpdateAsync(int id, UpdateBlogCommentDto BlogcmtDto)
+        {
+            var existingBlogcmt = await _Context.CommentBlog.FirstOrDefaultAsync(x => x.ID == id);
+            if (existingBlogcmt == null)
+            {
+                return null;
+            }
+
+            existingBlogcmt.content = BlogcmtDto.content;
+            existingBlogcmt.Status = BlogcmtDto.Status;
+            existingBlogcmt.Note = BlogcmtDto.Note;
+
+            await _Context.SaveChangesAsync();
+
+            return existingBlogcmt;
+        }
     }
 }

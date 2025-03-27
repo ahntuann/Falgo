@@ -12,6 +12,6 @@ namespace api.Interface.Services
         Task<List<CommentBlog>> GetAllComments();
         Task<CommentBlog?> DeleteAync(int commentId);
         Task<CommentBlog> CreateAsync(CommentBlog content);
-
+        Task<CommentBlog?> UpdateAsync(int id, UpdateBlogCommentDto BlogcmtDto);
     }
 }

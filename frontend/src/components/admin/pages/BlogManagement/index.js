@@ -39,11 +39,13 @@ function BlogManagement() {
     const totalPages = Math.ceil(filteredBlogs.length / query.postsPerPage);
     const paginatedBlogs = filteredBlogs.slice(startIndex, endIndex);
     const role = JSON.parse(sessionStorage.getItem('admin'));
+
     useEffect(() => {
         if (!role) {
             navigate('/');
         }
     }, [role]);
+
     const fetchBlogs = async () => {
         try {
             const params = Object.fromEntries(
@@ -280,7 +282,6 @@ function BlogManagement() {
                         Reset
                     </button>
                 </div>
-                {/* pagination */}
                 <div className={cs('pagination')}>
                     <button
                         disabled={query.page === 1}
@@ -324,7 +325,6 @@ function BlogManagement() {
                         Cuối
                     </button>
                 </div>
-                {/* End pagination */}
                 {paginatedBlogs.length > 0 ? (
                     paginatedBlogs.map((blog) => (
                         <div key={blog.id} className={cs('blog-item')}>
@@ -413,12 +413,14 @@ function BlogManagement() {
                                     </button>
                                 </div>
                             </div>
+                            {blog.status === 'Báo cáo' && (
+                                <div className={cs('Note')}>{blog.note}</div>
+                            )}
                         </div>
                     ))
                 ) : (
                     <p className={cs('no-blogs')}>Không có bài viết nào.</p>
                 )}
-                {/* pagination */}
                 <div className={cs('pagination')}>
                     <button
                         disabled={query.page === 1}
@@ -462,7 +464,6 @@ function BlogManagement() {
                         Cuối
                     </button>
                 </div>
-                {/* End pagination */}
             </div>
         </AdminLayout>
     );

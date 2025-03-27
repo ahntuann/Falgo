@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
 import classNames from 'classnames/bind';
-import styles from './UserBlog.module.scss';
+import styles from './BlogBookMark.module.scss';
 import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
 
 import { useContext } from 'react';
@@ -11,13 +11,17 @@ import { Link } from 'react-router-dom';
 
 const cs = classNames.bind(styles);
 
-const UserBlog = () => {
+const BlogBookMark = () => {
     const { userRole } = useContext(AuthContext);
     const userNow = localStorage.getItem('user');
     const userObject = userNow ? JSON.parse(userNow) : null;
 
     const [originalBlogs, setOriginalBlogs] = useState([]);
     const [filteredBlogs, setFilteredBlogs] = useState([]);
+
+    useEffect(() => {
+        console.log(filteredBlogs);
+    }, [filteredBlogs]);
 
     const [categories] = useState([
         { name: 'Thử thách', icon: '🔥' },
@@ -26,11 +30,9 @@ const UserBlog = () => {
         { name: 'Mẹo lập trình', icon: '💡' },
         { name: 'Xu hướng lập trình', icon: '🚀' },
     ]);
-    const StatusOptions = ['Chờ duyệt', 'Duyệt Lại', 'Thông qua', 'Từ chối', 'Báo cáo'];
     const [query, setQuery] = useState({
         search: '',
         category: '',
-        status: '',
         sortBy: 'createOn',
         IsDescending: true,
         page: 1,
@@ -40,9 +42,15 @@ const UserBlog = () => {
 
     const startIndex = (query.page - 1) * query.postsPerPage;
     const endIndex = startIndex + query.postsPerPage;
-    const userBlogs = filteredBlogs.filter((blog) => blog.userId === userObject.id).reverse();
-    const totalPages = Math.ceil(userBlogs.length / query.postsPerPage);
-    const paginatedBlogs = userBlogs.slice(startIndex, endIndex);
+    const availableblog = filteredBlogs.filter(
+        (blog) =>
+            (blog.status === 'Thông qua' || blog.status === 'Báo cáo') &&
+            new Date(blog.datePublic) < new Date() &&
+            blog.blogBookmark.some((bookmark) => bookmark.userID === userObject.id),
+    );
+    console.log('availableblog', availableblog);
+    const totalPages = Math.ceil(availableblog.length / query.postsPerPage);
+    const paginatedBlogs = availableblog.slice(startIndex, endIndex);
     const debounceRef = useRef(null);
 
     const [dateFilter, setDateFilter] = useState({
@@ -74,10 +82,6 @@ const UserBlog = () => {
                     return query.IsDescending
                         ? b.title.localeCompare(a.title)
                         : a.title.localeCompare(b.title);
-                } else if (query.sortBy === 'status') {
-                    return query.IsDescending
-                        ? b.status.localeCompare(a.status)
-                        : a.status.localeCompare(b.status);
                 }
                 return 0;
             }),
@@ -94,7 +98,6 @@ const UserBlog = () => {
             });
 
             let fetchedBlogs = response.data || [];
-
             if (query.category) {
                 fetchedBlogs = fetchedBlogs.filter((blog) => {
                     if (!blog.categoryBlog) return false;
@@ -113,10 +116,6 @@ const UserBlog = () => {
                 );
             }
 
-            if (query.status) {
-                fetchedBlogs = fetchedBlogs.filter((blog) => blog.status === query.status);
-            }
-
             fetchedBlogs = fetchedBlogs.sort((a, b) => {
                 if (query.sortBy === 'createOn') {
                     return query.IsDescending
@@ -126,10 +125,6 @@ const UserBlog = () => {
                     return query.IsDescending
                         ? b.title.localeCompare(a.title)
                         : a.title.localeCompare(b.title);
-                } else if (query.sortBy === 'status') {
-                    return query.IsDescending
-                        ? b.status.localeCompare(a.status)
-                        : a.status.localeCompare(b.status);
                 }
                 return 0;
             });
@@ -172,7 +167,6 @@ const UserBlog = () => {
         setDateFilter({ date: '', day: '', month: '', year: '' });
         setFilteredBlogs(originalBlogs);
     };
-
     const handleDateChange = (event) => {
         const selectedDate = event.target.value;
         if (!selectedDate) {
@@ -188,6 +182,7 @@ const UserBlog = () => {
             year: year || '',
         });
     };
+
     const handleFilterByDate = () => {
         const { day, month, year } = dateFilter;
 
@@ -247,7 +242,7 @@ const UserBlog = () => {
             <div className={cs('blog')}>
                 <div>
                     <div className={cs('blog_title_search')}>
-                        <h2 className={cs('title')}>Danh sách bài viết đã tạo</h2>
+                        <h2 className={cs('title')}>Danh sách bài viết đã lưu</h2>
                         <div className={cs('search-bar')}>
                             <input
                                 type="text"
@@ -311,122 +306,89 @@ const UserBlog = () => {
                         <div className={cs('blog-list')}>
                             {paginatedBlogs.length > 0 ? (
                                 paginatedBlogs.map((blog) => (
-                                    <div className={cs('blog_content')}>
-                                        <div key={blog.id} className={cs('blog-item')}>
-                                            <img
-                                                src={blog.thumbnail ? blog.thumbnail : NoImage}
-                                                alt={blog.title}
-                                                className={cs('thumbnail')}
-                                                onError={(e) => {
-                                                    e.target.onerror = null;
-                                                    e.target.src = NoImage;
-                                                }}
-                                            />
+                                    <div key={blog.id} className={cs('blog-item')}>
+                                        <img
+                                            src={blog.thumbnail ? blog.thumbnail : NoImage}
+                                            alt={blog.title}
+                                            className={cs('thumbnail')}
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = NoImage;
+                                            }}
+                                        />
 
-                                            <div className={cs('content')}>
-                                                <h2>{blog.title}</h2>
-                                                <p>{blog.description}</p>
-                                                {blog.categoryBlog &&
-                                                    blog.categoryBlog.trim() !== '' &&
-                                                    blog.categoryBlog.trim() !== ',' && (
-                                                        <div className={cs('category-tags')}>
-                                                            {blog.categoryBlog
-                                                                .split(',')
-                                                                .map((category, index) => (
-                                                                    <button
-                                                                        key={index}
-                                                                        className={cs(
-                                                                            'category-item',
-                                                                        )}
-                                                                        onClick={() =>
-                                                                            handleCategoryChange(
-                                                                                category.trim(),
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        {category.trim()}
-                                                                    </button>
-                                                                ))}
-                                                        </div>
-                                                    )}
-
-                                                <div className={cs('Date')}>
-                                                    <p>
-                                                        Ngày đăng:{' '}
-                                                        {blog.createOn
-                                                            ? new Date(
-                                                                  blog.createOn + 'Z',
-                                                              ).toLocaleDateString('vi-VN')
-                                                            : 'Không có dữ liệu'}
-                                                    </p>
-                                                    <p>
-                                                        Ngày công bố:{' '}
-                                                        {blog.datePublic
-                                                            ? new Date(
-                                                                  blog.datePublic + 'Z',
-                                                              ).toLocaleDateString('vi-VN')
-                                                            : 'Không có dữ liệu'}
-                                                    </p>
-                                                </div>
-
-                                                <div className={cs('actions')}>
-                                                    <div className={cs('userPart')}>
-                                                        {userRole !== 'guest' &&
-                                                            userObject &&
-                                                            userObject.id === blog.userId && (
-                                                                <>
-                                                                    <Link
-                                                                        to={'/BlogUpdate'}
-                                                                        state={{ blog }}
-                                                                        className={cs('edit')}
-                                                                    >
-                                                                        Chỉnh sửa
-                                                                    </Link>
-                                                                    <button
-                                                                        className={cs('delete')}
-                                                                        onClick={() =>
-                                                                            handleDelete(blog.id)
-                                                                        }
-                                                                    >
-                                                                        Xóa
-                                                                    </button>
-                                                                </>
-                                                            )}
+                                        <div className={cs('content')}>
+                                            <h2>{blog.title}</h2>
+                                            <p>{blog.description}</p>
+                                            {blog.categoryBlog &&
+                                                blog.categoryBlog.trim() !== '' &&
+                                                blog.categoryBlog.trim() !== ',' && (
+                                                    <div className={cs('category-tags')}>
+                                                        {blog.categoryBlog
+                                                            .split(',')
+                                                            .map((category, index) => (
+                                                                <button
+                                                                    key={index}
+                                                                    className={cs('category-item')}
+                                                                    onClick={() =>
+                                                                        handleCategoryChange(
+                                                                            category.trim(),
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    {category.trim()}
+                                                                </button>
+                                                            ))}
                                                     </div>
-                                                    <p
-                                                        className={cs('status', {
-                                                            approved: blog.status === 'Thông qua',
-                                                            rejected: blog.status === 'Từ chối',
-                                                            report: blog.status === 'Báo cáo',
-                                                            pending:
-                                                                blog.status !== 'Thông qua' &&
-                                                                blog.status !== 'Từ chối' &&
-                                                                blog.status !== 'Báo cáo',
-                                                        })}
-                                                    >
-                                                        {blog.status}
-                                                    </p>
-                                                    <Link
-                                                        to={'/DetailBlog'}
-                                                        state={{ blog }}
-                                                        className={cs('btn-read-more')}
-                                                    >
-                                                        Đọc thêm
-                                                    </Link>
+                                                )}
+                                            <p>
+                                                Ngày đăng:{' '}
+                                                {blog.createOn
+                                                    ? new Date(
+                                                          blog.createOn + 'Z',
+                                                      ).toLocaleDateString('vi-VN')
+                                                    : 'Không có dữ liệu'}
+                                            </p>
+
+                                            <div className={cs('actions')}>
+                                                <div className={cs('userPart')}>
+                                                    {userRole !== 'guest' &&
+                                                        userObject &&
+                                                        userObject.id === blog.userId && (
+                                                            <>
+                                                                <Link
+                                                                    to={'/BlogUpdate'}
+                                                                    state={{ blog }}
+                                                                    className={cs('edit')}
+                                                                >
+                                                                    Chỉnh sửa
+                                                                </Link>
+                                                                <button
+                                                                    className={cs('delete')}
+                                                                    onClick={() =>
+                                                                        handleDelete(blog.id)
+                                                                    }
+                                                                >
+                                                                    Xóa
+                                                                </button>
+                                                            </>
+                                                        )}
                                                 </div>
+                                                <Link
+                                                    to={'/DetailBlog'}
+                                                    state={{ blog }}
+                                                    className={cs('btn-read-more')}
+                                                >
+                                                    Đọc thêm
+                                                </Link>
                                             </div>
                                         </div>
-                                        {(blog.status === 'Từ chối' ||
-                                            blog.status === 'Báo cáo') && (
-                                            <div className={cs('Note')}>{blog.note}</div>
-                                        )}
                                     </div>
                                 ))
                             ) : (
                                 <p className={cs('no-blogs')}>Không có bài viết nào.</p>
                             )}
                         </div>
-
                         <div className={cs('pagination')}>
                             <button
                                 disabled={query.page === 1}
@@ -480,7 +442,6 @@ const UserBlog = () => {
                         </div>
                     </div>
                 </div>
-
                 <div className={cs('Create_UBlog_sidebar')}>
                     <div className={cs('Create_UBlog')}>
                         <Link to={'/CreateBlog'} className={cs('Create')}>
@@ -493,7 +454,6 @@ const UserBlog = () => {
                             Đã tạo
                         </Link>
                     </div>
-
                     <div className={cs('sidebar')}>
                         <h3>Danh mục</h3>
                         <div className={cs('category-list')}>
@@ -508,13 +468,11 @@ const UserBlog = () => {
                                 </button>
                             ))}
                         </div>
-
                         <h3>Sắp xếp theo</h3>
                         <div className={cs('sort-controls')}>
                             <select name="sortBy" value={query.sortBy} onChange={handleChange}>
                                 <option value="createOn">Ngày đăng</option>
                                 <option value="title">Tiêu đề</option>
-                                <option value="status">Trạng thái</option>
                             </select>
                             <button
                                 onClick={() =>
@@ -527,28 +485,15 @@ const UserBlog = () => {
                                 {query.IsDescending ? 'Giảm dần' : 'Tăng dần'}
                             </button>
                         </div>
+                        <h3>Lọc theo ngày</h3>
 
-                        <div className={cs('filter-name')}>
-                            <h3>Lọc theo ngày</h3>
-                            <h3>Trạng thái</h3>
-                        </div>
                         <div className={cs('date-filter')}>
-                            <div className={cs('date-filter')}>
-                                <input
-                                    type="date"
-                                    value={dateFilter.date}
-                                    onChange={handleDateChange}
-                                    className={cs('DateInput')}
-                                />
-                            </div>
-                            <select name="status" value={query.status} onChange={handleChange}>
-                                <option value="">Tất cả</option>
-                                {StatusOptions.map((status, index) => (
-                                    <option key={index} value={status}>
-                                        {status}
-                                    </option>
-                                ))}
-                            </select>
+                            <input
+                                type="date"
+                                value={dateFilter.date}
+                                onChange={handleDateChange}
+                                className={cs('DateInput')}
+                            />
                         </div>
                         <button className={cs('reset-button')} onClick={handleReset}>
                             Reset
@@ -560,4 +505,4 @@ const UserBlog = () => {
     );
 };
 
-export default UserBlog;
+export default BlogBookMark;

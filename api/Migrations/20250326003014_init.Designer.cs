@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -11,9 +12,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250326003014_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,19 +54,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "da47625f-8f4c-4450-9431-4e4f3f481f70",
+                            Id = "e29aef0d-533d-4752-9c53-4ff3efabb047",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "88576871-3a5b-492e-b3dd-f45909ee620d",
+                            Id = "4b896ee8-832b-4470-a6df-59ff5d697c48",
                             Name = "Guest",
                             NormalizedName = "GUEST"
                         },
                         new
                         {
-                            Id = "ffd3a3e8-2411-4f3a-b9ef-94878a6cd18e",
+                            Id = "e07f4af4-90a1-42b2-a5cb-d0d37d4b4d4c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -207,9 +210,6 @@ namespace api.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GitHubAccessToken")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastLoginAt")

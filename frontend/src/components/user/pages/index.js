@@ -17,6 +17,7 @@ export { default as UserProfileBlog } from './UserProfileBlog';
 export { default as UserSubmissions } from './UserSubmissions';
 export { default as UserContest } from './UserContest';
 export { default as ContestList } from './ContestList';
+export { default as BlogBookMark } from './BlogBookMark';
 export { default as SubmissionHistory } from './SubmissionHistory';
 export { default as Ranking } from './Ranking';
 export { default as PublicProfile } from './PublicProfile';
