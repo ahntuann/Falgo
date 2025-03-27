@@ -107,7 +107,7 @@ function ContestManagement() {
                 <tbody>
                     {contest !== undefined &&
                         contest.map((contest, i) => (
-                            <tr>
+                            <tr key={i}>
                                 <td>{contest.contestId}</td>
                                 <td>
                                     <ReactQuill

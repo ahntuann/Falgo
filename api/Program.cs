@@ -220,7 +220,6 @@ if (app.Environment.IsDevelopment())
 app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseRouting();
 app.MapControllers();
-app.Run();
 
 app.UseStaticFiles();
 app.UseRouting();
@@ -231,5 +230,4 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
-app.MapControllers();
 app.Run();
