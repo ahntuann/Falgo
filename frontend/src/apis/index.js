@@ -134,3 +134,24 @@ export const fetchAllContest = async (typeOfContest) => {
         return response.data;
     } catch (error) {}
 };
+
+export const StartContestForUserAPI = async (userId, contestId) => {
+    try {
+        const response = await axios.patch(`${API_ROOT}/api/contest/start`, {
+            userId,
+            contestId,
+        });
+
+        return response.data;
+    } catch (error) {}
+};
+
+export const GetContestRegistionByUserIdAndContestIdAPI = async (userId, contestId) => {
+    try {
+        const response = await axios.get(
+            `${API_ROOT}/api/contest/contestRegistion?UserId=${userId}&ContestId=${contestId}`,
+        );
+
+        return response.data;
+    } catch (error) {}
+};

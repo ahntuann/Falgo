@@ -65,5 +65,19 @@ namespace api.Repository
                 .Select(cr => cr.Contest)
                 .ToListAsync();
         }
+
+        public async Task StartContestForUserAsync(string userId, string contestId)
+        {
+            var regis = await _context.ContestRegistions
+                .FirstOrDefaultAsync(x => x.ContestId == contestId && x.AppUserId == userId);
+
+            if (regis == null)
+                return;
+
+            regis.IsStart = true;
+            regis.StartAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
