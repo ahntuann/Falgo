@@ -32,16 +32,15 @@
                 .description_space {
                     display: -webkit-box;
                     -webkit-box-orient: vertical;
-                    -webkit-line-clamp: 3; /* Giới hạn hiển thị 2 dòng */
+                    -webkit-line-clamp: 3;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: normal;
-                    word-break: break-word; /* Cắt từ nếu quá dài */
-                    max-height: 3.2em; /* Điều chỉnh tùy theo font-size */
+                    word-break: break-word;
+                    max-height: 3.2em;
                 }
-                .description_space{
-                    -webkit-line-clamp: 3; /* Giới hạn hiển thị 2 dòng */
-
+                .description_space {
+                    -webkit-line-clamp: 3;
                 }
                 .title_space input,
                 .description_space input {

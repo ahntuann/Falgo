@@ -169,18 +169,9 @@ const UserBlog = () => {
             dateFilter: '',
         });
 
-        // setDateFilter({ day: '', month: '', year: '' });
         setDateFilter({ date: '', day: '', month: '', year: '' });
         setFilteredBlogs(originalBlogs);
     };
-
-    // const handleDateChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setDateFilter((prev) => ({
-    //         ...prev,
-    //         [name]: value,
-    //     }));
-    // };
 
     const handleDateChange = (event) => {
         const selectedDate = event.target.value;
@@ -253,8 +244,6 @@ const UserBlog = () => {
 
     return (
         <div className={cs('container')}>
-            {/* DataBase */}
-
             <div className={cs('blog')}>
                 <div>
                     <div className={cs('blog_title_search')}>
@@ -319,7 +308,6 @@ const UserBlog = () => {
                                 Cuối
                             </button>
                         </div>
-                        {/* Bloglist */}
                         <div className={cs('blog-list')}>
                             {paginatedBlogs.length > 0 ? (
                                 paginatedBlogs.map((blog) => (
@@ -438,7 +426,6 @@ const UserBlog = () => {
                                 <p className={cs('no-blogs')}>Không có bài viết nào.</p>
                             )}
                         </div>
-                        {/* End Bloglist */}
 
                         <div className={cs('pagination')}>
                             <button
@@ -563,18 +550,12 @@ const UserBlog = () => {
                                 ))}
                             </select>
                         </div>
-                        {/* End date-filter */}
-
-                        {/* reset-button */}
                         <button className={cs('reset-button')} onClick={handleReset}>
                             Reset
                         </button>
-                        {/* End reset-button */}
                     </div>
-                    {/* End sidebar */}
                 </div>
             </div>
-            {/* End DataBase */}
         </div>
     );
 };

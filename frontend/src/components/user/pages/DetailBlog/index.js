@@ -208,8 +208,6 @@ const DetailBlog = () => {
 
     const handleCopyLink = () => {
         navigator.clipboard.writeText(window.location.href);
-        // const blogUrl = `http://localhost:3000/DetailBlog/${blog.id}`;
-        // navigator.clipboard.writeText(blogUrl);
         alert('Đã sao chép link!');
         setshowPopupShare(false);
     };
@@ -357,7 +355,7 @@ const DetailBlog = () => {
     const handleReportComment = async (commentId, currentContent) => {
         let reason = '';
 
-        reason = prompt('Hãy nhập lý do từ chối:', 'Vi phạm cộng đồng!!!');
+        reason = prompt('Hãy nhập lý do báo cáo:', 'Vi phạm cộng đồng!!!');
         if (reason === null) return;
 
         try {

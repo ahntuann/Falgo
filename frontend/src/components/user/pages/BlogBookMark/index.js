@@ -164,20 +164,11 @@ const BlogBookMark = () => {
             dateFilter: '',
         });
 
-        // setDateFilter({ day: '', month: '', year: '' });
         setDateFilter({ date: '', day: '', month: '', year: '' });
         setFilteredBlogs(originalBlogs);
     };
-
-    // const handleDateChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setDateFilter((prev) => ({
-    //         ...prev,
-    //         [name]: value,
-    //     }));
-    // };
     const handleDateChange = (event) => {
-        const selectedDate = event.target.value; // "YYYY-MM-DD" hoặc rỗng
+        const selectedDate = event.target.value;
         if (!selectedDate) {
             setDateFilter({ day: '', month: '', year: '' });
             return;
@@ -248,7 +239,6 @@ const BlogBookMark = () => {
 
     return (
         <div className={cs('container')}>
-            {/* DataBase */}
             <div className={cs('blog')}>
                 <div>
                     <div className={cs('blog_title_search')}>
@@ -313,7 +303,6 @@ const BlogBookMark = () => {
                                 Cuối
                             </button>
                         </div>
-                        {/* Bloglist */}
                         <div className={cs('blog-list')}>
                             {paginatedBlogs.length > 0 ? (
                                 paginatedBlogs.map((blog) => (
@@ -400,9 +389,6 @@ const BlogBookMark = () => {
                                 <p className={cs('no-blogs')}>Không có bài viết nào.</p>
                             )}
                         </div>
-                        {/* End Bloglist */}
-
-                        {/* pagination */}
                         <div className={cs('pagination')}>
                             <button
                                 disabled={query.page === 1}
@@ -454,7 +440,6 @@ const BlogBookMark = () => {
                                 Cuối
                             </button>
                         </div>
-                        {/* End pagination */}
                     </div>
                 </div>
                 <div className={cs('Create_UBlog_sidebar')}>
@@ -469,9 +454,7 @@ const BlogBookMark = () => {
                             Đã tạo
                         </Link>
                     </div>
-                    {/* sidebar */}
                     <div className={cs('sidebar')}>
-                        {/* category */}
                         <h3>Danh mục</h3>
                         <div className={cs('category-list')}>
                             {categories.map((category, index) => (
@@ -485,9 +468,6 @@ const BlogBookMark = () => {
                                 </button>
                             ))}
                         </div>
-                        {/* End category */}
-
-                        {/* sortBy */}
                         <h3>Sắp xếp theo</h3>
                         <div className={cs('sort-controls')}>
                             <select name="sortBy" value={query.sortBy} onChange={handleChange}>
@@ -505,9 +485,6 @@ const BlogBookMark = () => {
                                 {query.IsDescending ? 'Giảm dần' : 'Tăng dần'}
                             </button>
                         </div>
-                        {/* End sortBy */}
-
-                        {/* date-filter */}
                         <h3>Lọc theo ngày</h3>
 
                         <div className={cs('date-filter')}>
@@ -518,18 +495,12 @@ const BlogBookMark = () => {
                                 className={cs('DateInput')}
                             />
                         </div>
-                        {/* End date-filter */}
-
-                        {/* reset-button */}
                         <button className={cs('reset-button')} onClick={handleReset}>
                             Reset
                         </button>
-                        {/* End reset-button */}
                     </div>
-                    {/* End sidebar */}
                 </div>
             </div>
-            {/* End DataBase */}
         </div>
     );
 };

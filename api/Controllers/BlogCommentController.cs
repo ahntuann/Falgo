@@ -43,7 +43,7 @@ namespace api.Controllers
         public async Task<IActionResult> create([FromBody] CreateCommentBlogRequestDto BlogDto)
         {
             var content = BlogDto.ToCommentBlogFromCreateDto();
-            content.Status = "Bình Thường";
+            content.Status = "Bình thường";
 
             await _blogCommentService.CreateAsync(content);
 

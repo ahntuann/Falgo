@@ -25,7 +25,6 @@ namespace api.Data
         public DbSet<Contest> Contests { get; set; }
         public DbSet<ProgrammingLanguage> ProgrammingLanguage { get; set; }
 
-        //BlogDaTa
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<CommentBlog> CommentBlog { get; set; }
         public DbSet<BlogLike> BlogLike { get; set; }
@@ -33,7 +32,6 @@ namespace api.Data
         public DbSet<BlogBookmark> BlogBookmark { get; set; }
         public DbSet<BlogForbiddenWord> BlogForbiddenWord { get; set; }
 
-        //EndBlogData
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
