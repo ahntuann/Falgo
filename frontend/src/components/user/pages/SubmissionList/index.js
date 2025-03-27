@@ -31,6 +31,25 @@ const SubmissionList = () => {
         fetchSubmittersName();
     }, [query]);
 
+    const convertStatusToVietnamese = (status) => {
+        switch (status) {
+            case 'Compilation Error':
+                return 'Lỗi biên dịch';
+            case 'Time Limit Exceeded':
+                return 'Quá thời gian thực thi';
+            case 'Wrong Answer':
+                return 'Sai đáp án';
+            case 'Accepted':
+                return 'Đã hoàn thành';
+            case 'Runtime Error':
+                return 'Lỗi thực thi';
+            case 'Memory Limit Exceeded':
+                return 'Vượt quá bộ nhớ';
+            default:
+                return status;
+        }
+    };
+
     const fetchSubmissions = async () => {
         try {
             const filteredQuery = Object.fromEntries(
@@ -109,7 +128,7 @@ const SubmissionList = () => {
                     <option value="">Tất cả trạng thái</option>
                     {statuses.map((status, index) => (
                         <option key={index} value={status}>
-                            {status}
+                            {convertStatusToVietnamese(status)}
                         </option>
                     ))}
                 </select>
@@ -147,7 +166,7 @@ const SubmissionList = () => {
                             <tr key={i} className={cs({ topRank: !isFiltered && actualIndex < 3 })}>
                                 <td>{submission.submitterName}</td>
                                 <td>{submission.score}</td>
-                                <td>{submission.status}</td>
+                                <td>{convertStatusToVietnamese(submission.status)}</td>
                                 <td>{submission.programmingLanguage}</td>
                                 <td>{submission.executeTime}</td>
                                 <td>{submission.memoryUsed}</td>

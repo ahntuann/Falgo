@@ -12,6 +12,7 @@ const Ranking = () => {
     const [rankData, setRankData] = useState([]);
     const [top3, setTop3] = useState([]); // Top 3 cố định
     const [totalPages, setTotalPages] = useState(1);
+    const [totalUser, setTotalUser] = useState([]);
     const [noDataMessage, setNoDataMessage] = useState('');
     const [query, setQuery] = useState({
         FullName: '',
@@ -52,6 +53,7 @@ const Ranking = () => {
             if (typeof response.data === 'string') {
                 setRankData([]);
                 setTop3([]);
+                setTotalUser(0);
                 setTotalPages(1);
                 setNoDataMessage(response.data);
                 return;
@@ -71,6 +73,7 @@ const Ranking = () => {
             }
 
             // Danh sách bảng chỉ lấy từ dữ liệu còn lại
+            setTotalUser(response.data.totalItems);
             setRankData(response.data.items);
             setTotalPages(response.data.totalPages);
         } catch (error) {
@@ -84,7 +87,7 @@ const Ranking = () => {
 
     return (
         <div className={cs('leaderboard')}>
-            <h1 className={cs('title')}>Bảng Xếp Hạng</h1>
+            <h1 className={cs('title')}>Bảng Xếp Hạng ({totalUser} người tham gia)</h1>
 
             {/* Bộ lọc */}
             <div className={cs('filters')}>
