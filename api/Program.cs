@@ -24,7 +24,7 @@ using api.Interface.Repository;
 using api.Interface.Services;
 using Microsoft.Extensions.FileProviders;
 using api.Helpers;
-
+using CloudinaryDotNet;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
@@ -148,7 +148,15 @@ builder.Services.AddSession();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
 
+var cloudinarySettings = builder.Configuration.GetSection("Cloudinary");
+var cloudinaryAccount = new Account(
+    cloudinarySettings["CloudName"],
+    cloudinarySettings["ApiKey"],
+    cloudinarySettings["ApiSecret"]
+);
+var cloudinary = new Cloudinary(cloudinaryAccount);
 
+builder.Services.AddSingleton(cloudinary);
 // Dependency Injection
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ISubmissionRepository, SubmissionRepository>();
@@ -204,6 +212,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+
+app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+app.UseRouting();
+app.MapControllers();
+app.Run();
+
 app.UseStaticFiles();
 app.UseRouting();
 app.UseWebSockets();

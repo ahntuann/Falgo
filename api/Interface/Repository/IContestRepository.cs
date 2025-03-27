@@ -12,5 +12,7 @@ namespace api.Interface
         public Task<Contest?> GetContestByIdAsync(string id);
         public Task<List<Contest>> GetContestsAsync(string typeOfContest);
         public  Task<List<Contest>> GetAllContestAsync(ContestManagementQueryObject query);
+        public  Task DeleteContestAsync(string ContestId);
+        public  Task addContest(Contest contest);
     }
 }

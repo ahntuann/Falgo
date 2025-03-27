@@ -5,7 +5,8 @@ import styles from './ProblemManagement.module.scss';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ProblemUpdate from '../ProblemUpdate';
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 const cx = classNames.bind(styles);
 function ProblemsManagement() {
     const navigate = useNavigate();
@@ -110,7 +111,13 @@ function ProblemsManagement() {
                         {problems.map((problem, i) => (
                             <tr key={i}>
                                 <td>{problem.problemId}</td>
-                                <td>{problem.title}</td>
+                                <td>
+                                    <ReactQuill
+                                        value={problem.title}
+                                        readOnly={true}
+                                        theme="bubble"
+                                    />
+                                </td>
                                 <td>{problem.category}</td>
                                 <td>{problem.acceptanceRate}%</td>
                                 <td>{problem.acceptedCount}</td>
