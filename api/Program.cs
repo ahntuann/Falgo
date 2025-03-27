@@ -224,7 +224,6 @@ if (app.Environment.IsDevelopment())
 app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseRouting();
 app.MapControllers();
-
 app.UseStaticFiles();
 app.UseRouting();
 app.UseWebSockets();
