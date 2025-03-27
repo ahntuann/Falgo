@@ -3,11 +3,17 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { AdminLayout } from '~/layouts';
-
+import ReactQuill from 'react-quill';
 const ProblemUpdate = () => {
     const navigate = useNavigate();
     const location = useLocation();
-
+    const modules = {
+        toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link', 'image'], // "image" can be removed if not needed
+        ],
+    };
     const [problem, setProblem] = useState(location.state?.problem || {});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -68,20 +74,23 @@ const ProblemUpdate = () => {
                         disabled={!!problem} // Disable ID field when updating
                     />
                     <h2>Mô tả bài toán</h2>
-                    <textarea
+                    <ReactQuill
+                        modules={modules}
                         value={problem.detail}
-                        onChange={(e) => setProblem({ ...problem, detail: e.target.value })}
+                        onChange={(value) => setProblem({ ...problem, detail: value })}
                         placeholder="Viết mô tả bài toán ở đây"
                         rows={10}
                         style={{ width: '100%', padding: '10px', fontSize: '16px' }}
+                        required
                     />
                     <h2>Lời giải</h2>
-                    <textarea
+                    <ReactQuill
                         value={problem.solution}
-                        onChange={(e) => setProblem({ ...problem, solution: e.target.value })}
+                        onChange={(value) => setProblem({ ...problem, solution: value })}
                         placeholder="Viết lời giải bài toán ở đây"
                         rows={10}
                         style={{ width: '100%', padding: '10px', fontSize: '16px' }}
+                        required
                     />
                     <input
                         type="text"

@@ -23,7 +23,6 @@ export default function AddContest() {
         dueTime: '',
         totalPoint: '',
         level: '',
-
         endDate: '',
         banner: '',
     });

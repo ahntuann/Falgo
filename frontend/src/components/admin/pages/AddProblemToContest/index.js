@@ -26,13 +26,12 @@ function AddProblemToContest() {
     const [totalPages, setTotalPages] = useState(1);
     const [query, setQuery] = useState({
         ContestId: contest.contestId,
+        ProblemTitle: '',
         ProblemId: '',
         PageNumber: 1,
         PageSize: 15,
     });
-    useEffect(() => {
-        console.log('Updated query state:', query);
-    }, [query]);
+
     const debounceRef = useRef(null);
     useEffect(() => {
         fetchCategories();
