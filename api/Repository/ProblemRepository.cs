@@ -41,7 +41,7 @@ namespace api.Repository
             if (!string.IsNullOrWhiteSpace(query.ProblemTitle))
             {
                 var titleLower = query.ProblemTitle.ToLower();
-                problemsQuery = problemsQuery.Where(p => p.Title.ToLower().Contains(titleLower));
+                problemsQuery = problemsQuery.Where(p => p.Title.ToLower().Contains(titleLower) || p.ProblemId.ToLower().Contains(titleLower));
             }
             if (!string.IsNullOrWhiteSpace(query.HidePassed) &&
                 bool.TryParse(query.HidePassed, out bool hidePassed) && hidePassed)
@@ -58,7 +58,7 @@ namespace api.Repository
         public async Task<string> GetProblemNameByIdAsync(string problemId)
         {
             var problem = await _context.Problems.AsNoTracking().FirstOrDefaultAsync(p => p.ProblemId == problemId);
-            return  problem?.Title ?? "Unknown Problem";
+            return problem?.Title ?? "Unknown Problem";
         }
     }
 }

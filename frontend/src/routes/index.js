@@ -24,6 +24,7 @@ import {
 import { AdminLogin } from '~/components/admin/pages';
 import { DefaultLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
 import ContestDetail from '~/components/user/pages/ContestDetail';
+import QA from '~/components/user/pages/Q&A';
 
 const routes = [
     {
@@ -164,6 +165,12 @@ const routes = [
         path: '/BlogBookMark',
         layout: DefaultLayout,
         role: ['user'],
+    },
+    {
+        component: QA,
+        path: '/Q&A',
+        layout: DefaultLayout,
+        role: ['user', 'guest'],
     },
 ];
 

@@ -1,7 +1,7 @@
 import classNames from 'classnames/bind';
 import styles from './AdminLayout.module.scss';
 import { Sidebar } from '~/components/admin/components';
-
+import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 function AdminLayout({ children }) {

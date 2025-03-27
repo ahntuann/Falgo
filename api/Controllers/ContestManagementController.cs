@@ -56,9 +56,9 @@ namespace api.Controllers
         {
 
             var contests = await _contestService.getContestById(contest.ContestId);
-            Console.WriteLine("hehe           " + contests);
-            if (contests != null) return BadRequest("Đã tồn tại contest Id");
-
+              
+          if(contests!=null)return BadRequest("Đã tồn tại contest Id");
+       
             await _contestService.addContest(contest);
             return Ok();
         }

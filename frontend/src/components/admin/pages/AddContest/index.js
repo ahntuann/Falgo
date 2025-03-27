@@ -1,21 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import classNames from 'classnames/bind';
 import 'react-quill/dist/quill.snow.css';
 import styles from './AddContest.module.scss';
+import { useNavigate } from 'react-router-dom';
 import { AdminLayout } from '~/layouts';
 
 const cx = classNames.bind(styles);
 
 export default function AddContest() {
+    const navigate = useNavigate();
+    const role = JSON.parse(sessionStorage.getItem('admin'));
+    useEffect(() => {
+        if (!role) {
+            navigate('/');
+        }
+    }, [role]);
     const [contest, setContest] = useState({
         contestId: '',
         contestName: '',
         dueTime: '',
         totalPoint: '',
         level: '',
-
         endDate: '',
         banner: '',
     });
@@ -96,9 +103,9 @@ export default function AddContest() {
     return (
         <AdminLayout>
             <div className={cx('container')}>
-                <h2 className={cx('title')}>Add New Contest</h2>
+                <h2 className={cx('title')}>Thêm cuộc thi mới</h2>
                 <form onSubmit={handleSubmit} className={cx('form')}>
-                    <label className={cx('label')}>Contest Id:</label>
+                    <label className={cx('label')}>Id cuộc thi:</label>
                     <input
                         classname={cx('editor')}
                         type="text"
@@ -108,16 +115,17 @@ export default function AddContest() {
                         onChange={handleChange}
                         required
                     />
-                    {/* 🔹 Contest Name (Quill Editor) */}
-                    <label className={cx('label')}>Contest Name:</label>
-                    <ReactQuill
-                        className={cx('editor')}
+                    <label className={cx('label')}>Tên cuộc thi:</label>
+                    <input
+                        type="text"
+                        name="contestName"
                         value={contest.contestName}
-                        onChange={handleQuillChange}
+                        onChange={handleChange}
+                        className={cx('inputt')}
+                        required
                     />
-
                     {/* 🔹 Due Time */}
-                    <label className={cx('label')}>Due Time (minutes):</label>
+                    <label className={cx('label')}>Thời gian làm bài (phút):</label>
                     <input
                         type="number"
                         name="dueTime"
@@ -126,9 +134,8 @@ export default function AddContest() {
                         className={cx('input')}
                         required
                     />
-
                     {/* 🔹 Total Points */}
-                    <label className={cx('label')}>Total Points:</label>
+                    <label className={cx('label')}>Tổng điểm:</label>
                     <input
                         type="number"
                         name="totalPoint"
@@ -137,9 +144,8 @@ export default function AddContest() {
                         className={cx('input')}
                         required
                     />
-
                     {/* 🔹 Level */}
-                    <label className={cx('label')}>Level:</label>
+                    <label className={cx('label')}>Độ kh:</label>
                     <select
                         name="level"
                         value={contest.level}
@@ -152,8 +158,7 @@ export default function AddContest() {
                         <option value="Medium">Medium</option>
                         <option value="Hard">Hard</option>
                     </select>
-
-                    <label className={cx('label')}>End Date:</label>
+                    <label className={cx('label')}>Ngày Kết Thúc:</label>
                     <input
                         type="datetime-local"
                         name="endDate"
@@ -162,8 +167,7 @@ export default function AddContest() {
                         className={cx('input')}
                         required
                     />
-
-                    <label className={cx('label')}>Banner Image:</label>
+                    <label className={cx('label')}>Ảnh Banner:</label>
                     <input
                         type="file"
                         onChange={handleFileChange}
@@ -171,9 +175,8 @@ export default function AddContest() {
                         accept="image/*"
                         required
                     />
-
                     <button type="submit" className={cx('submit-btn')} disabled={loading}>
-                        {loading ? 'Submitting...' : 'Add Contest'}
+                        {loading ? 'Submitting...' : ' Thêm cuộc thi'}
                     </button>
                 </form>
             </div>

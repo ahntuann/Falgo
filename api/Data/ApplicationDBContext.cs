@@ -24,7 +24,9 @@ namespace api.Data
         public DbSet<ContestProblem> ContestProblems { get; set; }
         public DbSet<Contest> Contests { get; set; }
         public DbSet<ProgrammingLanguage> ProgrammingLanguage { get; set; }
-
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Answer> Answers { get; set; }
+        //BlogDaTa
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<CommentBlog> CommentBlog { get; set; }
         public DbSet<BlogLike> BlogLike { get; set; }
@@ -35,7 +37,24 @@ namespace api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+             modelBuilder.Entity<Question>()
+            .HasOne(q => q.User)
+            .WithMany(u => u.Questions) 
+            .HasForeignKey(q => q.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
+        // Define One-to-Many: Question -> Answers
+        modelBuilder.Entity<Answer>()
+            .HasOne(a => a.Question)
+            .WithMany(q => q.Answers)
+            .HasForeignKey(a => a.QuestionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Answer>()
+            .HasOne(a => a.User)
+            .WithMany(u => u.Answers)
+            .HasForeignKey(a => a.UserId);
+            
             modelBuilder.Entity<TestCaseStatus>()
                 .HasKey(tc => new { tc.TestCaseId, tc.SubmissionId });
 

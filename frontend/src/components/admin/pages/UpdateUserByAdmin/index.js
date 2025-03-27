@@ -18,6 +18,12 @@ const UpdateUserByAdmin = () => {
         address: '',
         avatar: '',
     });
+    const role = JSON.parse(sessionStorage.getItem('admin'));
+    useEffect(() => {
+        if (!role) {
+            navigate('/');
+        }
+    }, [role]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
