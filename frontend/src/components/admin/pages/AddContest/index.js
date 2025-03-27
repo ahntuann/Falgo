@@ -94,7 +94,7 @@ export default function AddContest() {
             setBannerFile(null);
         } catch (error) {
             console.error('Error adding contest:', error);
-            alert('Failed to add contest');
+            alert(error.response.data);
         } finally {
             setLoading(false);
         }

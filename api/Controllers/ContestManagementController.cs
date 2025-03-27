@@ -56,7 +56,7 @@ namespace api.Controllers
         {
 
             var contests = await _contestService.getContestById(contest.ContestId);
-              
+             if( contest.EndDate<DateTime.Now)return BadRequest("Ngày kết thúc phải là ngày hợp lệ");
           if(contests!=null)return BadRequest("Đã tồn tại contest Id");
        
             await _contestService.addContest(contest);
