@@ -1,25 +1,32 @@
 import { AdminLayout } from '~/layouts';
 import { useEffect, useState, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import classNames from 'classnames/bind';
-import styles from './ProblemManagement.module.scss';
+import styles from './AddProblemToContest.module.scss';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ProblemUpdate from '../ProblemUpdate';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 const cx = classNames.bind(styles);
-function ProblemsManagement() {
+function AddProblemToContest() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [contest, setContest] = useState(location.state?.contest || {});
     const [problems, setProblems] = useState([]);
+    const [AddedProblems, setAddedProblems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [categories, setCategories] = useState([]);
     const [totalPages, setTotalPages] = useState(1);
     const [query, setQuery] = useState({
-        ProblemTitle: '',
-        ProblemCategory: '',
+        ContestId: contest.contestId,
+        ProblemId: '',
         PageNumber: 1,
         PageSize: 15,
     });
+    useEffect(() => {
+        console.log('Updated query state:', query);
+    }, [query]);
     const debounceRef = useRef(null);
     useEffect(() => {
         fetchCategories();
@@ -30,16 +37,33 @@ function ProblemsManagement() {
         }
         debounceRef.current = setTimeout(() => {
             fetchProblems();
+            fetchAddedProblems();
         }, 500);
 
         return () => clearTimeout(debounceRef.current);
     }, [query]);
+    const fetchAddedProblems = async () => {
+        try {
+            const filteredQuery = Object.fromEntries(
+                Object.entries(query).filter(([_, value]) => value !== ''),
+            );
+            console.log(fetchProblems);
+            const response = await axios.get('http://localhost:5180/api/ContestProblem/Added', {
+                params: filteredQuery,
+            });
+            setAddedProblems(response.data.items);
+            console.log(AddedProblems);
+            setTotalPages(response.data.totalPages);
+        } catch (error) {
+            console.error('Error fetching problems', error);
+        }
+    };
     const fetchProblems = async () => {
         try {
             const filteredQuery = Object.fromEntries(
                 Object.entries(query).filter(([_, value]) => value !== ''),
             );
-            const response = await axios.get('http://localhost:5180/api/problemManagement', {
+            const response = await axios.get('http://localhost:5180/api/ContestProblem/Exist', {
                 params: filteredQuery,
             });
             setProblems(response.data.items);
@@ -64,16 +88,39 @@ function ProblemsManagement() {
     const handleChange = (e) => {
         setQuery({ ...query, [e.target.name]: e.target.value });
     };
-    const handleEdit = (id) => {
-        console.log('Edit problem:', id);
+    const handleAdd = async (problemId) => {
+        const updatedQuery = { ...query, ProblemId: problemId };
+        setQuery(updatedQuery);
+
+        try {
+            const filteredQuery = Object.fromEntries(
+                Object.entries(updatedQuery).filter(([_, value]) => value !== ''),
+            );
+            console.log(filteredQuery);
+            await axios.get('http://localhost:5180/api/ContestProblem/Add', {
+                params: filteredQuery,
+            });
+
+            fetchProblems();
+            fetchAddedProblems();
+        } catch (error) {
+            console.error('Error deleting problem:', error);
+        }
     };
     const handleDelete = async (problemId) => {
+        const updatedQuery = { ...query, ProblemId: problemId };
+        setQuery(updatedQuery);
+
         try {
-            const requestData = { problemId };
-            await axios.delete(
-                `http://localhost:5180/api/problemManagement/delete?problemId=${problemId}`,
+            const filteredQuery = Object.fromEntries(
+                Object.entries(updatedQuery).filter(([_, value]) => value !== ''),
             );
+
+            await axios.get('http://localhost:5180/api/ContestProblem/Delete', {
+                params: filteredQuery,
+            });
             fetchProblems();
+            fetchAddedProblems();
         } catch (error) {
             console.error('Error deleting problem:', error);
         }
@@ -81,7 +128,48 @@ function ProblemsManagement() {
     return (
         <AdminLayout>
             <div className={cx('content')}>
-                <h2>Danh sách bài tập</h2>
+                <h2>Cuộc thi :{contest.contestId}</h2>
+                <h2>Danh sách bài tập đã thêm</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mã Câu hỏi</th>
+                            <th>Tên</th>
+                            <th>Dang câu hỏi</th>
+                            <th>Tỉ lệ hoàn thành</th>
+                            <th>Tổng số bài hoàn thành</th>
+                            <th>Điểm</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {AddedProblems.map((AddedProblems, i) => (
+                            <tr key={i}>
+                                <td>{AddedProblems.problemId}</td>
+                                <td>
+                                    <ReactQuill
+                                        value={AddedProblems.title}
+                                        readOnly={true}
+                                        theme="bubble"
+                                    />
+                                </td>
+                                <td>{AddedProblems.category}</td>
+                                <td>{AddedProblems.acceptanceRate}%</td>
+                                <td>{AddedProblems.acceptedCount}</td>
+                                <td>{AddedProblems.score}</td>
+                                <td>
+                                    <button
+                                        className={cx('delete-btn')}
+                                        onClick={() => handleDelete(AddedProblems.problemId)}
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <h2>Danh sách bài tập chưa được thêm</h2>
                 <div className={cx('top-bar')}>
                     <input
                         type="text"
@@ -90,9 +178,6 @@ function ProblemsManagement() {
                         value={query.ProblemTitle}
                         onChange={handleChange}
                     />
-                    <button className={cx('create-btn')} onClick={() => navigate('/ProblemForm')}>
-                        Tạo bài tập mới
-                    </button>
                 </div>
                 <table>
                     <thead>
@@ -103,8 +188,7 @@ function ProblemsManagement() {
                             <th>Tỉ lệ hoàn thành</th>
                             <th>Tổng số bài hoàn thành</th>
                             <th>Điểm</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
+                            <th>Add</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,19 +209,9 @@ function ProblemsManagement() {
                                 <td>
                                     <button
                                         className={cx('edit-btn')}
-                                        onClick={() =>
-                                            navigate('/problemupdate', { state: { problem } })
-                                        }
+                                        onClick={() => handleAdd(problem.problemId)}
                                     >
-                                        Edit
-                                    </button>
-                                </td>
-                                <td>
-                                    <button
-                                        className={cx('delete-btn')}
-                                        onClick={() => handleDelete(problem.problemId)}
-                                    >
-                                        Delete
+                                        Add
                                     </button>
                                 </td>
                             </tr>
@@ -165,4 +239,4 @@ function ProblemsManagement() {
         </AdminLayout>
     );
 }
-export default ProblemsManagement;
+export default AddProblemToContest;

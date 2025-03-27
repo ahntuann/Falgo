@@ -201,7 +201,7 @@ const Ranking = () => {
                                     <img
                                         src={
                                             user.avatar
-                                                ? `http://localhost:5180${user.avatar}`
+                                                ? `http://localhost:5180/${user.avatar}`
                                                 : 'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
                                         }
                                         alt="Avatar"

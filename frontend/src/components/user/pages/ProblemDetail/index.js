@@ -42,7 +42,8 @@ const ProblemDetail = () => {
             <div className={cs('section')}>
                 <h2>Thông tin bài tập</h2>
                 <p>
-                    <strong>Mô tả:</strong> {problem.detail}
+                    <strong>Mô tả:</strong>{' '}
+                    <span dangerouslySetInnerHTML={{ __html: problem.detail }} />
                 </p>
                 <p>
                     <strong>Giới hạn thời gian:</strong> {problem.timeLimit} giây

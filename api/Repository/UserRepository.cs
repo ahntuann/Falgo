@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.User;
@@ -13,9 +16,11 @@ namespace api.Repository
     public class UserRepository : IUserRepository
     {
         private readonly ApplicationDBContext _context;
-        public UserRepository(ApplicationDBContext context)
+        private readonly HttpClient _httpClient;
+        public UserRepository(ApplicationDBContext context, HttpClient httpClient)
         {
             _context = context;
+            _httpClient = httpClient;
         }
 
         public async Task<AppUser?> GetUserByIdAsync(string id)
@@ -91,8 +96,90 @@ namespace api.Repository
             await _context.SaveChangesAsync();
         }
 
-        
+        public async Task<string> GetGitHubEmail(string accessToken)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("MyApp");
 
-       
+            var response = await _httpClient.GetStringAsync("https://api.github.com/user/emails");
+            var emails = JsonSerializer.Deserialize<List<GitHubEmail>>(response);
+            var primaryEmail = emails?.FirstOrDefault(e => e.Primary && e.Verified)?.Email;
+
+            return primaryEmail ?? emails?.FirstOrDefault()?.Email;
+        }
+
+        public async Task<bool> CheckRepositoryExists(string accessToken, string repoName)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            var response = await _httpClient.GetAsync($"https://api.github.com/repos/{repoName}");
+
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> CommitCodeToRepository(string accessToken, string repoName, string filePath, string content)
+        {
+            var url = $"https://api.github.com/repos/{repoName}/contents/{filePath}";
+            var requestBody = new
+            {
+                message = "Commit source code",
+                content = Convert.ToBase64String(Encoding.UTF8.GetBytes(content))
+            };
+
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("MyApp");
+
+            var jsonContent = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync(url, jsonContent);
+
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<List<LanguageUsage>> GetTopProgrammingLanguagesAsync(string userId)
+        {
+            var topLanguages = await _context.Submissions
+                .Where(s => s.AppUserId == userId)
+                .GroupBy(s => s.ProgrammingLanguageId)
+                .Select(g => new 
+                {
+                    LanguageId = g.Key,
+                    Count = g.Count()
+                })
+                .OrderByDescending(x => x.Count)
+                .Take(5)
+                .Join(_context.ProgrammingLanguage,
+                    submission => submission.LanguageId,
+                    language => language.ProgrammingLanguageId,
+                    (submission, language) => new LanguageUsage
+                    {
+                        Language = language.Language ?? "Unknown", 
+                        Count = submission.Count
+                    })
+                .ToListAsync();
+
+            return topLanguages;
+        }
+
+        public async Task<List<CategoryPercentage>> GetProblemCategoryPercentageAsync(string userId)
+        {
+            var totalSubmissions = await _context.Submissions
+                .CountAsync(s => s.AppUserId == userId);
+
+            var categoryPercentages = await _context.Submissions
+                .Where(s => s.AppUserId == userId)
+                .Join(_context.Problems,
+                    submission => submission.ProblemId,
+                    problem => problem.ProblemId,
+                    (submission, problem) => problem.Category)
+                .GroupBy(category => category)
+                .Select(g => new CategoryPercentage
+                {
+                    Category = g.Key,
+                    Percentage = Math.Round((double)g.Count() / totalSubmissions * 100, 2)
+                })
+                .OrderByDescending(x => x.Percentage)
+                .ToListAsync();
+
+            return categoryPercentages;
+        }
     }
 }

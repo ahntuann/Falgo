@@ -12,7 +12,7 @@ namespace api.Model
     public string ContestId { get; set;} = string.Empty;
     [Required]
     public string ProblemId { get; set;} = string.Empty;
-    public Contest Contest { get; set; } = new Contest();
-    public Problem Problem { get; set; } = new Problem();
+    public Contest Contest { get; set; } 
+    public Problem Problem { get; set; } 
     }
 }

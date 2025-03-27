@@ -170,7 +170,7 @@ const ProblemList = () => {
                         <tr key={i}>
                             <td
                                 style={{
-                                    color: '#8FF6FD',
+                                    color: '##9370DB',
                                     fontWeight: 'bold',
                                 }}
                             >
@@ -180,7 +180,7 @@ const ProblemList = () => {
                                 <Link
                                     to={`/problems/${problem.problemId}`}
                                     style={{
-                                        color: '#8FF6FD',
+                                        color: '##9370DB',
                                         fontWeight: 'bold',
                                     }}
                                 >
