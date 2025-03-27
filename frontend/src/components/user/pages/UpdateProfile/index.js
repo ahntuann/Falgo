@@ -111,6 +111,7 @@ const UpdateProfile = () => {
 
             if (selectedFile) {
                 const formData = new FormData();
+                formData.append('avatar', selectedFile);
 
                 try {
                     const response = await axios.post(

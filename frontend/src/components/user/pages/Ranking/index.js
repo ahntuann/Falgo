@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import AuthContext from '~/context/AuthContext';
 import axios from 'axios';
 import styles from './Ranking.module.scss';
@@ -116,8 +116,9 @@ const Ranking = () => {
                             <a href={`/profile/public/${top3[1].appUserId}`}>
                                 <img
                                     src={
-                                        top3[1].avatar ||
-                                        'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
+                                        top3[1].avatar
+                                            ? `http://localhost:5180${top3[1].avatar}`
+                                            : 'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
                                     }
                                     alt="Avatar"
                                     className={cs('avatar')}
@@ -137,8 +138,9 @@ const Ranking = () => {
                             <a href={`/profile/public/${top3[0].appUserId}`}>
                                 <img
                                     src={
-                                        top3[0].avatar ||
-                                        'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
+                                        top3[0].avatar
+                                            ? `http://localhost:5180${top3[0].avatar}`
+                                            : 'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
                                     }
                                     alt="Avatar"
                                     className={cs('avatar')}
@@ -158,8 +160,9 @@ const Ranking = () => {
                             <a href={`/profile/public/${top3[2].appUserId}`}>
                                 <img
                                     src={
-                                        top3[2].avatar ||
-                                        'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
+                                        top3[2].avatar
+                                            ? `http://localhost:5180${top3[2].avatar}`
+                                            : 'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
                                     }
                                     alt="Avatar"
                                     className={cs('avatar')}
@@ -194,17 +197,18 @@ const Ranking = () => {
                         <tr key={user.rank}>
                             <td>{user.rank}</td>
                             <td className={cs('user-info')}>
-                                <a href={`/profile/public/${user.appUserId}`}>
+                                <Link to={`/profile/public/${user.appUserId}`}>
                                     <img
                                         src={
-                                            user.avatar ||
-                                            'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
+                                            user.avatar
+                                                ? `http://localhost:5180${user.avatar}`
+                                                : 'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg'
                                         }
                                         alt="Avatar"
                                         className={cs('table-avatar')}
                                     />
-                                    <span>{user.fullName}</span>
-                                </a>
+                                </Link>
+                                <span>{user.fullName}</span>
                             </td>
                             <td>{user.score}</td>
                             <td>{user.totalProblem}</td>

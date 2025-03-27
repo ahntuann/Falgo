@@ -18,6 +18,7 @@ import {
     ContestList,
     SubmissionHistory,
     Ranking,
+    PublicProfile,
 } from '~/components/user/pages';
 import { AdminLogin, Dashboard } from '~/components/admin/pages';
 import { DefaultLayout, AdminLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
@@ -141,6 +142,12 @@ const routes = [
     {
         component: Ranking,
         path: '/ranking',
+        layout: DefaultLayout,
+        role: ['guest', 'user'],
+    },
+    {
+        component: PublicProfile,
+        path: '/profile/public/:userId',
         layout: DefaultLayout,
         role: ['guest', 'user'],
     },
