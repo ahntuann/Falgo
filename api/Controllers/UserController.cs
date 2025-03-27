@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using api.Dtos.User;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace api.Controllers
 {
@@ -207,5 +209,78 @@ namespace api.Controllers
             return System.Text.RegularExpressions.Regex.Replace(input, @"[^a-zA-Z0-9_]", "");
         }
 
+        [HttpPost("commit/{submissionId}")]
+        [Authorize]
+        public async Task<IActionResult> CommitSubmissionToGitHub(string submissionId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User ID not found.");
+            }
+
+            try
+            {
+                bool success = await _userService.CommitSubmissionToGitHub(userId, submissionId);
+                if (success)
+                {
+                    return Ok("Submission committed successfully.");
+                }
+                return BadRequest("Failed to commit submission.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("{userId}/top-languages")]
+        public async Task<IActionResult> GetUserTopProgrammingLanguages(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("User ID is required");
+
+            try 
+            {
+                var topLanguages = await _userService.GetTopProgrammingLanguagesAsync(userId);
+
+                if (topLanguages == null || !topLanguages.Any())
+                    return NotFound("No programming language usage data found");
+
+                return Ok(new 
+                {
+                    message = "Top 5 Programming Languages",
+                    data = topLanguages
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error retrieving top programming languages", error = ex.Message });
+            }
+        }
+
+        [HttpGet("{userId}/problem-categories")]
+        public async Task<IActionResult> GetUserProblemCategoryPercentages(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("User ID is required");
+
+            try 
+            {
+                var categoryPercentages = await _userService.GetProblemCategoryPercentageAsync(userId);
+
+                if (categoryPercentages == null || !categoryPercentages.Any())
+                    return NotFound("No problem category data found");
+
+                return Ok(new 
+                {
+                    message = "Problem Category Percentages",
+                    data = categoryPercentages
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error retrieving problem category percentages", error = ex.Message });
+            }
+        }
     }
 }

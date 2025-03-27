@@ -21,5 +21,9 @@ namespace api.Interface
         Task<PageResult<SubmissionListDto>> GetUserSubmissionsAsync(string userId, SubmissionListQueryObject query);
         Task<List<UserContestDto>> GetUserContestsAsync(string userId);
         Task<byte[]> DownloadSubmissionSourceCodeAsync(string submissionId);
+        Task<string> GetGitHubEmail(string accessToken);
+        Task<bool> CommitSubmissionToGitHub(string userId, string submissionId);
+        Task<List<LanguageUsage>> GetTopProgrammingLanguagesAsync(string userId);
+        Task<List<CategoryPercentage>> GetProblemCategoryPercentageAsync(string userId);
     }
 }
