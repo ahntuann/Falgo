@@ -8,12 +8,14 @@ import AuthContext from '~/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 const cs = classNames.bind(style);
 
-function ContestBrief({ contest, classnames }) {
+function ContestBrief({ contest, contestStatus }) {
     const { contestId, banner, contestName, totalPoint, level, endDate, dueTime, numRegis } =
         contest;
     const { appUser } = useContext(AuthContext);
 
     const [isRegis, setIsRegis] = useState(false);
+
+    const navigate = useNavigate();
 
     const navagate = useNavigate();
 
@@ -41,7 +43,10 @@ function ContestBrief({ contest, classnames }) {
 
     return (
         <div className={cs('wrapper', classNames || '')}>
-            <div className={cs('banner')}>
+            <div
+                className={cs('banner')}
+                onClick={() => navigate(`/contest/${contestId}`, { state: contest })}
+            >
                 <img className={cs('bannerImg')} alt="banner" src={banner} />
             </div>
 
@@ -77,7 +82,11 @@ function ContestBrief({ contest, classnames }) {
             </div>
 
             {isRegis ? (
-                <div className={cs('register')}>Bạn đã đăng ký</div>
+                contestStatus === 'over' ? (
+                    <div className={cs('register')}>Bắt đầu thi giả lập</div>
+                ) : (
+                    <div className={cs('register')}>Bắt đầu ngay</div>
+                )
             ) : (
                 <div onClick={() => registerUser()} className={cs('register')}>
                     Đăng ký ngay

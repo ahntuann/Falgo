@@ -21,5 +21,6 @@ namespace api.Model
         public string ProblemId { get; set; } = string.Empty;
         [ForeignKey("ProblemId")]
         public Problem Problem { get; set; }
+        public ICollection<TestCaseStatus> TestCaseStatuses { get; set; } = new List<TestCaseStatus>();
     }
 }

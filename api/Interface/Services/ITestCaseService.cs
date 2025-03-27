@@ -9,5 +9,6 @@ namespace api.Interface.Services
     public interface ITestCaseService
     {
         public Task<List<TestCase>> GetAllTestCaseByProblemIdAsync(string problemId);
+        public Task<TestCase> GetTestCaseById(string testcaseId);
     }
 }

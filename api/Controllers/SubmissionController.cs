@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using api.Data;
 using api.Dtos.Problem;
 using api.Dtos.ProgramingLanguage;
 using api.Dtos.TestCase;
@@ -24,16 +25,23 @@ namespace api.Controllers
         private readonly IProgramingLanguageService _proLangService;
         private readonly ITestCaseService _testCaseService;
         private readonly IProblemService _proService;
+        private readonly ITestCaseStatusService _testcaseStatusService;
+        private readonly ApplicationDBContext _context;
         public SubmissionController(
             ISubmissionService subService,
             IProgramingLanguageService proLangService,
             ITestCaseService testCaseService,
-            IProblemService proService)
+            IProblemService proService,
+            ITestCaseStatusService testCaseStatusService,
+            ApplicationDBContext context)
         {
             _proLangService = proLangService;
             _submissionService = subService;
             _testCaseService = testCaseService;
             _proService = proService;
+            _testcaseStatusService = testCaseStatusService;
+
+            _context = context;
         }
 
         [HttpGet("{problemId}")]
@@ -163,9 +171,10 @@ namespace api.Controllers
 
                 Directory.Delete(baseURL, true);
 
+                Submission addedSubmission = new Submission();
+
                 if (!submissionPostDto.IsTestCode)
                 {
-                    System.Console.WriteLine(submissionPostDto.ProgrammingLanguageId);
                     string status;
                     if (isError)
                         status = "Compilation Error";
@@ -176,7 +185,7 @@ namespace api.Controllers
                     else
                         status = "Accepted";
 
-                    await _submissionService.CreateASubmissionAsync(new Submission
+                    addedSubmission = await _submissionService.CreateASubmissionAsync(new Submission
                     {
                         Point = numOfSucces * 10,
                         SourceCode = submissionPostDto.SourceCode,
@@ -187,6 +196,23 @@ namespace api.Controllers
                         AppUserId = submissionPostDto.UserId,
                         ProgrammingLanguageId = submissionPostDto.ProgrammingLanguageId
                     });
+
+                    var submissionId = addedSubmission.SubmissionId;
+
+                    if (addedSubmission != null)
+                        foreach (var testCaseStatus in testCaseStatuses)
+                        {
+                            var testCase = testCases.FirstOrDefault(x => x.TestCaseId == testCaseStatus.TestCaseId);
+                            await _testcaseStatusService.AddTestcaseStatusAsync(new TestCaseStatus
+                            {
+                                TestCaseId = testCase.TestCaseId,
+                                SubmissionId = submissionId,
+                                Result = testCaseStatus.Result,
+                                TestCase = testCase,
+                                Submission = addedSubmission,
+                                ExecutionTime = testCaseStatus.ExecutionTime
+                            });
+                        }
                 }
 
                 return Ok(testCaseStatuses);

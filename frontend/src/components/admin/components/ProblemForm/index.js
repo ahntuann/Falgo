@@ -4,9 +4,20 @@ import classNames from 'classnames/bind';
 import { AdminLayout } from '~/layouts';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import React from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const ProblemForm = () => {
-    const [showForm, setShowForm] = useState(false); // Controls visibility
+    const [showForm, setShowForm] = useState(false);
+    const modules = {
+        toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link', 'image'], // "image" can be removed if not needed
+        ],
+    };
+
     const [problem, setProblem] = useState({
         problemId: '',
         category: '',
@@ -92,18 +103,20 @@ const ProblemForm = () => {
                         required
                     />
                     <h2>Mô tả bài toán</h2>
-                    <textarea
+                    <ReactQuill
+                        modules={modules}
                         value={problem.detail}
-                        onChange={(e) => setProblem({ ...problem, detail: e.target.value })}
+                        onChange={(value) => setProblem({ ...problem, detail: value })}
                         placeholder="Viết mô tả bài toán ở đây"
                         rows={10}
                         style={{ width: '100%', padding: '10px', fontSize: '16px' }}
                         required
                     />
+
                     <h2>Lời giải</h2>
-                    <textarea
+                    <ReactQuill
                         value={problem.solution}
-                        onChange={(e) => setProblem({ ...problem, solution: e.target.value })}
+                        onChange={(value) => setProblem({ ...problem, solution: value })}
                         placeholder="Viết lời giải bài toán ở đây"
                         rows={10}
                         style={{ width: '100%', padding: '10px', fontSize: '16px' }}

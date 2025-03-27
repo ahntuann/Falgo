@@ -184,6 +184,8 @@ builder.Services.AddScoped<IBlogCommentRepository, BlogCommentRepository>();
 builder.Services.AddScoped<IBlogCommentService, BlogCommentService>();
 builder.Services.AddScoped<IRankingRepository, RankingRepository>();
 builder.Services.AddScoped<IRankingService, RankingService>();
+builder.Services.AddScoped<ITestCaseStatusRepository, TestCaseStatusRepository>();
+builder.Services.AddScoped<ITestCaseStatusService, TestCaseStatusService>();
 
 // Logging
 builder.Logging.AddConsole();

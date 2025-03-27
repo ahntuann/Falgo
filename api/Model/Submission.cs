@@ -39,5 +39,6 @@ namespace api.Model
         public string ProgrammingLanguageId { get; set; }
         [ForeignKey("ProgrammingLanguageId")]
         public ProgrammingLanguage ProgrammingLanguage { get; set; }
+        public ICollection<TestCaseStatus> TestCaseStatuses { get; set; } = new List<TestCaseStatus>();
     }
 }

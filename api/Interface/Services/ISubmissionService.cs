@@ -22,5 +22,6 @@ namespace api.Interface
         Task<PageResult<SubmissionListDto>> GetUserSubmissionsWithProblemInfoAsync(string userId, SubmissionListQueryObject query);
         public Task<PageResult<SubmissionHistoryDto>> GetSubmissionHistory(string userId, string problemId, SubmissionHistoryQueryObject query);
         public Task<List<string>> GetAllSubmissionHistoryStatusesAsync(string userId, string problemId);
+        Task<Submission> GetSubmissionByIdAsync(string submissionId);
     }
 }
