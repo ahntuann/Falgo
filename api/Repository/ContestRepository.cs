@@ -77,7 +77,8 @@ namespace api.Repository
         }
         public async Task DeleteContestAsync(string ContestId)
         {
-            await _context.Contests.Where(P => P.ContestId == ContestId).ExecuteDeleteAsync();
+           await _context.Contests.Where(P => P.ContestId==ContestId).ExecuteDeleteAsync();
+               await _context.SaveChangesAsync();
         }
 
         public async Task addContest(Contest contest)

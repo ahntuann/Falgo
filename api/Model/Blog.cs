@@ -32,5 +32,6 @@ namespace api.Model
         public List<CommentBlog> CommentBlog { get; set; } = new List<CommentBlog>();
         public List<BlogLike> BlogLike { get; set; } = new List<BlogLike>();
         public List<BlogShare> BlogShare { get; set; } = new List<BlogShare>();
+        public List<BlogBookmark> BlogBookmark { get; set; } = new List<BlogBookmark>();
    }
 }

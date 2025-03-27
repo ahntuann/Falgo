@@ -29,8 +29,7 @@ namespace api.Repository
 
         public async Task<Blog?> DeleteAync(int id)
         {
-            // var BlogModel = await _Context.Blogs.FirstOrDefaultAsync(x => x.ID == id);
-            var BlogModel = await _Context.Blogs.Include(b => b.BlogLike).Include(b => b.BlogShare).Include(b => b.CommentBlog).FirstOrDefaultAsync(b => b.ID == id);
+            var BlogModel = await _Context.Blogs.Include(b => b.BlogLike).Include(b => b.BlogShare).Include(b => b.CommentBlog).Include(b => b.BlogBookmark).FirstOrDefaultAsync(b => b.ID == id);
             if (BlogModel == null)
             {
                 return null;
@@ -39,6 +38,7 @@ namespace api.Repository
             _Context.BlogLike.RemoveRange(BlogModel.BlogLike);
             _Context.BlogShare.RemoveRange(BlogModel.BlogShare);
             _Context.CommentBlog.RemoveRange(BlogModel.CommentBlog);
+            _Context.BlogBookmark.RemoveRange(BlogModel.BlogBookmark);
 
             _Context.Blogs.Remove(BlogModel);
             await _Context.SaveChangesAsync();
@@ -48,9 +48,10 @@ namespace api.Repository
         public async Task<List<Blog>> GetAllAsync()
         {
             return await _Context.Blogs
-                .Include(b => b.CommentBlog)  // Load danh sách bình luận
-                .Include(b => b.BlogLike)     // Load danh sách lượt thích
-                .Include(b => b.BlogShare)    // Load danh sách chia sẻ
+                .Include(b => b.CommentBlog)
+                .Include(b => b.BlogLike)
+                .Include(b => b.BlogShare)
+                .Include(b => b.BlogBookmark)
                 .ToListAsync();
         }
 

@@ -53,14 +53,7 @@ function ContestBrief({ contest, contestStatus }) {
             </div>
 
             <div className={cs('info')}>
-                <div className={cs('title')}>
-                    <ReactQuill
-                        className={cs('ql-editor')}
-                        value={contestName}
-                        readOnly={true}
-                        theme="bubble"
-                    />
-                </div>
+                <div className={cs('title')}>{contestName}</div>
                 <div
                     className={cs('level', {
                         hard: level === 'hard',

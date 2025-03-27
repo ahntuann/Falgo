@@ -19,10 +19,12 @@ import {
     SubmissionHistory,
     Ranking,
     PublicProfile,
+    BlogBookMark,
 } from '~/components/user/pages';
 import { AdminLogin } from '~/components/admin/pages';
 import { DefaultLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
 import ContestDetail from '~/components/user/pages/ContestDetail';
+import QA from '~/components/user/pages/Q&A';
 
 const routes = [
     {
@@ -59,7 +61,7 @@ const routes = [
         component: Blog,
         path: '/Blog',
         layout: DefaultLayout,
-        role: ['user', 'guest'],
+        role: ['user', 'guest', 'admin'],
     },
 
     {
@@ -72,7 +74,7 @@ const routes = [
         component: DetailBlog,
         path: '/DetailBlog',
         layout: DefaultLayout,
-        role: ['user', 'guest'],
+        role: ['user', 'guest', 'admin'],
     },
     {
         component: UserBlog,
@@ -84,13 +86,13 @@ const routes = [
         component: BlogUpdate,
         path: '/BlogUpdate',
         layout: DefaultLayout,
-        role: ['user'],
+        role: ['user', 'admin'],
     },
     {
         component: CreateBlog,
         path: '/CreateBlog',
         layout: DefaultLayout,
-        role: ['user'],
+        role: ['user', 'admin'],
     },
     {
         component: CodeEditing,
@@ -157,6 +159,18 @@ const routes = [
         path: '/contest/:contestId',
         layout: DefaultLayout,
         role: ['user'],
+    },
+    {
+        component: BlogBookMark,
+        path: '/BlogBookMark',
+        layout: DefaultLayout,
+        role: ['user'],
+    },
+    {
+        component: QA,
+        path: '/Q&A',
+        layout: DefaultLayout,
+        role: ['user', 'guest'],
     },
 ];
 

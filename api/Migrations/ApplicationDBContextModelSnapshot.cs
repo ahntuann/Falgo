@@ -331,6 +331,53 @@ namespace api.Migrations
                     b.ToTable("Blogs");
                 });
 
+            modelBuilder.Entity("api.Model.BlogBookmark", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("BlogID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("BlogID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("BlogBookmark");
+                });
+
+            modelBuilder.Entity("api.Model.BlogForbiddenWord", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Word")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("BlogForbiddenWord");
+                });
+
             modelBuilder.Entity("api.Model.BlogLike", b =>
                 {
                     b.Property<int>("ID")
@@ -730,6 +777,23 @@ namespace api.Migrations
                     b.HasOne("api.Model.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("api.Model.BlogBookmark", b =>
+                {
+                    b.HasOne("api.Model.Blog", "Blog")
+                        .WithMany()
+                        .HasForeignKey("BlogID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("api.Model.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID");
+
+                    b.Navigation("Blog");
 
                     b.Navigation("User");
                 });

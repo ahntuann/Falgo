@@ -20,6 +20,12 @@ function ProblemsManagement() {
         PageNumber: 1,
         PageSize: 15,
     });
+    const role = JSON.parse(sessionStorage.getItem('admin'));
+    useEffect(() => {
+        if (!role) {
+            navigate('/');
+        }
+    }, [role]);
     const debounceRef = useRef(null);
     useEffect(() => {
         fetchCategories();
@@ -112,11 +118,7 @@ function ProblemsManagement() {
                             <tr key={i}>
                                 <td>{problem.problemId}</td>
                                 <td>
-                                    <ReactQuill
-                                        value={problem.title}
-                                        readOnly={true}
-                                        theme="bubble"
-                                    />
+                                    <div dangerouslySetInnerHTML={{ __html: problem.title }} />
                                 </td>
                                 <td>{problem.category}</td>
                                 <td>{problem.acceptanceRate}%</td>

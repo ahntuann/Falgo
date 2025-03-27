@@ -54,7 +54,7 @@
             max-width: 859.4px;
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis; 
+            text-overflow: ellipsis;
             max-width: 100%;
             .edit,
             .delete,
@@ -86,7 +86,7 @@
                 gap: 10px;
 
                 .edit {
-                    background-color: #ffc107;
+                    background-color: #ff9d5f;
                     color: black;
                     border: none;
                 }
@@ -98,7 +98,7 @@
                 }
 
                 .edit:hover {
-                    background-color: #e0a800;
+                    background-color: #863908;
                     transform: scale(1.05);
                 }
 

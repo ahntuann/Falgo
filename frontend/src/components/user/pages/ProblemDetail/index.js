@@ -43,7 +43,10 @@ const ProblemDetail = () => {
                 <h2>Thông tin bài tập</h2>
                 <p>
                     <strong>Mô tả:</strong>{' '}
-                    <span dangerouslySetInnerHTML={{ __html: problem.detail }} />
+                    <div
+                        className="content-container"
+                        dangerouslySetInnerHTML={{ __html: problem.detail }}
+                    />
                 </p>
                 <p>
                     <strong>Giới hạn thời gian:</strong> {problem.timeLimit} giây
