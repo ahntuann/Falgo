@@ -20,11 +20,13 @@ namespace api.Services
         private readonly IProblemManagementRepository _ProblemRepo;
         private readonly ISubmissionRepository _submissionRepository;
         private readonly ITestCaseRepository _testcaseRepository;
-        public ProblemManagementService(IProblemManagementRepository ProblemRepo,ISubmissionRepository submissionRepository,ITestCaseRepository testcaseRepository)
+        private readonly IContestRepository _contestRepo;
+        public ProblemManagementService(IProblemManagementRepository ProblemRepo,ISubmissionRepository submissionRepository,ITestCaseRepository testcaseRepository,IContestRepository contestRepo)
         {
             _ProblemRepo = ProblemRepo;
             _submissionRepository = submissionRepository;
             _testcaseRepository = testcaseRepository;
+            _contestRepo=contestRepo;
         }
         public async Task DeleteProblemAsync(string ProblemID)
         {
@@ -82,6 +84,65 @@ namespace api.Services
         public async Task UpdateProblemAsync(ProblemDto problem)
         {
             await _ProblemRepo.UpdateProblemAsync( problem.ToProblemFromProblemDto());
+        }
+        public async Task<PageResult<ViewProblemManagementDto>> GetAddedProblemAsync(ContestProblemQueryObject query)
+        {
+          var problems= await _ProblemRepo.GetAddedProblemAsync(query.ContestId);
+          var problemIds = problems.Select(p => p.ProblemId).ToList();
+            var allSubmissions = await _submissionRepository.GetSubmissionsByProblemIdsAsync(problemIds);
+            var submissionsLookup = allSubmissions.ToLookup(s => s.Problem.ProblemId);
+            var problem = problems.Select(problem =>
+            {
+                var submissions = submissionsLookup[problem.ProblemId].ToList();
+                return problem.ProblemManagementDto(submissions);
+            }).ToList();
+            int totalItems = problem.Count;
+            var result = problem.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToList();
+            int totalPoint=0;
+            foreach (var item in result)
+            {
+                totalPoint+=item.Score;
+            }
+            _contestRepo.UpdateTotalPoint(totalPoint,query.ContestId);
+                return new PageResult<ViewProblemManagementDto>
+            {
+                Items = result,
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)query.PageSize),
+                CurrentPage = query.PageNumber
+            };
+        }
+        public async Task<PageResult<ViewProblemManagementDto>> GetExistProblemAsync(ContestProblemQueryObject query)
+        {
+        var problems= await _ProblemRepo.GetExistProblemAsync(query.ContestId);  
+         var problemIds = problems.Select(p => p.ProblemId).ToList();
+            var allSubmissions = await _submissionRepository.GetSubmissionsByProblemIdsAsync(problemIds);
+            var submissionsLookup = allSubmissions.ToLookup(s => s.Problem.ProblemId);
+            var problem = problems.Select(problem =>
+            {
+                var submissions = submissionsLookup[problem.ProblemId].ToList();
+                return problem.ProblemManagementDto(submissions);
+            }).ToList();
+            int totalItems = problem.Count;
+            var result = problem.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToList();
+                return new PageResult<ViewProblemManagementDto>
+            {
+                Items = result,
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling(totalItems / (double)query.PageSize),
+                CurrentPage = query.PageNumber
+            };
+        }
+         public async Task AddProblemToContest(string problemId,string contestId)
+        {
+           
+            await _ProblemRepo.AddProblemToContest(problemId,contestId);
+
+            
+        }
+        public async Task DeleteProblemFromContest(string problemId,string contestId)
+        {
+            await _ProblemRepo.DeleteProblemFromContest(problemId,contestId);
         }
     }
 }

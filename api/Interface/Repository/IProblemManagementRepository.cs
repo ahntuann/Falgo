@@ -15,5 +15,11 @@ namespace api.Interface.Repository
           public  Task<List<Problem>> GetFilteredProblemsAsync(ProblemManagamentQueryObject query);
           public  Task<Problem?> GetProblemByIdAsync(string problemId);
          public  Task UpdateProblemAsync(Problem problem);
+         public  Task<List<Problem>> GetAddedProblemAsync(string contestId);
+        
+        public  Task<List<Problem>> GetExistProblemAsync(string contestId);
+         public  Task AddProblemToContest(string problemId,string contestId);
+        
+        public  Task DeleteProblemFromContest(string problemId,string contestId);
     }
 }

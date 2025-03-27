@@ -15,6 +15,7 @@ namespace api.Repository
     public class ProblemManagementRepository : IProblemManagementRepository
     {
           private readonly ApplicationDBContext _context;
+        
           public ProblemManagementRepository(ApplicationDBContext context)
           {
             _context=context;
@@ -47,6 +48,35 @@ namespace api.Repository
         public async Task<Problem?> GetProblemByIdAsync(string problemId)
         {
             return await _context.Problems.AsNoTracking().FirstOrDefaultAsync(p => p.ProblemId == problemId);
+        }
+          public async Task<List<Problem>> GetAddedProblemAsync(string contestId)
+        {
+            var Problem= await  _context.Problems
+        .Where(p => _context.ContestProblems
+            .Any(cp => cp.ContestId == contestId && cp.ProblemId == p.ProblemId))
+        .ToListAsync();
+            return Problem;
+        }
+        public async Task AddProblemToContest(string problemId,string contestId)
+        {
+            await _context.ContestProblems.AddAsync(new ContestProblem{
+                ProblemId=problemId,
+                ContestId=contestId,
+            });
+            await _context.SaveChangesAsync();
+        }
+        public async Task DeleteProblemFromContest(string problemId,string contestId)
+        {
+            await _context.ContestProblems.Where(cp => cp.ProblemId == problemId && cp.ContestId == contestId)
+            .ExecuteDeleteAsync();
+            await _context.SaveChangesAsync();
+        }
+        public async Task<List<Problem>> GetExistProblemAsync(string contestId)
+        {
+             return await _context.Problems
+        .Where(p => !_context.ContestProblems
+            .Any(cp => cp.ContestId == contestId && cp.ProblemId == p.ProblemId))
+        .ToListAsync();
         }
         public async Task UpdateProblemAsync(Problem problem)
         {

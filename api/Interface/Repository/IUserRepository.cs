@@ -15,7 +15,11 @@ namespace api.Interface
         Task<bool> UpdateUserAsync(string userId, UpdateUserDto updateUserDto);
         Task<bool> UpdateUser(AppUser user);
         Task UpdateUserAsync(AppUser user);
-        
+        Task<string> GetGitHubEmail(string accessToken);
+        Task<bool> CheckRepositoryExists(string accessToken, string repoName);
+        Task<bool> CommitCodeToRepository(string accessToken, string repoName, string filePath, string content);
+        Task<List<LanguageUsage>> GetTopProgrammingLanguagesAsync(string userId);
+        Task<List<CategoryPercentage>> GetProblemCategoryPercentageAsync(string userId);
 
     }
 }

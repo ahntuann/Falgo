@@ -5,12 +5,15 @@ import styles from './ContestManagement.module.scss';
 import { useNavigate } from 'react-router-dom';
 import ContestDashboard from '../../components/ContestShowDashboard';
 import axios from 'axios';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 const cx = classNames.bind(styles);
 
 function ContestManagement() {
     useEffect(() => {
         fetchContests();
     }, []);
+    const navigate = useNavigate();
     const [totalPages, setTotalPages] = useState(1);
     const [query, setQuery] = useState({
         ContestTitle: '',
@@ -24,17 +27,21 @@ function ContestManagement() {
     };
     const handleUpdate = (id) => {
         console.log('Edit problem:', id);
+        navigate('/AddProblemToContest', { state: { contest } });
     };
 
     const handleDelete = async (contestId) => {
+        const isConfirmed = window.confirm('Bạn có chắc muốn xóa cuộc thi này không?');
+
+        if (!isConfirmed) return; // If user cancels, stop execution
+
         try {
-            const requestData = { contestId };
             await axios.delete(
                 `http://localhost:5180/api/ContestManagement/delete?contestId=${contestId}`,
             );
             fetchContests();
         } catch (error) {
-            console.error('Error deleting problem:', error);
+            console.error('lỗi khi xóa contest:', error);
         }
     };
     const debounceRef = useRef(null);
@@ -79,6 +86,9 @@ function ContestManagement() {
                     value={query.ContestTitle}
                     onChange={handleChange}
                 />
+                <button className={cx('create-btn')} onClick={() => navigate('/AddContest')}>
+                    Tạo Cuộc thi mới
+                </button>
             </div>
             <table className={cx('table')}>
                 <thead>
@@ -97,9 +107,15 @@ function ContestManagement() {
                 <tbody>
                     {contest !== undefined &&
                         contest.map((contest, i) => (
-                            <tr>
+                            <tr key={i}>
                                 <td>{contest.contestId}</td>
-                                <td>{contest.contestName}</td>
+                                <td>
+                                    <ReactQuill
+                                        value={contest.contestName}
+                                        readOnly={true}
+                                        theme="bubble"
+                                    />
+                                </td>
                                 <td>{contest.dueTime}</td>
                                 <td>{contest.totalPoint}</td>
                                 <td>{contest.level}</td>
@@ -108,7 +124,9 @@ function ContestManagement() {
                                 <td>
                                     <button
                                         className={cx('edit-btn')}
-                                        onClick={() => handleUpdate(contest.contestId)}
+                                        onClick={() =>
+                                            navigate('/AddProblemToContest', { state: { contest } })
+                                        }
                                     >
                                         Edit
                                     </button>

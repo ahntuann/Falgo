@@ -235,12 +235,10 @@ namespace api.Services
             return zipBytes;
         }
 
-
         private string RemoveSpecialCharacters(string input)
         {
             return System.Text.RegularExpressions.Regex.Replace(input, @"[^a-zA-Z0-9_]", "");
         }
-
 
         private string GetFileExtensionByLanguage(string languageName)
         {
@@ -253,6 +251,63 @@ namespace api.Services
                 "csharp" => ".cs",
                 _ => ".txt"
             };
+        }
+        public async Task<string> GetGitHubEmail(string accessToken)
+        {
+            return await _userRepo.GetGitHubEmail(accessToken);
+        }
+
+        public async Task<bool> CommitSubmissionToGitHub(string userId, string submissionId)
+        {
+            Console.WriteLine($"Committing submission for user: {userId}, submissionId: {submissionId}");
+
+            var user = await _userRepo.GetUserByIdAsync(userId);
+            
+            if (user == null) 
+            {
+                Console.WriteLine("User not found");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(user.GitHubAccessToken))
+            {
+                Console.WriteLine("GitHub access token is missing");
+                return false;
+            }
+
+            var submission = await _subRepo.GetSubmissionByIdAsync(submissionId);
+            
+            if (submission == null)
+            {
+                Console.WriteLine("Submission not found");
+                return false;
+            }
+
+            if (submission.AppUserId != userId)
+            {
+                Console.WriteLine("Submission does not belong to this user");
+                return false;
+            }
+
+            string repoName = "Falgo";
+            bool repoExists = await _userRepo.CheckRepositoryExists(user.GitHubAccessToken, repoName);
+            if (!repoExists)
+            {
+                throw new Exception("Repository 'Falgo' does not exist. Please create it on GitHub.");
+            }
+
+            string filePath = $"submissions/{submission.SubmissionId}.txt";
+            return await _userRepo.CommitCodeToRepository(user.GitHubAccessToken, repoName, filePath, submission.SourceCode);
+        }
+
+        public async Task<List<LanguageUsage>> GetTopProgrammingLanguagesAsync(string userId)
+        {
+            return await _userRepo.GetTopProgrammingLanguagesAsync(userId);
+        }
+
+        public async Task<List<CategoryPercentage>> GetProblemCategoryPercentageAsync(string userId)
+        {
+            return await _userRepo.GetProblemCategoryPercentageAsync(userId);
         }
         
     }

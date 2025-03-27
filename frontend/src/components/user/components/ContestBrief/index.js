@@ -1,11 +1,13 @@
 import classNames from 'classnames/bind';
-
+import 'react-quill/dist/quill.snow.css';
 import style from './ContestBrief.module.scss';
 import CountDown from '~/components/user/components/CountDown';
 import { useContext, useEffect, useState } from 'react';
 import { fetchCheckIfUserRegisContestAPI, registerUserForContest } from '~/apis';
 import AuthContext from '~/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import ReactQuill from 'react-quill';
+
 const cs = classNames.bind(style);
 
 function ContestBrief({ contest, contestStatus }) {
@@ -51,7 +53,14 @@ function ContestBrief({ contest, contestStatus }) {
             </div>
 
             <div className={cs('info')}>
-                <div className={cs('title')}>{contestName}</div>
+                <div className={cs('title')}>
+                    <ReactQuill
+                        className={cs('ql-editor')}
+                        value={contestName}
+                        readOnly={true}
+                        theme="bubble"
+                    />
+                </div>
                 <div
                     className={cs('level', {
                         hard: level === 'hard',
