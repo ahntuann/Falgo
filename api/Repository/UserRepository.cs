@@ -181,5 +181,11 @@ namespace api.Repository
 
             return categoryPercentages;
         }
+         public async Task<List<AppUser>> GetUserbyUserId(List<string> userIds)
+        {
+            return await _context.AppUsers.Include(s => s.Questions)
+                .Where(s => userIds.Contains(s.Id))
+                .ToListAsync();
+        }
     }
 }

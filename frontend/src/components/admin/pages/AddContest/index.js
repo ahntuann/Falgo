@@ -81,7 +81,7 @@ export default function AddContest() {
             console.log(contestData);
 
             await axios.post('http://localhost:5180/api/ContestManagement/AddContest', contestData);
-            alert('Contest added successfully!');
+            alert('Đã thêm cuộc thi thành công!');
             setContest({
                 contestId: '',
                 contestName: '',

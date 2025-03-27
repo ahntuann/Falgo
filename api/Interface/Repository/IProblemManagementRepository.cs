@@ -17,7 +17,7 @@ namespace api.Interface.Repository
          public  Task UpdateProblemAsync(Problem problem);
          public  Task<List<Problem>> GetAddedProblemAsync(string contestId);
         
-        public  Task<List<Problem>> GetExistProblemAsync(string contestId);
+        public  Task<List<Problem>> GetExistProblemAsync(ContestProblemQueryObject query);
          public  Task AddProblemToContest(string problemId,string contestId);
         
         public  Task DeleteProblemFromContest(string problemId,string contestId);

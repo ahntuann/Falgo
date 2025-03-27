@@ -91,7 +91,10 @@ const ProblemForm = () => {
                     },
                 },
             );
+            alert('Thêm Bài tập thành công!');
+            navigate('/ProblemsManagement');
         } catch (error) {
+            alert(error.response.data);
             console.error('Error:', error);
         }
     };
