@@ -137,7 +137,7 @@ const UpdateProfile = () => {
             }
 
             setEditing(false);
-            setError(null); // Xóa lỗi khi cập nhật thành công
+            setError(null);
         } catch (error) {
             setError('Có lỗi xảy ra khi cập nhật thông tin!');
         }
