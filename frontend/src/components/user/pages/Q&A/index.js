@@ -63,9 +63,11 @@ const QA = () => {
     };
 
     return (
-        <div className="container">
-            <aside className="sidebar">
-                {categories.map((category, index) => (
+        <div className={cx('container')}>
+            <div className={cx('Leftsidebar_space')}>
+                sidebar
+                <aside className={cx('sidebar')}>
+                    {/* {categories.map((category, index) => (
                     <a
                         key={index}
                         href="#"
@@ -73,46 +75,65 @@ const QA = () => {
                     >
                         {category.name}
                     </a>
-                ))}
-            </aside>
-            <main className="content">
-                <h2>Tạo Câu Hỏi Mới</h2>
-                <form onSubmit={handleSubmit} className={cx('form')}>
-                    <ReactQuill value={questions.content} onChange={handleChange} />
-                    <button type="submit" className={cx('submit-btn')} disabled={loading}>
-                        {loading ? 'Submitting...' : ' Thêm câu hỏi'}
-                    </button>
-                </form>
-                <div className="user-info">
-                    <div>
-                        <h4>
-                            {questions.userName} <span className="role">Giáo viên</span>
-                        </h4>
-                        <p className="timestamp">Hôm kia lúc {questions.time}</p>
-                    </div>
-                </div>
-                <p className="question-text">{questions.content}</p>
-                <ul className="answers">
-                    {questions.answer.map((option, index) => (
-                        <li key={index}>{option}</li>
+                ))} */}
+                    {categories.map((category, index) => (
+                        <button
+                            key={index}
+                            className={index === categories.length - 1 ? 'active' : ''}
+                            onClick={() => console.log(category.name)}
+                        >
+                            {category.name}
+                        </button>
                     ))}
-                </ul>
-                <div className="tags">
-                    <span className="tag">Lớp 8</span>
-                    <span className="tag">Giáo dục công dân</span>
-                </div>
-            </main>
-
-            {/* Ranking */}
-            <aside className="ranking">
-                <h3>Xếp hạng</h3>
-                {ranking.map((user, index) => (
-                    <div key={index} className="rank-item">
-                        <span>{user.name}</span>
-                        <span className="points">{user.points} GP</span>
+                </aside>
+            </div>
+            <div className={cx('Content_space')}>
+                <main className={cx('content')}>
+                    <div className={cx('Create_content')}>
+                        <form onSubmit={handleSubmit} className={cx('form')}>
+                            <h2>Tạo Câu Hỏi Mới</h2>
+                            <ReactQuill value={questions.content} onChange={handleChange} />
+                            <button type="submit" className={cx('submit-btn')} disabled={loading}>
+                                {loading ? 'Submitting...' : ' Thêm câu hỏi'}
+                            </button>
+                        </form>
                     </div>
-                ))}
-            </aside>
+
+                    <div className={cx('show_data')}>
+                        <div className={cx('user-info')}>
+                            <div>
+                                <h4>
+                                    {questions.userName}{' '}
+                                    <span className={cx('role')}>Giáo viên</span>
+                                </h4>
+                                <p className={cx('timestamp')}>Hôm kia lúc {questions.time}</p>
+                            </div>
+                        </div>
+                        <p className={cx('question-text')}>{questions.content}</p>
+                        <ul className={cx('answers')}>
+                            {questions.answer.map((option, index) => (
+                                <li key={index}>{option}</li>
+                            ))}
+                        </ul>
+                        <div className={cx('tags')}>
+                            <span className={cx('tags')}>Lớp 8</span>
+                            <span className={cx('tags')}>Giáo dục công dân</span>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            <div className={cx('Rightsidebar_space')}>
+                {/* Ranking */}
+                <aside className={cx('ranking')}>
+                    <h3>Xếp hạng</h3>
+                    {ranking.map((user, index) => (
+                        <div key={index} className={cx('rank-item')}>
+                            <span>{user.name}</span>
+                            <span className={cx('points')}>{user.points} GP</span>
+                        </div>
+                    ))}
+                </aside>
+            </div>
         </div>
     );
 };

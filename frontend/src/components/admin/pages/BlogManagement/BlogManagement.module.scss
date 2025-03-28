@@ -25,6 +25,17 @@
             align-items: center;
         }
     }
+    .char_Space {
+        .Blog_number_char {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            align-items: flex-start;
+            .BlogChar_detail{
+                width: 250px;
+            }
+        }
+    }
     .blog-item {
         display: flex;
         border: 1px solid black;
@@ -32,6 +43,9 @@
         margin: 5px;
         padding: 15px;
         gap: 20px;
+        .Note {
+            width: 100px;
+        }
         .category-tags {
             display: flex;
             gap: 10px;
@@ -41,12 +55,6 @@
             height: 255px;
             border-radius: 10px;
             border: 1px solid black;
-        }
-
-        .actions {
-            margin-top: 15px;
-            padding: 10px;
-            border-top: 1px solid #ddd;
         }
 
         .content {
@@ -71,7 +79,6 @@
 
             .btn-read-more {
                 background-color: #007bff;
-                color: black;
 
                 &:hover {
                     background-color: #0056b3;
@@ -81,19 +88,25 @@
 
             .actions {
                 display: flex;
-                align-items: center;
-                justify-content: space-between;
                 gap: 10px;
-
+                margin-top: 15px;
+                padding: 10px;
+                border-top: 1px solid #ddd;
+                flex-wrap: nowrap;
+                align-items: flex-start;
+                flex-direction: column;
+                .Like_Share_cmt,
+                .Action_space {
+                    display: flex;
+                    gap: 5px;
+                }
                 .edit {
                     background-color: #ff9d5f;
-                    color: black;
                     border: none;
                 }
 
                 .delete {
                     background-color: #dc3545;
-                    color: white;
                     border: none;
                 }
 

@@ -161,7 +161,7 @@ const Blog = () => {
         setBlogMostLikeAndShare(blogMostLikeAndShare);
         setBlogMostLike(blogMostLike);
         setBlogMostShare(blogMostShare);
-    }, [availableblog, filteredBlogs]);
+    }, [filteredBlogs]);
 
     useEffect(() => {
         if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -307,39 +307,98 @@ const Blog = () => {
         setFilteredBlogs(filtered);
     };
 
-    const handleDelete = async (blogId) => {
-        if (!window.confirm('Bạn có chắc chắn muốn xóa bài viết này không?')) return;
+    // const handleDelete = async (blogId) => {
+    //     if (!window.confirm('Bạn có chắc chắn muốn xóa bài viết này không?')) return;
 
+    //     try {
+    //         const url = `http://localhost:5180/api/BlogController/${blogId}`;
+    //         console.log('Request URL:', url);
+    //         const token = localStorage.getItem('accessToken');
+    //         console.log('id', blogId);
+    //         const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
+    //             method: 'DELETE',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 Accept: '*/*',
+    //                 Authorization: `Bearer ${token}`,
+    //             },
+    //             credentials: 'include',
+    //         });
+
+    //         if (response.status === 401) {
+    //             alert('Bạn cần đăng nhập để xóa bài viết!');
+    //             return;
+    //         }
+
+    //         const text = await response.text();
+
+    //         if (response.ok) {
+    //             alert('Xóa bài viết thành công!');
+    //             setFilteredBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== blogId));
+    //         } else {
+    //             alert(`Xóa thất bại! Server trả về: ${text}`);
+    //         }
+    //     } catch (error) {
+    //         console.error('Lỗi khi xóa bài viết:', error);
+    //         alert('Có lỗi xảy ra!');
+    //     }
+    // };
+
+    const handleDelete = async (blogId) => { 
+        if (!window.confirm('Bạn có chắc chắn muốn xóa bài viết này không?')) return;
+    
         try {
             const token = localStorage.getItem('accessToken');
-            const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
+            if (!token) {
+                alert('Bạn cần đăng nhập để xóa bài viết!');
+                return;
+            }
+    
+            const url = `http://localhost:5180/api/BlogController/${blogId}`;
+            console.log("Request URL:", url);
+    
+            const response = await fetch(url, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    Accept: '*/*',
-                    Authorization: `Bearer ${token}`,
+                    'Authorization': `Bearer ${token}`, // Gửi token để xác thực
+                    'Accept': '*/*',
                 },
                 credentials: 'include',
             });
-
+    
+            console.log("Response status:", response.status);
+    
             if (response.status === 401) {
                 alert('Bạn cần đăng nhập để xóa bài viết!');
                 return;
             }
-
+    
+            if (response.status === 403) {
+                alert('Bạn không có quyền xóa bài viết này!');
+                return;
+            }
+    
+            if (response.status === 404) {
+                alert('Không tìm thấy bài viết để xóa!');
+                return;
+            }
+    
             const text = await response.text();
-
+            console.log("Response text:", text);
+    
             if (response.ok) {
-                alert('Xóa bài viết thành công!');
+                alert(`Xóa bài viết thành công!`);
                 setFilteredBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== blogId));
             } else {
                 alert(`Xóa thất bại! Server trả về: ${text}`);
             }
         } catch (error) {
             console.error('Lỗi khi xóa bài viết:', error);
-            alert('Có lỗi xảy ra!');
+            alert('Có lỗi xảy ra khi gửi yêu cầu xóa!');
         }
     };
+    
 
     return (
         <div className={cs('container')}>
