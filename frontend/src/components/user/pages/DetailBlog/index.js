@@ -7,6 +7,8 @@ import classNames from 'classnames/bind';
 import styles from './DetailBlog.module.scss';
 import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
 import { Link } from 'react-router-dom';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const cs = classNames.bind(styles);
 
@@ -27,6 +29,28 @@ const DetailBlog = () => {
     const [activeCommentId, setActiveCommentId] = useState(null);
 
     const [bookmarked, setBookmarked] = useState();
+
+    const modules = {
+        toolbar: [
+            [{ header: [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link', 'image', 'video'],
+        ],
+    };
+
+    const formats = [
+        'header',
+        'bold',
+        'italic',
+        'underline',
+        'strike',
+        'list',
+        'bullet',
+        'link',
+        'image',
+        'video',
+    ];
 
     useEffect(() => {
         if (location.state?.blog) {
@@ -56,6 +80,9 @@ const DetailBlog = () => {
         }
     }, [blog, userObject]);
 
+    const handleCommentChange = (content) => {
+        setComments(content);
+    };
     const suggestByAuthor = useMemo(() => {
         return allBlogs.filter((b) => b.userId === blog?.userId && b.id !== blog?.id).slice(0, 3);
     }, [allBlogs, blog]);
@@ -505,11 +532,11 @@ const DetailBlog = () => {
                         </button>
                     </div>
                     <div className={cs('cmt_Space')}>
-                        <input
-                            type="text"
-                            placeholder="Nhập bình luận..."
+                        <ReactQuill
                             value={comments}
-                            onChange={(e) => setComments(e.target.value)}
+                            onChange={handleCommentChange}
+                            modules={modules}
+                            formats={formats}
                         />
                         <button className={cs('cmt_Action')} onClick={handleComment}>
                             Lưu
@@ -593,7 +620,13 @@ const DetailBlog = () => {
                                             <p className={cs('comment_name')}>
                                                 {comment.guestName || 'Ẩn danh'}
                                             </p>
-                                            <p className={cs('comment_text')}>{comment.content}</p>
+                                            <p className={cs('comment_text')}>
+                                                <div
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: comment.content,
+                                                    }}
+                                                />
+                                            </p>
                                             {comment.status === 'Báo cáo' &&
                                                 comment.userId === userObject?.id && (
                                                     <div className={cs('Note')}>

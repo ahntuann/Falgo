@@ -19,8 +19,6 @@ function ContestBrief({ contest, contestStatus }) {
 
     const navigate = useNavigate();
 
-    const navagate = useNavigate();
-
     // Check if user register contest
     useEffect(() => {
         if (appUser === null) {
@@ -33,7 +31,7 @@ function ContestBrief({ contest, contestStatus }) {
     // Register User for contest
     const registerUser = () => {
         if (appUser === null) {
-            navagate('/login');
+            navigate('/login');
             return;
         }
 

@@ -1,12 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import style from './ProblemContestList.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 const cs = classNames.bind(style);
 
-const ProblemContestList = ({ contestId, problems, isStart, isEnd }) => {
-    console.log(isStart);
+const ProblemContestList = ({ contestId, problems, isStart, isEnd, contest }) => {
+    const navigate = useNavigate();
+
     return (
         <div className={cs('problemList')}>
             <h2>Danh sách bài toán</h2>
@@ -24,20 +25,23 @@ const ProblemContestList = ({ contestId, problems, isStart, isEnd }) => {
                         <tr key={index}>
                             <td>{index + 1}</td>
                             <td>
-                                <Link
-                                    onClick={(event) => {
+                                <div
+                                    className={cs('link')}
+                                    onClick={() => {
                                         if (isEnd) {
-                                            event.preventDefault();
                                             alert('Đã hết giờ!');
                                         } else if (!isStart) {
-                                            event.preventDefault();
-                                            alert('Bạn phải ấn "Bắt đầu" để làm bài');
+                                            alert('Bạn phải ấn "Bắt đầu thi" để làm bài');
+                                        } else {
+                                            navigate(
+                                                `/problems/${problem.problemId}?contestId=${contestId}`,
+                                                { state: contest },
+                                            );
                                         }
                                     }}
-                                    to={`/practice?id=${problem.problemId}`}
                                 >
                                     {problem.title}
-                                </Link>
+                                </div>
                             </td>
                             <td>{problem.score ?? '-'}</td>
                             <td className={cs(`status ${problem.status}`)}>

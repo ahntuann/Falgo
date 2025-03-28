@@ -77,8 +77,8 @@ namespace api.Repository
         }
         public async Task DeleteContestAsync(string ContestId)
         {
-           await _context.Contests.Where(P => P.ContestId==ContestId).ExecuteDeleteAsync();
-               await _context.SaveChangesAsync();
+            await _context.Contests.Where(P => P.ContestId == ContestId).ExecuteDeleteAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task addContest(Contest contest)
@@ -94,6 +94,16 @@ namespace api.Repository
 
                 throw ex;
             }
+        }
+
+        public async Task<List<Problem>> GetAllProblemOfContest(string contestId)
+        {
+            var problems = await _context.Problems
+                .Where(p => _context.ContestProblems
+                    .Any(cp => cp.ContestId == contestId && cp.ProblemId == p.ProblemId))
+                .ToListAsync();
+
+            return problems;
         }
     }
 }

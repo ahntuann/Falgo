@@ -15,6 +15,7 @@ using api.Interface.Services;
 using api.Mappers;
 using api.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace api.Controllers
 {
@@ -176,8 +177,6 @@ namespace api.Controllers
 
                 Directory.Delete(baseURL, true);
 
-                Submission addedSubmission = new Submission();
-
                 if (!submissionPostDto.IsTestCode)
                 {
                     string status;
@@ -190,34 +189,57 @@ namespace api.Controllers
                     else
                         status = "Accepted";
 
-                    addedSubmission = await _submissionService.CreateASubmissionAsync(new Submission
+                    if (!submissionPostDto.ContestId.IsNullOrEmpty())
                     {
-                        Point = numOfSucces * 10,
-                        SourceCode = submissionPostDto.SourceCode,
-                        Status = status,
-                        ExecuteTime = executionTime,
-                        MemoryUsed = 1000,
-                        ProblemId = submissionPostDto.ProblemID,
-                        AppUserId = submissionPostDto.UserId,
-                        ProgrammingLanguageId = submissionPostDto.ProgrammingLanguageId
-                    });
-
-                    var submissionId = addedSubmission.SubmissionId;
-
-                    if (addedSubmission != null)
-                        foreach (var testCaseStatus in testCaseStatuses)
+                        await _submissionService.CreateASubmissionContestAsync(new SubmissionContest
                         {
-                            var testCase = testCases.FirstOrDefault(x => x.TestCaseId == testCaseStatus.TestCaseId);
-                            await _testcaseStatusService.AddTestcaseStatusAsync(new TestCaseStatus
+                            Point = numOfSucces * (problem.TotalPoint / 10),
+                            SourceCode = submissionPostDto.SourceCode,
+                            Status = status,
+                            ExecuteTime = executionTime,
+                            MemoryUsed = 1000,
+                            ProblemId = submissionPostDto.ProblemID,
+                            AppUserId = submissionPostDto.UserId,
+                            ProgrammingLanguageId = submissionPostDto.ProgrammingLanguageId,
+                            ContestId = submissionPostDto.ContestId,
+                            SubmittedAt = DateTime.Now
+                        });
+                    }
+                    else
+                    {
+                        Submission addedSubmission = new Submission();
+
+                        addedSubmission = await _submissionService.CreateASubmissionAsync(new Submission
+                        {
+                            Point = numOfSucces * (problem.TotalPoint / 10),
+                            SourceCode = submissionPostDto.SourceCode,
+                            Status = status,
+                            ExecuteTime = executionTime,
+                            MemoryUsed = 1000,
+                            ProblemId = submissionPostDto.ProblemID,
+                            AppUserId = submissionPostDto.UserId,
+                            ProgrammingLanguageId = submissionPostDto.ProgrammingLanguageId
+                        });
+
+                        var submissionId = addedSubmission.SubmissionId;
+
+                        if (addedSubmission != null)
+                            foreach (var testCaseStatus in testCaseStatuses)
                             {
-                                TestCaseId = testCase.TestCaseId,
-                                SubmissionId = submissionId,
-                                Result = testCaseStatus.Result,
-                                TestCase = testCase,
-                                Submission = addedSubmission,
-                                ExecutionTime = testCaseStatus.ExecutionTime
-                            });
-                        }
+                                var testCase = testCases.FirstOrDefault(x => x.TestCaseId == testCaseStatus.TestCaseId);
+                                await _testcaseStatusService.AddTestcaseStatusAsync(new TestCaseStatus
+                                {
+                                    TestCaseId = testCase.TestCaseId,
+                                    SubmissionId = submissionId,
+                                    Result = testCaseStatus.Result,
+                                    TestCase = testCase,
+                                    Submission = addedSubmission,
+                                    ExecutionTime = testCaseStatus.ExecutionTime
+                                });
+                            }
+                    }
+
+
                 }
 
                 return Ok(testCaseStatuses);

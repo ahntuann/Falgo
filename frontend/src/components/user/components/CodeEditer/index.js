@@ -10,9 +10,9 @@ const cs = classNames.bind(style);
 
 const MemoizedCodeEditerAction = React.memo(CodeEditerAction);
 
-function CodeEditer({ briefInfoProblem }) {
+function CodeEditer({ briefInfoProblem, contestId }) {
     return (
-        <CodeEditingProvider briefInfoProblem={briefInfoProblem}>
+        <CodeEditingProvider briefInfoProblem={briefInfoProblem} contestId={contestId}>
             <div className={cs('wrapper')}>
                 <div className={cs('actions')}>
                     <MemoizedCodeEditerAction />

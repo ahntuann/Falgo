@@ -106,6 +106,7 @@ function ContestManagement() {
                         <th>độ khó</th>
                         <th>ngày kết thúc</th>
                         <th>đăng ký</th>
+                        <th>trạng thái</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
@@ -127,6 +128,12 @@ function ContestManagement() {
                                 <td>{contest.level}</td>
                                 <td>{new Date(contest.endDate).toLocaleString()}</td>
                                 <td>{contest.numRegis}</td>
+                                <td>
+                                    {' '}
+                                    {new Date(contest.endDate) > Date.now()
+                                        ? 'On-Going'
+                                        : 'Finished'}
+                                </td>
                                 <td>
                                     <button
                                         className={cx('edit-btn')}

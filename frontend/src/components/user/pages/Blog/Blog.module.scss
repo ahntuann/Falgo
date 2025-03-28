@@ -40,7 +40,9 @@
                 margin-bottom: 16px;
                 width: 100%;
                 min-width: 807.4px;
+                color: white;
                 input {
+                    color: white;
                     background-color: #333333;
                     width: 100%;
                     padding: 10px;
@@ -89,6 +91,7 @@
     }
     .category-list button,
     .reset-button {
+        color: white;
         display: block;
         width: 100%;
         padding: 8px;
@@ -98,7 +101,7 @@
         border-radius: 4px;
         cursor: pointer;
         transition: 0.3s;
-        color: black;
+
         &:hover,
         &.active {
             background-color: #0056b3;
@@ -111,6 +114,7 @@
     }
     .date-filter,
     .DateInput {
+        color: white;
         display: flex;
         align-items: center;
         flex-wrap: nowrap;
@@ -121,6 +125,7 @@
         select,
         input,
         button {
+            color: white;
             background-color: #333333;
             height: 35px;
             width: 70px;
@@ -140,7 +145,6 @@
     .blog-list {
         width: 100%;
         max-width: 807.4px;
-        min-height: 400px;
         .no-blogs {
             color: white;
         }
@@ -160,6 +164,7 @@
         border-radius: 8px;
         background: #333333;
         .category-item {
+            color: white;
             font-size: 13.5px;
         }
 
@@ -191,6 +196,7 @@
         justify-content: space-between;
         gap: 10px;
         select {
+            color: white;
             background-color: #333333;
             flex: 1 1 auto;
             text-align: center;
@@ -198,11 +204,16 @@
             border-radius: 4px;
             font-size: 14px;
         }
+        button {
+            color: white;
+        }
     }
 
     .edit,
     .delete,
     .btn-read-more {
+        color: white;
+
         padding: 8px 12px;
         font-size: 14px;
         border: none;
@@ -214,8 +225,6 @@
 
     .btn-read-more {
         background-color: #2f00b2;
-        color: black;
-
         &:hover {
             background-color: #0056b3;
             transform: scale(1.05);

@@ -18,6 +18,8 @@ function CodeEditing() {
 
     const navigate = useNavigate();
 
+    const contest = location.state || {};
+
     const [problem, setProblem] = useState(null);
 
     useEffect(() => {
@@ -33,16 +35,25 @@ function CodeEditing() {
                     <FontAwesomeIcon
                         className={cs('problemInfoIcon')}
                         icon={faAngleLeft}
-                        onClick={() => navigate(`/problems/${briefInfoProblem.id}`)}
+                        onClick={() => {
+                            if (briefInfoProblem.contestId)
+                                navigate(
+                                    `/problems/${briefInfoProblem.id}?contestId=${briefInfoProblem.contestId}`,
+                                    { state: contest },
+                                );
+                            else navigate(`/problems/${briefInfoProblem.id}`);
+                        }}
                     />
                     {problem !== null && problem !== undefined && <div>{problem.title}</div>}
                     <FontAwesomeIcon className={cs('helpIcon')} icon={faCircleQuestion} />
                 </div>
             </div>
 
-            {problem !== null && problem !== undefined && <CodeEditer briefInfoProblem={problem} />}
+            {problem !== null && problem !== undefined && (
+                <CodeEditer contestId={briefInfoProblem?.contestId} briefInfoProblem={problem} />
+            )}
 
-            <Chatbot />
+            {briefInfoProblem.contestId === undefined && <Chatbot />}
         </div>
     );
 }

@@ -115,14 +115,17 @@ export const submitSolutionForAProblemAPI = async (
     sourceCode,
     programmingLanguageId,
     isTestCode,
+    contestId,
 ) => {
     try {
+        console.log(contestId);
         const reponse = await axios.post(`${API_ROOT}/api/submission`, {
             problemID,
             userId,
             sourceCode,
             programmingLanguageId,
             isTestCode,
+            contestId,
         });
 
         return reponse.data;
@@ -155,5 +158,13 @@ export const GetContestRegistionByUserIdAndContestIdAPI = async (userId, contest
         );
 
         return response.data;
+    } catch (error) {}
+};
+
+export const fetchAllProblemOfContestAPI = async (contestId) => {
+    try {
+        const reponse = await axios.get(`${API_ROOT}/api/contest/problems?contestId=${contestId}`);
+
+        return reponse.data;
     } catch (error) {}
 };

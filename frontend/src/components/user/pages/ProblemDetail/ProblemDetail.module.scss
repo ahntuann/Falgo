@@ -98,3 +98,20 @@
         color: #007bff;
     }
 }
+
+.backToContest {
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    opacity: 0.5;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.backIcon {
+    margin-right: 5px;
+}
