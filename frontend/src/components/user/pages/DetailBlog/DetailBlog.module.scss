@@ -12,10 +12,11 @@
     }
 
     .ql-container {
-        min-height: 200px;
+        height: 200px;
+        overflow: hidden;
     }
     .ql-editor {
-        min-height: 150px;
+        height: 150px;
     }
 
     .Blog_Content {
@@ -116,6 +117,10 @@
             justify-content: flex-end;
             align-items: center;
             gap: 7px;
+            .cmt_Space {
+                display: flex;
+                flex-direction: column;
+            }
             .share_showPopup {
                 position: absolute;
 
