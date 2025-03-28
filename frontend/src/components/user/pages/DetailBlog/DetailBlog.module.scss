@@ -105,9 +105,10 @@
         }
         .Content_space {
             background-color: #333333;
+            padding: 30px;
         }
         .Content_space img {
-            max-width: 50%;
+            max-width: 100%;
         }
 
         .Action_space,
@@ -265,16 +266,18 @@
                 gap: 10px;
 
                 .suggest_item {
+                    color: white;
+
                     display: flex;
                     align-items: flex-start;
                     gap: 10px;
-                    background: #f9f9f9;
+                    background-color: #333333;
                     padding: 10px;
                     border-radius: 8px;
                     transition: background 0.3s;
                     flex-direction: column;
                     &:hover {
-                        background: #eee;
+                        background: #1e1e1e;
                     }
 
                     .LinkTo_space {
@@ -291,6 +294,8 @@
                         }
 
                         .btn-read-more {
+                            color: white;
+                            text-decoration: none;
                             flex: 1;
                             display: -webkit-box;
                             -webkit-box-orient: vertical;

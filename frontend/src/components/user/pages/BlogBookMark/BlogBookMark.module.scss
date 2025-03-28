@@ -41,6 +41,7 @@
                 width: 100%;
                 min-width: 807.4px;
                 input {
+                    color: white;
                     background-color: #333333;
                     width: 100%;
                     padding: 10px;
@@ -98,7 +99,8 @@
         border-radius: 4px;
         cursor: pointer;
         transition: 0.3s;
-        color: black;
+        color: white;
+
         &:hover,
         &.active {
             background-color: #0056b3;
@@ -111,6 +113,7 @@
     }
     .date-filter,
     .DateInput {
+        color: white;
         display: flex;
         align-items: center;
         flex-wrap: nowrap;
@@ -159,6 +162,7 @@
         border-radius: 8px;
         background: #333333;
         .category-item {
+            color: white;
             font-size: 13.5px;
         }
 
@@ -190,6 +194,7 @@
         justify-content: space-between;
         gap: 10px;
         select {
+            color: white;
             background-color: #333333;
             flex: 1 1 auto;
             text-align: center;
@@ -198,10 +203,13 @@
             font-size: 14px;
         }
     }
-
+    button {
+        color: white;
+    }
     .edit,
     .delete,
     .btn-read-more {
+        color: white;
         padding: 8px 12px;
         font-size: 14px;
         border: none;
@@ -213,7 +221,6 @@
 
     .btn-read-more {
         background-color: #2f00b2;
-        color: black;
 
         &:hover {
             background-color: #0056b3;
