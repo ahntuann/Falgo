@@ -30,6 +30,7 @@ function CodeEditerAction() {
         setTestCase,
         setTestcaseAndStatus,
         setNotifyContent,
+        contestId,
     } = useCodeEditing();
     const { appUser } = useAuth();
 
@@ -67,12 +68,20 @@ function CodeEditerAction() {
 
         let numOfSuccess = 0;
 
+        let contestIdSent;
+        // const contestId = briefInfoProblem?.contestId !==
+        // console.log(briefInfoProblem?.contestId === null);
+        if (contestId) contestIdSent = contestId;
+        else contestIdSent = '';
+        console.log(contestIdSent);
+
         submitSolutionForAProblemAPI(
             briefInfoProblem.problemId,
             appUser.id,
             codeText,
             programmingLanguages.at(languageId).programmingLanguageId,
             isTestCode,
+            contestIdSent,
         ).then((newTestCase) => {
             if (newTestCase === undefined) {
                 alert('Hệ thống hiện không hỗ trợ ngôn ngữ này.');

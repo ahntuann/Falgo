@@ -26,6 +26,7 @@ namespace api.Data
         public DbSet<ProgrammingLanguage> ProgrammingLanguage { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<SubmissionContest> SubmissionContest { get; set; }
         //BlogDaTa
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<CommentBlog> CommentBlog { get; set; }
@@ -37,24 +38,24 @@ namespace api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-             modelBuilder.Entity<Question>()
-            .HasOne(q => q.User)
-            .WithMany(u => u.Questions) 
-            .HasForeignKey(q => q.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Question>()
+           .HasOne(q => q.User)
+           .WithMany(u => u.Questions)
+           .HasForeignKey(q => q.UserId)
+           .OnDelete(DeleteBehavior.Cascade);
 
-        // Define One-to-Many: Question -> Answers
-        modelBuilder.Entity<Answer>()
-            .HasOne(a => a.Question)
-            .WithMany(q => q.Answers)
-            .HasForeignKey(a => a.QuestionId)
-            .OnDelete(DeleteBehavior.Cascade);
+            // Define One-to-Many: Question -> Answers
+            modelBuilder.Entity<Answer>()
+                .HasOne(a => a.Question)
+                .WithMany(q => q.Answers)
+                .HasForeignKey(a => a.QuestionId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<Answer>()
-            .HasOne(a => a.User)
-            .WithMany(u => u.Answers)
-            .HasForeignKey(a => a.UserId);
-            
+            modelBuilder.Entity<Answer>()
+                .HasOne(a => a.User)
+                .WithMany(u => u.Answers)
+                .HasForeignKey(a => a.UserId);
+
             modelBuilder.Entity<TestCaseStatus>()
                 .HasKey(tc => new { tc.TestCaseId, tc.SubmissionId });
 
@@ -73,6 +74,26 @@ namespace api.Data
 
             modelBuilder.Entity<ContestRegistion>()
                 .HasKey(cr => new { cr.Id, cr.ContestId });
+
+            modelBuilder.Entity<SubmissionContest>()
+                .HasOne(s => s.Contest)
+                .WithMany()
+                .HasForeignKey(s => s.ContestId);
+
+            modelBuilder.Entity<SubmissionContest>()
+                .HasOne(s => s.Problem)
+                .WithMany()
+                .HasForeignKey(s => s.ProblemId);
+
+            modelBuilder.Entity<SubmissionContest>()
+                .HasOne(s => s.AppUser)
+                .WithMany()
+                .HasForeignKey(s => s.AppUserId);
+
+            modelBuilder.Entity<SubmissionContest>()
+                .HasOne(s => s.ProgrammingLanguage)
+                .WithMany()
+                .HasForeignKey(s => s.ProgrammingLanguageId);
 
             List<IdentityRole> roles = new List<IdentityRole>
     {

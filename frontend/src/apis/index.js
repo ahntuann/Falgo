@@ -115,14 +115,17 @@ export const submitSolutionForAProblemAPI = async (
     sourceCode,
     programmingLanguageId,
     isTestCode,
+    contestId,
 ) => {
     try {
+        console.log(contestId);
         const reponse = await axios.post(`${API_ROOT}/api/submission`, {
             problemID,
             userId,
             sourceCode,
             programmingLanguageId,
             isTestCode,
+            contestId,
         });
 
         return reponse.data;

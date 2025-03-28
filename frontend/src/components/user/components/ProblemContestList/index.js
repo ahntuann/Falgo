@@ -31,10 +31,10 @@ const ProblemContestList = ({ contestId, problems, isStart, isEnd }) => {
                                             alert('Đã hết giờ!');
                                         } else if (!isStart) {
                                             event.preventDefault();
-                                            alert('Bạn phải ấn "Bắt đầu" để làm bài');
+                                            alert('Bạn phải ấn "Bắt đầu thi" để làm bài');
                                         }
                                     }}
-                                    to={`/practice?id=${problem.problemId}`}
+                                    to={`/practice?id=${problem.problemId}&contestId=${contestId}`}
                                 >
                                     {problem.title}
                                 </Link>

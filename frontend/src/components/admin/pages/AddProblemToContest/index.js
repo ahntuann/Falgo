@@ -133,7 +133,7 @@ function AddProblemToContest() {
     return (
         <AdminLayout>
             <div className={cx('content')}>
-                <h2>Cuộc thi :{contest.contestId}</h2>
+                <h2>Cuộc thi :{contest.contestName}</h2>
                 <h2>Danh sách bài tập đã thêm</h2>
                 <table>
                     <thead>

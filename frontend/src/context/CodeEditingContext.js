@@ -5,8 +5,10 @@ import notifyTestcase from '~/ultils/notifyTestcase';
 
 const CodeEditingContext = createContext(null);
 
-export const CodeEditingProvider = ({ children, briefInfoProblem }) => {
+export const CodeEditingProvider = ({ children, briefInfoProblem, contestId }) => {
     const savedDraft = JSON.parse(localStorage.getItem('Save Draft'));
+    console.log('context');
+    console.log(briefInfoProblem);
 
     const [languageId, setLanguageId] = useState(
         savedDraft !== null && briefInfoProblem.problemId === savedDraft.problemId
@@ -105,6 +107,7 @@ export const CodeEditingProvider = ({ children, briefInfoProblem }) => {
                 setTestcaseAndStatus,
                 notifyContent,
                 setNotifyContent,
+                contestId,
             }}
         >
             {children}

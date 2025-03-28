@@ -16,6 +16,8 @@ function CodeEditing() {
     const searchParams = new URLSearchParams(location.search);
     const briefInfoProblem = Object.fromEntries(searchParams.entries());
 
+    console.log(briefInfoProblem);
+
     const navigate = useNavigate();
 
     const [problem, setProblem] = useState(null);
@@ -40,9 +42,11 @@ function CodeEditing() {
                 </div>
             </div>
 
-            {problem !== null && problem !== undefined && <CodeEditer briefInfoProblem={problem} />}
+            {problem !== null && problem !== undefined && (
+                <CodeEditer contestId={briefInfoProblem?.contestId} briefInfoProblem={problem} />
+            )}
 
-            <Chatbot />
+            {briefInfoProblem.contestId === undefined && <Chatbot />}
         </div>
     );
 }
