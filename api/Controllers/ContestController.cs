@@ -60,5 +60,32 @@ namespace api.Controllers
             else
                 return Ok();
         }
+
+        [HttpPatch]
+        [Route("start")]
+        public async Task<IActionResult> StartContestForUser([FromBody] StartContestDto startContestDto)
+        {
+            try
+            {
+                await _contestRegisService.StartContestForUserAsync(startContestDto.UserId, startContestDto.ContestId);
+
+                return Created();
+            }
+            catch (System.Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("contestRegistion")]
+        public async Task<IActionResult> GetContestRegistion([FromQuery] GetContestRegistionDto getDto)
+        {
+            var regis = await _contestRegisService.GetContestRegistionByUserIdAndContestIdAsync(getDto.UserId, getDto.ContestId);
+
+            if (regis == null)
+                return NotFound();
+
+            return Ok(regis);
+        }
     }
 }

@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 
 namespace api.Helpers
 {
-    public class ContestProblemQueryObject
+    public class QandAObjectQuery
     {
-        public string ProblemTitle { get; set; }=string.Empty;
-        public string ContestId { get; set; } = string.Empty;
-        public string ProblemId { get; set; } = string.Empty;
+        
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 15;
     }

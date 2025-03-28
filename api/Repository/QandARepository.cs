@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.Dtos.QandA;
 using api.Dtos.User;
 using api.Interface.Repository;
 using api.Model;
@@ -27,10 +28,20 @@ namespace api.Repository
             await _context.Answers.AddAsync(answer);
             await _context.SaveChangesAsync();
         }
-        public async Task<List<Question>> GetAllQuestion()
+        public async Task<List<QuestionDto>> GetAllQuestion()
         {
-            var Question = await _context.Questions.ToListAsync();
-            return Question;
+             var questions = await _context.Questions
+        .Include(q => q.User) // Ensure User data is loaded
+        .Select(q => new QuestionDto
+        {
+            Content = q.Content,
+            Category = q.Category,
+            CreatedAt = q.CreatedAt,
+            UserName = q.User.UserName // Fetch username from AppUser
+        })
+        .ToListAsync();
+
+    return questions;
         }
         public async Task<List<Answer>> GetAllAnswerByQuestionId(string questionId)
         {

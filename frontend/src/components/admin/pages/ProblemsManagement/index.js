@@ -74,6 +74,9 @@ function ProblemsManagement() {
         console.log('Edit problem:', id);
     };
     const handleDelete = async (problemId) => {
+        const isConfirmed = window.confirm('Bạn có chắc muốn xóa cuộc thi này không?');
+
+        if (!isConfirmed) return;
         try {
             const requestData = { problemId };
             await axios.delete(

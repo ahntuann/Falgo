@@ -7,9 +7,9 @@ import styles from './UserSubmissions.module.scss';
 const cs = classNames.bind(styles);
 
 const STATUS_TRANSLATIONS = {
-    Accepted: 'Chấp nhận',
+    Accepted: 'Đã hoàn thành',
     'Wrong Answer': 'Sai đáp án',
-    'Time Limit Exceeded': 'Vượt quá thời gian',
+    'Time Limit Exceeded': 'Quá thời gian thực thi',
     'Memory Limit Exceeded': 'Vượt quá bộ nhớ',
     'Runtime Error': 'Lỗi thực thi',
     Pending: 'Đang chờ',

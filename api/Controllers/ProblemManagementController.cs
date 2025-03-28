@@ -47,6 +47,8 @@ namespace api.Controllers
         public async Task<IActionResult> CreateProblem([FromBody] ProblemFormObject problemFormObject)
         {
             Console.WriteLine("ProblemId:   "+problemFormObject.testcase);
+           var problem= await _ProblemManagementService.GetProblemDetailByIdAsync(problemFormObject.Problem.ProblemId);
+           if(problem!=null)return BadRequest("Đã tồn tại Problem ID");
             await _ProblemManagementService.AddProblemAsync(problemFormObject);
             return Ok();
         }

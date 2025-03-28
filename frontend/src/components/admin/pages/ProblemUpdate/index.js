@@ -49,6 +49,7 @@ const ProblemUpdate = () => {
                 `http://localhost:5180/api/problemManagement/update`,
                 problem,
             );
+
             navigate('/ProblemsManagement');
         } catch (error) {
             console.error('Error:', error);

@@ -43,5 +43,21 @@ namespace api.Services
                     .Select(x => x.ToContestRegistationDtoFromContestRegistation())
                     .ToList();
         }
+
+        public async Task<ContestRegistion?> GetContestRegistionByUserIdAndContestIdAsync(string userId, string contestId)
+        {
+            var user = await _userRepo.GetUserByIdAsync(userId);
+            var contest = await _contestRepo.GetContestByIdAsync(contestId);
+
+            if (user == null || contest == null)
+                return null;
+
+            return await _contestRegisRepo.GetContestRegistionByUserAndContestAsync(user, contest);
+        }
+
+        public async Task StartContestForUserAsync(string userId, string contestId)
+        {
+            await _contestRegisRepo.StartContestForUserAsync(userId, contestId);
+        }
     }
 }

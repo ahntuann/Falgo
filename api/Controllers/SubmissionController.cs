@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Problem;
@@ -21,6 +22,7 @@ namespace api.Controllers
     [ApiController]
     public class SubmissionController : ControllerBase
     {
+        private readonly ExecutionConfig _executionConfig;
         private readonly ISubmissionService _submissionService;
         private readonly IProgramingLanguageService _proLangService;
         private readonly ITestCaseService _testCaseService;
@@ -33,14 +35,15 @@ namespace api.Controllers
             ITestCaseService testCaseService,
             IProblemService proService,
             ITestCaseStatusService testCaseStatusService,
-            ApplicationDBContext context)
+            ApplicationDBContext context,
+            IConfiguration configuration)
         {
             _proLangService = proLangService;
             _submissionService = subService;
             _testCaseService = testCaseService;
             _proService = proService;
             _testcaseStatusService = testCaseStatusService;
-
+            _executionConfig = configuration.GetSection("ExecutionConfig").Get<ExecutionConfig>();
             _context = context;
         }
 
@@ -92,11 +95,13 @@ namespace api.Controllers
 
             try
             {
-                string baseURL = "/Users/macbook/docker_tmp";
+                string baseURL = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
+                                 _executionConfig.WindowsBasePath :
+                                 _executionConfig.MacBasePath;
+
                 Directory.CreateDirectory(baseURL);
 
                 ProgramingLanguageDto proLangDto = await _proLangService.GetProgramingLanguageAsync(submissionPostDto.ProgrammingLanguageId);
-                // System.Console.WriteLine(proLangDto);
                 if (proLangDto == null)
                     return BadRequest(new { Error = "Not support this programming language" });
 

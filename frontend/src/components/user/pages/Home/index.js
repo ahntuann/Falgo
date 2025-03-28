@@ -61,7 +61,7 @@ function Home() {
 
     return (
         <div className={cs('wrapper')}>
-            {slider.length > 0 && (
+            {slider?.length > 0 && (
                 <div className={cs('slider')}>
                     <SliderBanner sliders={slider} />
                 </div>

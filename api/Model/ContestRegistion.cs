@@ -13,5 +13,8 @@ namespace api.Model
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public Contest Contest { get; set; } = new Contest();
         public AppUser AppUser { get; set; } = new AppUser();
+        public string AppUserId { get; set; } = string.Empty;
+        public bool IsStart { get; set; } = false;
+        public DateTime? StartAt { get; set; }
     }
 }

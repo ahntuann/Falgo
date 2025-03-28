@@ -5,9 +5,8 @@ import style from './ProblemContestList.module.scss';
 
 const cs = classNames.bind(style);
 
-const ProblemContestList = ({ contestId, problems }) => {
-    console.log(problems);
-
+const ProblemContestList = ({ contestId, problems, isStart, isEnd }) => {
+    console.log(isStart);
     return (
         <div className={cs('problemList')}>
             <h2>Danh sách bài toán</h2>
@@ -25,13 +24,24 @@ const ProblemContestList = ({ contestId, problems }) => {
                         <tr key={index}>
                             <td>{index + 1}</td>
                             <td>
-                                <Link to={`/contest/${contestId}/problem/${problem.id}`}>
+                                <Link
+                                    onClick={(event) => {
+                                        if (isEnd) {
+                                            event.preventDefault();
+                                            alert('Đã hết giờ!');
+                                        } else if (!isStart) {
+                                            event.preventDefault();
+                                            alert('Bạn phải ấn "Bắt đầu" để làm bài');
+                                        }
+                                    }}
+                                    to={`/practice?id=${problem.problemId}`}
+                                >
                                     {problem.title}
                                 </Link>
                             </td>
                             <td>{problem.score ?? '-'}</td>
                             <td className={cs(`status ${problem.status}`)}>
-                                {problem.status === 'solved' ? '✅' : '❌'}
+                                {problem.status === 'solved' ? '✅' : '-'}
                             </td>
                         </tr>
                     ))}

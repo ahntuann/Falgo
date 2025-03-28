@@ -12,5 +12,7 @@ namespace api.Interface
     {
         public Task<List<ContestRegistationDto?>> GetAllContestRegistationAsync(Contest contest);
         public Task<bool?> CreateContestRegisAsync(string contestId, string userId);
+        public Task StartContestForUserAsync(string userId, string contestId);
+        public Task<ContestRegistion?> GetContestRegistionByUserIdAndContestIdAsync(string userId, string contestId);
     }
 }

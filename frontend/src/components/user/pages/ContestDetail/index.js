@@ -3,10 +3,11 @@ import style from './ContestDetail.module.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
-import CountDown from '~/components/user/components/CountDown';
 import ProblemContestList from '~/components/user/components/ProblemContestList';
-import { useEffect, useState } from 'react';
-import { fetchProblemHomePageAPI } from '~/apis';
+import { useContext, useEffect, useState } from 'react';
+import { GetContestRegistionByUserIdAndContestIdAPI, fetchProblemHomePageAPI } from '~/apis';
+import FixedCountDown from '~/components/user/components/FixedCountDown';
+import AuthContext from '~/context/AuthContext';
 
 const cs = classNames.bind(style);
 
@@ -15,16 +16,40 @@ function ContestDetail() {
     const contest = location.state || {};
     const navigate = useNavigate();
 
-    const { contestId, banner, contestName, totalPoint, level, endDate, dueTime, numRegis } =
-        contest;
+    const { contestId, contestName, totalPoint, level, dueTime } = contest;
 
     const [problems, setProblems] = useState([]);
+    const { appUser } = useContext(AuthContext);
+    const [isStart, setIsStart] = useState(false);
+    const [startDate, setStartDate] = useState(null);
+    const [isEnd, setIsEnd] = useState(false);
+
+    useEffect(() => {
+        GetContestRegistionByUserIdAndContestIdAPI(appUser.id, contestId).then((regis) => {
+            setIsStart(regis.isStart);
+            setStartDate(regis.startAt);
+        });
+    }, [appUser, contestId, isStart]);
 
     useEffect(() => {
         fetchProblemHomePageAPI({ mostAttempted: true, done: false, notDone: false }).then(
             (problems) => setProblems(problems),
         );
     }, [contestId]);
+
+    useEffect(() => {
+        if (startDate == null) return;
+
+        const parsedStartDate = new Date(startDate);
+
+        const endTime = new Date(parsedStartDate.getTime() + dueTime * 60000);
+        const now = new Date();
+
+        if (now >= endTime) {
+            alert('Hết giờ');
+            setIsEnd(true);
+        }
+    }, [startDate, dueTime]);
 
     return (
         <div className={cs('wrapper')}>
@@ -52,13 +77,22 @@ function ContestDetail() {
                     Thời gian làm bài:
                     <span className={cs('dueTimeNum')}>{dueTime}'</span>
                 </div>
-
-                <div className={cs('registerEndDate')}>
-                    <CountDown classNames={cs('endDate')} endDate={endDate} />
-                </div>
             </div>
 
-            <ProblemContestList contestId={contestId} problems={problems} />
+            <ProblemContestList
+                contestId={contestId}
+                problems={problems}
+                isStart={isStart}
+                isEnd={isEnd}
+            />
+
+            <FixedCountDown
+                contest={contest}
+                isStart={isStart}
+                setIsStart={setIsStart}
+                startDate={startDate}
+                isEnd={isEnd}
+            />
         </div>
     );
 }

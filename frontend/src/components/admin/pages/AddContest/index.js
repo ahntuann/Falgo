@@ -81,7 +81,7 @@ export default function AddContest() {
             console.log(contestData);
 
             await axios.post('http://localhost:5180/api/ContestManagement/AddContest', contestData);
-            alert('Contest added successfully!');
+            alert('Đã thêm cuộc thi thành công!');
             setContest({
                 contestId: '',
                 contestName: '',
@@ -94,7 +94,7 @@ export default function AddContest() {
             setBannerFile(null);
         } catch (error) {
             console.error('Error adding contest:', error);
-            alert('Failed to add contest');
+            alert(error.response.data);
         } finally {
             setLoading(false);
         }

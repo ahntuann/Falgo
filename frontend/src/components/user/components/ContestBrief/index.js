@@ -47,7 +47,15 @@ function ContestBrief({ contest, contestStatus }) {
         <div className={cs('wrapper', classNames || '')}>
             <div
                 className={cs('banner')}
-                onClick={() => navigate(`/contest/${contestId}`, { state: contest })}
+                onClick={() => {
+                    if (isRegis)
+                        navigate(`/contest/${contestId}`, {
+                            state: { ...contest, contestStatus, isRegis },
+                        });
+                    else {
+                        alert('Bạn cần đăng ký mới có thể xem chi tiết cuộc thi');
+                    }
+                }}
             >
                 <img className={cs('bannerImg')} alt="banner" src={banner} />
             </div>
@@ -85,9 +93,27 @@ function ContestBrief({ contest, contestStatus }) {
 
             {isRegis ? (
                 contestStatus === 'over' ? (
-                    <div className={cs('register')}>Bắt đầu thi giả lập</div>
+                    <div
+                        className={cs('register')}
+                        onClick={() =>
+                            navigate(`/contest/${contestId}`, {
+                                state: { ...contest, contestStatus, isRegis },
+                            })
+                        }
+                    >
+                        Bắt đầu thi giả lập
+                    </div>
                 ) : (
-                    <div className={cs('register')}>Bắt đầu ngay</div>
+                    <div
+                        className={cs('register')}
+                        onClick={() =>
+                            navigate(`/contest/${contestId}`, {
+                                state: { ...contest, contestStatus, isRegis },
+                            })
+                        }
+                    >
+                        Bắt đầu ngay
+                    </div>
                 )
             ) : (
                 <div onClick={() => registerUser()} className={cs('register')}>

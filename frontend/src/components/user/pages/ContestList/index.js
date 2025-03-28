@@ -25,15 +25,15 @@ function ContestList() {
     const [currentPageOver, setCurrentPageOver] = useState(1);
 
     // Ongoing contest pagination
-    const totalPagesOngoing = Math.ceil(ongoingContests.length / ITEMS_PER_PAGE);
-    const displayedOngoingContests = ongoingContests.slice(
+    const totalPagesOngoing = Math.ceil(ongoingContests?.length / ITEMS_PER_PAGE);
+    const displayedOngoingContests = ongoingContests?.slice(
         (currentPageOngoing - 1) * ITEMS_PER_PAGE,
         currentPageOngoing * ITEMS_PER_PAGE,
     );
 
     // Over contest pagination
-    const totalPagesOver = Math.ceil(overContest.length / ITEMS_PER_PAGE);
-    const displayedOverContests = overContest.slice(
+    const totalPagesOver = Math.ceil(overContest?.length / ITEMS_PER_PAGE);
+    const displayedOverContests = overContest?.slice(
         (currentPageOver - 1) * ITEMS_PER_PAGE,
         currentPageOver * ITEMS_PER_PAGE,
     );
@@ -71,7 +71,7 @@ function ContestList() {
             <div className={cs('ongoingContest', 'contests')}>
                 <div className={cs('category')}>Các kỳ thi đang diễn ra</div>
                 <div className={cs('contestList')}>
-                    {displayedOngoingContests.length > 0 ? (
+                    {displayedOngoingContests?.length > 0 ? (
                         displayedOngoingContests.map((contest, i) => (
                             <ContestBrief key={i} contest={contest} contestStatus={'ongoing'} />
                         ))
@@ -123,7 +123,7 @@ function ContestList() {
             <div className={cs('overContest', 'contests')}>
                 <div className={cs('category')}>Các kỳ thi đã qua</div>
                 <div className={cs('contestList')}>
-                    {displayedOverContests.length > 0 ? (
+                    {displayedOverContests?.length > 0 ? (
                         displayedOverContests.map((contest, i) => (
                             <ContestBrief key={i} contest={contest} contestStatus={'over'} />
                         ))
