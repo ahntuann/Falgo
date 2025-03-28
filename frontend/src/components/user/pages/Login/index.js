@@ -50,6 +50,7 @@ const Login = () => {
                 const user = response.data;
                 localStorage.setItem('user', JSON.stringify(user));
                 logInAsUser();
+                alert('Đăng nhập thành công');
                 navigate('/');
             } catch (error) {
                 console.error('Login failed:', error.response?.data || error.message);

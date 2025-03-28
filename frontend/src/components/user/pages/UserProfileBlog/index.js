@@ -24,7 +24,6 @@ const UserProfileBlog = () => {
         'Xu hướng lập trình',
         'Kinh Nghiệm',
         'Thử thách',
-        'Câu Hỏi',
     ]);
     const StatusOptions = ['Chờ duyệt', 'Duyệt Lại', 'Thông qua', 'Từ chối', 'Báo cáo'];
     const [query, setQuery] = useState({
