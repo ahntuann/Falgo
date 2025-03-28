@@ -160,3 +160,11 @@ export const GetContestRegistionByUserIdAndContestIdAPI = async (userId, contest
         return response.data;
     } catch (error) {}
 };
+
+export const fetchAllProblemOfContestAPI = async (contestId) => {
+    try {
+        const reponse = await axios.get(`${API_ROOT}/api/contest/problems?contestId=${contestId}`);
+
+        return reponse.data;
+    } catch (error) {}
+};

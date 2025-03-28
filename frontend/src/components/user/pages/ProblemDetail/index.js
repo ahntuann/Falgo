@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '~/context/AuthContext';
 import './ProblemDetail.module.scss';
 import classNames from 'classnames/bind';
 import styles from './ProblemDetail.module.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
 
 const cs = classNames.bind(styles);
 
@@ -15,6 +17,13 @@ const ProblemDetail = () => {
     const [languages, setLanguages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const location = useLocation();
+    const contest = location.state || {};
+
+    const { contestId } = contest;
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios
@@ -38,6 +47,20 @@ const ProblemDetail = () => {
 
     return (
         <div className={cs('problem-detail')}>
+            {contestId !== null && contestId !== undefined && (
+                <div
+                    className={cs('backToContest')}
+                    onClick={() =>
+                        navigate(`/contest/${contestId}`, {
+                            state: contest,
+                        })
+                    }
+                >
+                    <FontAwesomeIcon icon={faCaretLeft} className={cs('backIcon')} />
+                    Quay lại kỳ thi
+                </div>
+            )}
+
             <h1 className={cs('title')}>{problem.title}</h1>
             <div className={cs('section')}>
                 <h2>Thông tin bài tập</h2>
@@ -85,9 +108,22 @@ const ProblemDetail = () => {
                 </p>
             </div>
             <div className={cs('actions')}>
-                <Link to={`/practice?id=${problemId}`} className={cs('button', 'primary')}>
-                    Làm bài
-                </Link>
+                {contestId !== null && contestId !== undefined ? (
+                    <div
+                        onClick={() =>
+                            navigate(`/practice?id=${problemId}&contestId=${contestId}`, {
+                                state: contest,
+                            })
+                        }
+                        className={cs('button', 'primary')}
+                    >
+                        Làm bài
+                    </div>
+                ) : (
+                    <Link to={`/practice?id=${problemId}`} className={cs('button', 'primary')}>
+                        Làm bài
+                    </Link>
+                )}
                 {!appUser ? (
                     <Link to="/login" className={cs('button', 'secondary')}>
                         Lịch sử nộp bài

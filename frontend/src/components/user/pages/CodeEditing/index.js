@@ -16,9 +16,9 @@ function CodeEditing() {
     const searchParams = new URLSearchParams(location.search);
     const briefInfoProblem = Object.fromEntries(searchParams.entries());
 
-    console.log(briefInfoProblem);
-
     const navigate = useNavigate();
+
+    const contest = location.state || {};
 
     const [problem, setProblem] = useState(null);
 
@@ -35,7 +35,14 @@ function CodeEditing() {
                     <FontAwesomeIcon
                         className={cs('problemInfoIcon')}
                         icon={faAngleLeft}
-                        onClick={() => navigate(`/problems/${briefInfoProblem.id}`)}
+                        onClick={() => {
+                            if (briefInfoProblem.contestId)
+                                navigate(
+                                    `/problems/${briefInfoProblem.id}?contestId=${briefInfoProblem.contestId}`,
+                                    { state: contest },
+                                );
+                            else navigate(`/problems/${briefInfoProblem.id}`);
+                        }}
                     />
                     {problem !== null && problem !== undefined && <div>{problem.title}</div>}
                     <FontAwesomeIcon className={cs('helpIcon')} icon={faCircleQuestion} />

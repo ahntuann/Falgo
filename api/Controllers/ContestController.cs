@@ -87,5 +87,16 @@ namespace api.Controllers
 
             return Ok(regis);
         }
+
+        [HttpGet("problems")]
+        public async Task<IActionResult> GetAllProblemOfContest([FromQuery] string contestID)
+        {
+            if (contestID.IsNullOrEmpty())
+                return BadRequest("ContestId is required");
+
+            var problems = await _contestService.GetAllProblemOfContest(contestID);
+
+            return Ok(problems);
+        }
     }
 }

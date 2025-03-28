@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
 import ProblemContestList from '~/components/user/components/ProblemContestList';
 import { useContext, useEffect, useState } from 'react';
-import { GetContestRegistionByUserIdAndContestIdAPI, fetchProblemHomePageAPI } from '~/apis';
+import { GetContestRegistionByUserIdAndContestIdAPI, fetchAllProblemOfContestAPI } from '~/apis';
 import FixedCountDown from '~/components/user/components/FixedCountDown';
 import AuthContext from '~/context/AuthContext';
 import AutoPopup from '~/ultils/AutoPopup';
@@ -18,6 +18,8 @@ function ContestDetail() {
     const navigate = useNavigate();
 
     const { contestId, contestName, totalPoint, level, dueTime, contestStatus } = contest;
+    console.log('contest detail');
+    console.log(contest);
 
     const [problems, setProblems] = useState([]);
     const { appUser } = useContext(AuthContext);
@@ -33,9 +35,7 @@ function ContestDetail() {
     }, [appUser, contestId, isStart]);
 
     useEffect(() => {
-        fetchProblemHomePageAPI({ mostAttempted: true, done: false, notDone: false }).then(
-            (problems) => setProblems(problems),
-        );
+        fetchAllProblemOfContestAPI(contestId).then((problems) => setProblems(problems));
     }, [contestId]);
 
     useEffect(() => {
@@ -87,6 +87,7 @@ function ContestDetail() {
                 problems={problems}
                 isStart={isStart}
                 isEnd={isEnd}
+                contest={contest}
             />
 
             <FixedCountDown

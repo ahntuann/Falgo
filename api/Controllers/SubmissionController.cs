@@ -200,7 +200,9 @@ namespace api.Controllers
                             MemoryUsed = 1000,
                             ProblemId = submissionPostDto.ProblemID,
                             AppUserId = submissionPostDto.UserId,
-                            ProgrammingLanguageId = submissionPostDto.ProgrammingLanguageId
+                            ProgrammingLanguageId = submissionPostDto.ProgrammingLanguageId,
+                            ContestId = submissionPostDto.ContestId,
+                            SubmittedAt = DateTime.Now
                         });
                     }
                     else

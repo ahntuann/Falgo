@@ -60,8 +60,8 @@ namespace api.Services
         public async Task<PageResult<ContestBriefDto>> GetxContestAsync(ContestManagementQueryObject query)
         {
             var contests = await _contestRepo.GetAllContestAsync(query);
-            
-             Dictionary<Contest, int> contestRegisCount = new Dictionary<Contest, int>();
+
+            Dictionary<Contest, int> contestRegisCount = new Dictionary<Contest, int>();
 
             foreach (var contest in contests)
             {
@@ -69,9 +69,9 @@ namespace api.Services
 
                 contestRegisCount.Add(contest, registions.Count);
             }
-        int totalItems = contestRegisCount.Count;
+            int totalItems = contestRegisCount.Count;
             var result = contestRegisCount.Skip((query.PageNumber - 1) * query.PageSize).Take(query.PageSize).ToList();
-           // Console.WriteLine("totalItems1:  "+query.ProblemTitle);
+            // Console.WriteLine("totalItems1:  "+query.ProblemTitle);
             return new PageResult<ContestBriefDto>
             {
                 Items = result.Select(x => x.Key.ToContestBriefFromContest(x.Value)).ToList(),
@@ -86,11 +86,16 @@ namespace api.Services
         }
         public async Task<Contest?> getContestById(string id)
         {
-           return await _contestRepo.GetContestByIdAsync(id);
+            return await _contestRepo.GetContestByIdAsync(id);
         }
         public async Task addContest(ContestDto contest)
         {
             await _contestRepo.addContest(contest.ToContestFromContestDto());
+        }
+
+        public Task<List<Problem>> GetAllProblemOfContest(string contestId)
+        {
+            return _contestRepo.GetAllProblemOfContest(contestId);
         }
     }
 }
