@@ -93,9 +93,14 @@ namespace api.Services
             await _contestRepo.addContest(contest.ToContestFromContestDto());
         }
 
-        public Task<List<Problem>> GetAllProblemOfContest(string contestId)
+        public async Task<List<Problem>> GetAllProblemOfContest(string contestId)
         {
-            return _contestRepo.GetAllProblemOfContest(contestId);
+            return await _contestRepo.GetAllProblemOfContest(contestId);
+        }
+
+        public async Task<List<AppUser>> GetAllUserOfContest(string contestId)
+        {
+            return await _contestRepo.GetAllUserOfContest(contestId);
         }
     }
 }

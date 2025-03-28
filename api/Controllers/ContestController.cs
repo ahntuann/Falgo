@@ -98,5 +98,16 @@ namespace api.Controllers
 
             return Ok(problems);
         }
+
+        [HttpGet("users")]
+        public async Task<IActionResult> GetAllUserOfContest([FromQuery] string contestId)
+        {
+            if (contestId == null)
+                return BadRequest("Contest Id is required");
+
+            var users = await _contestService.GetAllUserOfContest(contestId);
+
+            return Ok(users);
+        }
     }
 }

@@ -168,3 +168,21 @@ export const fetchAllProblemOfContestAPI = async (contestId) => {
         return reponse.data;
     } catch (error) {}
 };
+
+export const fetchBestSubmissionOfAUser = async (userId, contestId, problemId) => {
+    try {
+        const response = await axios.get(
+            `${API_ROOT}/api/submission/bestSubmission?ContestId=${contestId}&ProblemId=${problemId}&UserId=${userId}`,
+        );
+
+        return response.data;
+    } catch (error) {}
+};
+
+export const fetchAllUserOfContestAPI = async (contestId) => {
+    try {
+        const response = await axios.get(`${API_ROOT}/api/contest/users?contestId=${contestId}`);
+
+        return response.data;
+    } catch (error) {}
+};

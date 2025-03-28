@@ -1,0 +1,95 @@
+.backToContest {
+    width: 200px;
+    display: flex;
+    align-items: center;
+    color: var(--primary-text-color);
+    margin-top: 30px;
+    font-weight: 600;
+    opacity: 0.6;
+
+    &:hover {
+        opacity: 1;
+        cursor: pointer;
+    }
+}
+
+.backIcon {
+    margin-right: 6px;
+}
+
+.rankingTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    text-align: center;
+    color: #e0e0e0;
+    background-color: #161b22;
+    border-radius: 8px;
+    overflow: hidden;
+
+    th,
+    td {
+        padding: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    thead {
+        background-color: #0d1117;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    tbody {
+        tr {
+            &:nth-child(odd) {
+                background-color: #1c2025;
+            }
+
+            &:nth-child(even) {
+                background-color: #22272e;
+            }
+
+            &:hover {
+                background-color: #2d333b;
+                cursor: pointer;
+            }
+
+            &.top1 {
+                background: linear-gradient(90deg, #c79f02, #f1c606);
+                font-weight: bold;
+                color: #000;
+            }
+
+            &.top2 {
+                background: linear-gradient(90deg, #afaeae, #cbcbcb);
+                font-weight: bold;
+                color: #000;
+            }
+
+            &.top3 {
+                background: linear-gradient(90deg, #cd7f32, #e6954e);
+                font-weight: bold;
+                color: #000;
+            }
+        }
+    }
+
+    .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 8px;
+        vertical-align: middle;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    }
+
+    .penalty {
+        color: #ff6b6b;
+        font-weight: bold;
+        background-color: rgba(255, 107, 107, 0.2);
+        padding: 2px 8px;
+        border-radius: 4px;
+    }
+}

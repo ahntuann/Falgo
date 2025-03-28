@@ -21,5 +21,6 @@ namespace api.Interface
         public Task<List<Submission?>> GetSubmissionsHistory(string userId, string problemId, SubmissionHistoryQueryObject query);
         Task<bool> HasUserSolvedProblemAsync(string userId, string problemId);
         Task<Submission> GetSubmissionByIdAsync(string submissionId);
+        Task<SubmissionContest> GetBestSubmisisonContest(string userId, string contestId, string problemId);
     }
 }

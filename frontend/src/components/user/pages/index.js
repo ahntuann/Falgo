@@ -22,3 +22,4 @@ export { default as SubmissionHistory } from './SubmissionHistory';
 export { default as Ranking } from './Ranking';
 export { default as PublicProfile } from './PublicProfile';
 export { default as QA } from './Q&A';
+export { default as ContestRanking } from './ContestRanking';
