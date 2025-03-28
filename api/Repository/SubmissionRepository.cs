@@ -152,6 +152,38 @@ namespace api.Repository
             return await _context.Submissions.FirstOrDefaultAsync(x => x.SubmissionId == submissionId);
         }
 
+        public async Task<SubmissionContest> CreateASubmissionContestAsync(SubmissionContest submission)
+        {
+            if (submission == null)
+                throw new ArgumentNullException(nameof(submission));
 
+            try
+            {
+                submission.SubmissionContestId = Guid.NewGuid().ToString();
+                if (submission.ProgrammingLanguage != null)
+                {
+                    _context.Entry(submission.ProgrammingLanguage).State = EntityState.Unchanged;
+                }
+                if (submission.Problem != null)
+                {
+                    _context.Entry(submission.Problem).State = EntityState.Unchanged;
+                }
+                if (submission.AppUser != null)
+                {
+                    _context.Entry(submission.AppUser).State = EntityState.Unchanged;
+                }
+
+                await _context.SubmissionContest.AddAsync(submission);
+
+                await _context.SaveChangesAsync();
+
+                return submission;
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex);
+                return null;
+            }
+        }
     }
 }

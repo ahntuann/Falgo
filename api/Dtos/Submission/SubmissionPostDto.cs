@@ -19,5 +19,6 @@ namespace api.Model
         public string ProgrammingLanguageId { get; set; } = string.Empty;
         [Required]
         public bool IsTestCode { get; set; } = true;
+        public string ContestId { get; set; } = string.Empty;
     }
 }

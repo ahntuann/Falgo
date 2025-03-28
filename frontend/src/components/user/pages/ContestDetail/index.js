@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from 'react';
 import { GetContestRegistionByUserIdAndContestIdAPI, fetchProblemHomePageAPI } from '~/apis';
 import FixedCountDown from '~/components/user/components/FixedCountDown';
 import AuthContext from '~/context/AuthContext';
+import AutoPopup from '~/ultils/AutoPopup';
 
 const cs = classNames.bind(style);
 
@@ -16,7 +17,7 @@ function ContestDetail() {
     const contest = location.state || {};
     const navigate = useNavigate();
 
-    const { contestId, contestName, totalPoint, level, dueTime } = contest;
+    const { contestId, contestName, totalPoint, level, dueTime, contestStatus } = contest;
 
     const [problems, setProblems] = useState([]);
     const { appUser } = useContext(AuthContext);
@@ -53,6 +54,8 @@ function ContestDetail() {
 
     return (
         <div className={cs('wrapper')}>
+            {contestStatus === 'over' && <AutoPopup />}
+
             <div className={cs('backToContest')} onClick={() => navigate(`/contest`)}>
                 <FontAwesomeIcon icon={faCaretLeft} className={cs('backIcon')} />
                 Trở lại danh sách kỳ thi
