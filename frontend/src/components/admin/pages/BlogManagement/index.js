@@ -6,6 +6,9 @@ import styles from './BlogManagement.module.scss';
 import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, Cell } from 'recharts';
 
 const cs = classNames.bind(styles);
 
@@ -33,13 +36,50 @@ function BlogManagement() {
         'Thử thách',
         'Câu Hỏi',
     ]);
-    const StatusOptions = ['Chờ duyệt', 'Duyệt Lại', 'Thông qua', 'Từ chối', 'Báo cáo'];
+    const StatusOptions = ['Thông qua', 'Từ chối', 'Báo cáo', 'Chờ duyệt', 'Duyệt lại'];
+    const COLORS = ['#4caf50', '#f44336', '#9c27b0', '#ff9800', '#2196f3'];
+
     const startIndex = (query.page - 1) * query.postsPerPage;
     const endIndex = startIndex + query.postsPerPage;
     const totalPages = Math.ceil(filteredBlogs.length / query.postsPerPage);
     const paginatedBlogs = filteredBlogs.slice(startIndex, endIndex);
     const role = JSON.parse(sessionStorage.getItem('admin'));
+    const [hoveredBlog, setHoveredBlog] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const formatDate = (date) => date.toISOString().split('T')[0];
+    const formatDateUTC = (date) => {
+        const d = new Date(date);
+        return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+    };
 
+    const filteredBlogForChar = filteredBlogs.filter(
+        (blog) => formatDateUTC(new Date(blog.createOn)) === formatDateUTC(selectedDate),
+    );
+
+    const countByday = (status) =>
+        filteredBlogForChar.filter((blog) => blog.status === status).length;
+
+    const countByStatus = (status) => originalBlogs.filter((blog) => blog.status === status).length;
+
+    const chartDataToday = StatusOptions.map((status, index) => ({
+        name: status,
+        value: countByday(status),
+        fill: COLORS[index],
+    }));
+
+    const chartDataAllTime = StatusOptions.map((status, index) => ({
+        name: status,
+        value: countByStatus(status),
+        fill: COLORS[index],
+    }));
+
+    const handleMouseEnter = (blogId) => {
+        setHoveredBlog(blogId);
+    };
+
+    const handleMouseLeave = () => {
+        setHoveredBlog(null);
+    };
     useEffect(() => {
         if (!role) {
             navigate('/');
@@ -217,6 +257,81 @@ function BlogManagement() {
     return (
         <AdminLayout>
             <div className={cs('container')}>
+                <div className={cs('char_Space')}>
+                    <h3>Thống kê bài viết</h3>
+                    <DatePicker
+                        selected={selectedDate}
+                        onChange={(date) => setSelectedDate(new Date(date))}
+                        dateFormat="dd/MM/yyyy"
+                    />
+                    <button
+                        onClick={() => setSelectedDate(new Date())}
+                        className={cs('reset-button')}
+                    >
+                        Cài lại
+                    </button>
+                    <div className={cs('Blog_number_char')}>
+                        <div className={cs('BlogChar_detail')}>
+                            <p>📊 Tổng số bài viết hôm nay: {filteredBlogForChar.length}</p>
+                            <p>✔️ Thông qua: {countByday('Thông qua')}</p>
+                            <p>🚨 Báo cáo: {countByday('Báo cáo')}</p>
+                            <p>⏳ Chờ duyệt: {countByday('Chờ duyệt')}</p>
+                            <p>🔄 Duyệt lại: {countByday('Duyệt lại')}</p>
+                            <p>❌ Từ chối: {countByday('Từ chối')}</p>
+                        </div>
+                        <div className={cs('Blog_char')}>
+                            <BarChart width={500} height={300} data={chartDataToday}>
+                                <XAxis dataKey="name" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend
+                                    payload={chartDataToday.map((item) => ({
+                                        value: item.name,
+                                        type: 'square',
+                                        color: item.fill,
+                                    }))}
+                                />
+                                <Bar dataKey="value">
+                                    {chartDataToday.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                                    ))}
+                                </Bar>
+                            </BarChart>
+                        </div>
+                    </div>
+
+                    {/* 📌 Thống kê tổng bài viết */}
+                    <div className={cs('Blog_number_char')}>
+                        <div className={cs('BlogChar_detail')}>
+                            <p>📊 Tổng số bài viết đã tạo: {originalBlogs.length}</p>
+                            <p>✔️ Thông qua: {countByStatus('Thông qua')}</p>
+                            <p>🚨 Báo cáo: {countByStatus('Báo cáo')}</p>
+                            <p>⏳ Chờ duyệt: {countByStatus('Chờ duyệt')}</p>
+                            <p>🔄 Duyệt lại: {countByStatus('Duyệt lại')}</p>
+                            <p>❌ Từ chối: {countByStatus('Từ chối')}</p>
+                        </div>
+                        <div className={cs('Blog_char')}>
+                            <BarChart width={500} height={300} data={chartDataAllTime}>
+                                <XAxis dataKey="name" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend
+                                    payload={chartDataToday.map((item) => ({
+                                        value: item.name,
+                                        type: 'square',
+                                        color: item.fill,
+                                    }))}
+                                />
+                                <Bar dataKey="value">
+                                    {chartDataToday.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                                    ))}
+                                </Bar>
+                            </BarChart>
+                        </div>
+                    </div>
+                </div>
+
                 <div className={cs('topbar')}>
                     <div className={cs('search-bar')}>
                         <input
@@ -338,8 +453,22 @@ function BlogManagement() {
                                 }}
                             />
                             <div className={cs('content')}>
-                                <h2>{blog.title}</h2>
-                                <p>{blog.description}</p>
+                                <h2
+                                    onMouseEnter={() => handleMouseEnter(blog.id)}
+                                    onMouseLeave={handleMouseLeave}
+                                >
+                                    {blog.title}
+                                    {hoveredBlog === blog.id && (
+                                        <div className={cs('popup')}>
+                                            <div
+                                                dangerouslySetInnerHTML={{ __html: blog.content }}
+                                            />
+                                        </div>
+                                    )}
+                                </h2>
+
+                                {/* <h2>{blog.title}</h2>
+                                <p>{blog.description}</p> */}
                                 {blog.categoryBlog &&
                                     blog.categoryBlog.trim() !== '' &&
                                     blog.categoryBlog.trim() !== ',' && (
@@ -366,56 +495,75 @@ function BlogManagement() {
                                 </p>
 
                                 <div className={cs('actions')}>
-                                    <Link
-                                        to={'/BlogUpdate'}
-                                        state={{ blog }}
-                                        className={cs('edit')}
-                                    >
-                                        Chỉnh sửa
-                                    </Link>
-                                    <button
-                                        className={cs('delete')}
-                                        onClick={() => handleDelete(blog.id)}
-                                    >
-                                        Xóa
-                                    </button>
-                                    <Link
-                                        to={'/DetailBlog'}
-                                        state={{ blog }}
-                                        className={cs('btn-read-more')}
-                                    >
-                                        Đọc thêm
-                                    </Link>
-                                    <p
-                                        className={cs('status', {
-                                            approved: blog.status === 'Thông qua',
-                                            rejected: blog.status === 'Từ chối',
-                                            report: blog.status === 'Báo cáo',
-                                            pending:
-                                                blog.status !== 'Thông qua' &&
-                                                blog.status !== 'Từ chối' &&
-                                                blog.status !== 'Báo cáo',
-                                        })}
-                                    >
-                                        {blog.status}
-                                    </p>
-                                    <button
-                                        className={cs('UpdateStatus')}
-                                        onClick={() => updateBlogStatus(blog.id, 'Thông qua')}
-                                    >
-                                        Công khai
-                                    </button>
-                                    <button
-                                        className={cs('UpdateStatus')}
-                                        onClick={() => updateBlogStatus(blog.id, 'Từ chối')}
-                                    >
-                                        Từ chối
-                                    </button>
+                                    <div className={cs('Action_space')}>
+                                        <div class={cs('Like_Share_cmt')}>
+                                            <div className={cs('Like')}>
+                                                <div className={cs('Number_Like')}>
+                                                    {blog?.blogLike?.length || 0} 💙 Đã thích
+                                                </div>
+                                            </div>
+                                            <div className={cs('Share')}>
+                                                <div className={cs('Number_Share')}>
+                                                    {blog?.blogShare?.length || 0} 🔗 Chia sẻ
+                                                </div>
+                                            </div>
+                                            <div className={cs('Cmt')}>
+                                                <div className={cs('Number_Cmt')}>
+                                                    {blog?.commentBlog?.length || 0} Bình luận
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <Link
+                                            to={'/BlogUpdate'}
+                                            state={{ blog }}
+                                            className={cs('edit')}
+                                        >
+                                            Chỉnh sửa
+                                        </Link>
+                                        <button
+                                            className={cs('UpdateStatus')}
+                                            onClick={() => updateBlogStatus(blog.id, 'Thông qua')}
+                                        >
+                                            Công khai
+                                        </button>
+                                        <button
+                                            className={cs('UpdateStatus')}
+                                            onClick={() => updateBlogStatus(blog.id, 'Từ chối')}
+                                        >
+                                            Từ chối
+                                        </button>
+                                        <button
+                                            className={cs('delete')}
+                                            onClick={() => handleDelete(blog.id)}
+                                        >
+                                            Xóa
+                                        </button>
+                                        <Link
+                                            to={'/DetailBlog'}
+                                            state={{ blog }}
+                                            className={cs('btn-read-more')}
+                                        >
+                                            Đọc thêm
+                                        </Link>
+                                        <p
+                                            className={cs('status', {
+                                                approved: blog.status === 'Thông qua',
+                                                rejected: blog.status === 'Từ chối',
+                                                report: blog.status === 'Báo cáo',
+                                                pending:
+                                                    blog.status !== 'Thông qua' &&
+                                                    blog.status !== 'Từ chối' &&
+                                                    blog.status !== 'Báo cáo',
+                                            })}
+                                        >
+                                            {blog.status}
+                                        </p>
+                                    </div>
+                                    {blog.status === 'Báo cáo' && (
+                                        <div className={cs('Note')}>{blog.note}</div>
+                                    )}
                                 </div>
                             </div>
-                            {blog.status === 'Báo cáo' && (
-                                <div className={cs('Note')}>{blog.note}</div>
-                            )}
                         </div>
                     ))
                 ) : (
