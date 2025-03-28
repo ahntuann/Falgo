@@ -211,10 +211,10 @@ const PublicProfile = () => {
                                 <thead>
                                     <tr>
                                         <th>Mã Bài</th>
-                                        <th>Tên Bài</th>
+                                        <th>Tên Bài Tập</th>
                                         <th>Ngôn Ngữ</th>
                                         <th>Trạng Thái</th>
-                                        <th>Thời Gian</th>
+                                        <th>Ngày Nộp</th>
                                     </tr>
                                 </thead>
                                 <tbody>
