@@ -16,7 +16,6 @@ function NavBar({ classNames }) {
         { title: 'Cuộc thi', path: '/contest' },
         { title: 'Xếp hạng', path: '/ranking' },
         { title: 'Chia sẻ', path: '/blog' },
-        { title: 'Hỏi đáp', path: '/Q&A' },
         { title: 'Trang cá nhân', path: '/profile' },
     ];
 
@@ -47,7 +46,6 @@ function NavBar({ classNames }) {
                                 (item.title === 'Cuộc thi' && '/contest' === focusOn) ||
                                 (item.title === 'Xếp hạng' && '/ranking' === focusOn) ||
                                 (item.title === 'Chia sẻ' && '/blog' === focusOn) ||
-                                (item.title === 'Hỏi đáp' && '/Q&A' === focusOn) ||
                                 (item.title === 'Trang cá nhân' && '/profile' === focusOn),
                         })}
                         to={item.path}
