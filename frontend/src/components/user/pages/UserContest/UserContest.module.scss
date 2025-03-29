@@ -1,5 +1,5 @@
 .contestsPage {
-    background: 292929;
+    background: #292929;
     color: #fff;
     font-family: 'Arial', sans-serif;
     min-height: 100vh;
@@ -180,4 +180,68 @@
     background: rgba(220, 53, 69, 0.1);
     padding: 20px;
     border-radius: 10px;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    gap: 5px;
+    width: 100%;
+
+    .pagination-button {
+        min-width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        &.active {
+            background: #007bff;
+            border-color: #007bff;
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        &:first-child,
+        &:last-child {
+            padding: 8px 15px;
+            min-width: 90px;
+        }
+    }
+}
+@media (max-width: 767px) {
+    .pagination {
+        flex-wrap: wrap;
+
+        .pagination-button {
+            min-width: 35px;
+            height: 35px;
+            padding: 6px 10px;
+            font-size: 14px;
+
+            &:first-child,
+            &:last-child {
+                min-width: 70px;
+            }
+        }
+    }
 }

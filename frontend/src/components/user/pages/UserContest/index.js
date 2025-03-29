@@ -13,6 +13,9 @@ const UserContest = () => {
     const [error, setError] = useState(null);
     const [activeFilter, setActiveFilter] = useState('all');
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const contestsPerPage = 6;
+
     useEffect(() => {
         const fetchUserContests = async () => {
             try {
@@ -32,7 +35,6 @@ const UserContest = () => {
                 );
                 console.log('Kết quả API contests:', response.data);
 
-                // Thêm kiểm tra và xử lý dữ liệu
                 const contestData = Array.isArray(response.data)
                     ? response.data
                     : response.data.items || response.data.data || [];
@@ -70,6 +72,19 @@ const UserContest = () => {
             : `${minutes} phút`;
     };
 
+    const translateLevel = (level) => {
+        switch (level?.toLowerCase()) {
+            case 'easy':
+                return 'Dễ';
+            case 'medium':
+                return 'Trung bình';
+            case 'hard':
+                return 'Khó';
+            default:
+                return level || 'Không xác định';
+        }
+    };
+
     const getFilteredContests = () => {
         if (activeFilter === 'all') return contests;
         return contests.filter((contest) =>
@@ -81,10 +96,28 @@ const UserContest = () => {
 
     const handleContestClick = (contestId) => navigate(`/contest/${contestId}`);
 
+    const filteredContests = getFilteredContests();
+    const indexOfLastContest = currentPage * contestsPerPage;
+    const indexOfFirstContest = indexOfLastContest - contestsPerPage;
+    const currentContests = filteredContests.slice(indexOfFirstContest, indexOfLastContest);
+    const totalPages = Math.ceil(filteredContests.length / contestsPerPage);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    const goToPrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const goToNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
     if (loading) return <div className={cs('loading')}>Đang tải...</div>;
     if (error) return <div className={cs('error')}>{error}</div>;
-
-    const filteredContests = getFilteredContests();
 
     return (
         <div className={cs('contestsPage')}>
@@ -119,19 +152,28 @@ const UserContest = () => {
                 <div className={cs('filter-container')}>
                     <button
                         className={cs('filter-button', { active: activeFilter === 'all' })}
-                        onClick={() => setActiveFilter('all')}
+                        onClick={() => {
+                            setActiveFilter('all');
+                            setCurrentPage(1);
+                        }}
                     >
                         Tất cả
                     </button>
                     <button
                         className={cs('filter-button', { active: activeFilter === 'active' })}
-                        onClick={() => setActiveFilter('active')}
+                        onClick={() => {
+                            setActiveFilter('active');
+                            setCurrentPage(1);
+                        }}
                     >
                         Đang diễn ra
                     </button>
                     <button
                         className={cs('filter-button', { active: activeFilter === 'completed' })}
-                        onClick={() => setActiveFilter('completed')}
+                        onClick={() => {
+                            setActiveFilter('completed');
+                            setCurrentPage(1);
+                        }}
                     >
                         Đã kết thúc
                     </button>
@@ -142,48 +184,85 @@ const UserContest = () => {
                         <p>Bạn chưa đăng ký cuộc thi nào</p>
                     </div>
                 ) : (
-                    <div className={cs('contests-list')}>
-                        {filteredContests.map((contest) => (
-                            <div
-                                key={contest.contestId}
-                                className={cs('contest-card', {
-                                    completed: new Date(contest.endDate) <= new Date(),
-                                })}
-                                onClick={() => handleContestClick(contest.contestId)}
-                            >
-                                <div className={cs('contest-header')}>
-                                    <h3 className={cs('contest-name')}>{contest.contestName}</h3>
-                                    <div className={cs('contest-status')}>
-                                        {new Date(contest.endDate) <= new Date()
-                                            ? 'Đã kết thúc'
-                                            : 'Đang diễn ra'}
+                    <>
+                        <div className={cs('contests-list')}>
+                            {currentContests.map((contest) => (
+                                <div
+                                    key={contest.contestId}
+                                    className={cs('contest-card', {
+                                        completed: new Date(contest.endDate) <= new Date(),
+                                    })}
+                                    onClick={() => handleContestClick(contest.contestId)}
+                                >
+                                    <div className={cs('contest-header')}>
+                                        <h3 className={cs('contest-name')}>
+                                            {contest.contestName}
+                                        </h3>
+                                        <div className={cs('contest-status')}>
+                                            {new Date(contest.endDate) <= new Date()
+                                                ? 'Đã kết thúc'
+                                                : 'Đang diễn ra'}
+                                        </div>
+                                    </div>
+                                    <div className={cs('contest-details')}>
+                                        <div className={cs('contest-info')}>
+                                            <p>
+                                                <span>Độ khó:</span> {translateLevel(contest.level)}
+                                            </p>
+                                            <p>
+                                                <span>Điểm tối đa:</span> {contest.totalPoint}
+                                            </p>
+                                            <p>
+                                                <span>Thời gian làm bài:</span>{' '}
+                                                {formatDueTime(contest.dueTime)}
+                                            </p>
+                                            <p>
+                                                <span>Ngày tham gia:</span>{' '}
+                                                {formatDate(contest.createdAt)}
+                                            </p>
+                                            <p>
+                                                <span>Ngày kết thúc:</span>{' '}
+                                                {formatDate(contest.endDate)}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className={cs('contest-details')}>
-                                    <div className={cs('contest-info')}>
-                                        <p>
-                                            <span>Cấp độ:</span> {contest.level}
-                                        </p>
-                                        <p>
-                                            <span>Điểm tối đa:</span> {contest.totalPoint}
-                                        </p>
-                                        <p>
-                                            <span>Thời gian làm bài:</span>{' '}
-                                            {formatDueTime(contest.dueTime)}
-                                        </p>
-                                        <p>
-                                            <span>Ngày tham gia:</span>{' '}
-                                            {formatDate(contest.createdAt)}
-                                        </p>
-                                        <p>
-                                            <span>Ngày kết thúc:</span>{' '}
-                                            {formatDate(contest.endDate)}
-                                        </p>
-                                    </div>
-                                </div>
+                            ))}
+                        </div>
+
+                        {/* Phân trang */}
+                        {totalPages > 1 && (
+                            <div className={cs('pagination')}>
+                                <button
+                                    className={cs('pagination-button')}
+                                    onClick={goToPrevPage}
+                                    disabled={currentPage === 1}
+                                >
+                                    &laquo; Trước
+                                </button>
+
+                                {Array.from({ length: totalPages }, (_, i) => (
+                                    <button
+                                        key={i + 1}
+                                        className={cs('pagination-button', {
+                                            active: currentPage === i + 1,
+                                        })}
+                                        onClick={() => paginate(i + 1)}
+                                    >
+                                        {i + 1}
+                                    </button>
+                                ))}
+
+                                <button
+                                    className={cs('pagination-button')}
+                                    onClick={goToNextPage}
+                                    disabled={currentPage === totalPages}
+                                >
+                                    Sau &raquo;
+                                </button>
                             </div>
-                        ))}
-                    </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>
