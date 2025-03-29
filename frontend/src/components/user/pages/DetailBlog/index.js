@@ -112,35 +112,20 @@ const DetailBlog = () => {
     if (!blog) return <div className={cs('error-message')}>Không tìm thấy bài viết!</div>;
 
     const handleDelete = async (blogId) => {
-        if (!window.confirm('Bạn có chắc chắn muốn xóa bài viết này không?')) return;
+        if (window.confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
+            try {
+                const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
+                    method: 'DELETE',
+                });
 
-        try {
-            const token = localStorage.getItem('accessToken');
-            const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: '*/*',
-                    Authorization: `Bearer ${token}`,
-                },
-                credentials: 'include',
-            });
+                if (!response.ok) {
+                    alert('Xóa bình luận thất bại!');
+                }
 
-            if (response.status === 401) {
-                alert('Bạn cần đăng nhập để xóa bài viết!');
-                return;
-            }
-
-            const text = await response.text();
-            window.location.href = '/blog';
-            if (response.ok) {
                 alert('Xóa bài viết thành công!');
-                setAllBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== blogId));
-            } else {
-                alert(`Xóa thất bại! Server trả về: ${text}`);
+            } catch (error) {
+                alert('Lỗi khi xóa bình luận:', error);
             }
-        } catch (error) {
-            alert('Lỗi hệ thống! Vui lòng thử lại sau.');
         }
     };
 
@@ -209,7 +194,7 @@ const DetailBlog = () => {
                 },
                 body: JSON.stringify({
                     avatar: userObject?.avatar ?? NoImage,
-                    guestName: userObject?.userName ?? 'Guest',
+                    guestName: userObject?.userName ?? 'Ẩn danh',
                     content: comments,
                     blogId: blog.id,
                     userId: userObject?.id ?? null,
@@ -320,7 +305,14 @@ const DetailBlog = () => {
     };
 
     const handleEditComment = async (commentId, currentContent) => {
-        const newContent = prompt('Hãy nhập nội dung bình luận:', currentContent);
+        const newContent = prompt(
+            'Hãy nhập nội dung bình luận:',
+            <div
+                dangerouslySetInnerHTML={{
+                    __html: currentContent,
+                }}
+            />,
+        );
 
         if (newContent === null || newContent === currentContent) {
             return;

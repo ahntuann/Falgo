@@ -206,6 +206,9 @@
     button {
         color: white;
     }
+    button:disabled {
+        color: gray;
+    }
     .edit,
     .delete,
     .btn-read-more {
@@ -292,6 +295,7 @@
         margin-bottom: 20px;
 
         .paginationnumber button {
+            color: black;
             background: white;
             border: 1px solid #ccc;
             border-radius: 4px;

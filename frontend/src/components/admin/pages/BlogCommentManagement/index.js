@@ -90,8 +90,8 @@ function BlogCommentManagement() {
             }
 
             if (query.dateFilter) {
-                fetchedComments = fetchedComments.filter(
-                    (comment) => comment.createOn.startsWith(query.dateFilter), // So khớp ngày
+                fetchedComments = fetchedComments.filter((comment) =>
+                    comment.createOn.startsWith(query.dateFilter),
                 );
             }
             fetchedComments = fetchedComments.sort((a, b) => {
@@ -340,7 +340,13 @@ function BlogCommentManagement() {
                                 <div className={cs('comment_content')}>
                                     <div className={cs('comment_infor')}>
                                         <div>{comment.guestName}</div>
-                                        <div>{comment.content}</div>
+                                        <div>
+                                            <div
+                                                dangerouslySetInnerHTML={{
+                                                    __html: comment.content,
+                                                }}
+                                            />
+                                        </div>
                                         <div>
                                             {new Date(comment.createOn).toLocaleString('vi-VN')}
                                         </div>
