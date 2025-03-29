@@ -104,7 +104,7 @@ const ProblemList = () => {
                 <input
                     type="text"
                     name="ProblemTitle"
-                    placeholder="Tìm kiếm theo tên"
+                    placeholder="Tìm kiếm theo tên/mã"
                     value={query.ProblemTitle}
                     onChange={handleChange}
                 />
@@ -142,7 +142,7 @@ const ProblemList = () => {
             <table>
                 <thead>
                     <tr>
-                        <th>Mã câu hỏi</th>
+                        <th>Mã bài</th>
                         <th onClick={handleSortByTitle} style={{ cursor: 'pointer' }}>
                             Tên
                             <span style={{ marginLeft: '5px' }}>
@@ -158,7 +158,7 @@ const ProblemList = () => {
                                 </span>
                             </span>
                         </th>
-                        <th>Dạng câu hỏi</th>
+                        <th>Dạng bài</th>
                         <th>Tỉ lệ hoàn thành</th>
                         <th>Tổng số bài hoàn thành</th>
                         <th>Điểm</th>

@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretLeft, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { fetchAllUserOfContestAPI, fetchBestSubmissionOfAUser } from '~/apis';
-import useAuth from '~/hooks/useAuth';
 import style from './ContestRanking.module.scss';
 
 const cs = classNames.bind(style);
@@ -15,10 +14,10 @@ function ContestRanking() {
     const location = useLocation();
     const state = location.state || {};
     const navigate = useNavigate();
-    const { appUser } = useAuth();
 
     const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedProblem, setSelectedProblem] = useState(null);
 
     const { contestId, contestName } = state.contest;
     const problems = state.problems;
@@ -60,8 +59,18 @@ function ContestRanking() {
         fetchData();
     }, [contestId]);
 
+    const sortedUsers = [...users].sort((a, b) => {
+        if (selectedProblem) {
+            return (
+                b.scores[selectedProblem]?.score - a.scores[selectedProblem]?.score ||
+                a.scores[selectedProblem]?.time - b.scores[selectedProblem]?.time
+            );
+        }
+        return b.totalScore - a.totalScore || a.totalTime - b.totalTime;
+    });
+
     const totalPages = Math.ceil(users.length / USERS_PER_PAGE);
-    const currentUsers = users.slice(
+    const currentUsers = sortedUsers.slice(
         (currentPage - 1) * USERS_PER_PAGE,
         currentPage * USERS_PER_PAGE,
     );
@@ -74,6 +83,20 @@ function ContestRanking() {
             >
                 <FontAwesomeIcon icon={faCaretLeft} className={cs('backIcon')} />
                 Quay lại kỳ thi
+            </div>
+
+            <div className={cs('header')}>
+                Bảng xếp hạng <div className={cs('headerName')}>{contestName}</div>
+                <div className={cs('sortOptions')}>
+                    <select onChange={(e) => setSelectedProblem(e.target.value || null)}>
+                        <option value="">Sắp xếp theo tổng điểm</option>
+                        {problems.map((problem) => (
+                            <option key={problem.problemId} value={problem.problemId}>
+                                {problem.title}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
 
             <table className={cs('rankingTable')}>
@@ -98,7 +121,7 @@ function ContestRanking() {
                             )}
                         >
                             <td>{(currentPage - 1) * USERS_PER_PAGE + index + 1}</td>
-                            <td>
+                            <td className={cs('userName')}>
                                 <img
                                     src={
                                         user?.avatar
@@ -108,7 +131,7 @@ function ContestRanking() {
                                     alt={user.username}
                                     className={cs('avatar')}
                                 />
-                                {user.username}
+                                <div className={cs('userNametxt')}>{user.userName}</div>
                             </td>
                             <td>{user.totalScore}</td>
                             <td>{user.totalTime / 1000}s</td>
@@ -130,7 +153,7 @@ function ContestRanking() {
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
                 >
-                    <FontAwesomeIcon icon={faChevronLeft} />
+                    <FontAwesomeIcon icon={faCaretLeft} />
                 </button>
                 <span>
                     Page {currentPage} / {totalPages}
@@ -140,7 +163,7 @@ function ContestRanking() {
                     onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
                 >
-                    <FontAwesomeIcon icon={faChevronRight} />
+                    <FontAwesomeIcon icon={faCaretRight} />
                 </button>
             </div>
         </div>
