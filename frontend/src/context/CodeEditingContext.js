@@ -7,8 +7,6 @@ const CodeEditingContext = createContext(null);
 
 export const CodeEditingProvider = ({ children, briefInfoProblem, contestId }) => {
     const savedDraft = JSON.parse(localStorage.getItem('Save Draft'));
-    console.log('context');
-    console.log(briefInfoProblem);
 
     const [languageId, setLanguageId] = useState(
         savedDraft !== null && briefInfoProblem.problemId === savedDraft.problemId
@@ -27,6 +25,7 @@ export const CodeEditingProvider = ({ children, briefInfoProblem, contestId }) =
         })),
     );
     const [notifyContent, setNotifyContent] = useState(notifyTestcase['needToTest']);
+    const [noteValue, setNoteValue] = useState('');
 
     // language
     useEffect(() => {
@@ -55,6 +54,12 @@ export const CodeEditingProvider = ({ children, briefInfoProblem, contestId }) =
         else setCodeText(defaultCodes[programmingLanguages.at(languageId).language]);
     }, [programmingLanguages, languageId]);
 
+    // noteValue
+    useEffect(() => {
+        if (savedDraft !== null && briefInfoProblem.problemId === savedDraft.problemId)
+            setNoteValue(savedDraft.noteValue);
+    }, []);
+
     // isSubmitable
     useEffect(() => {
         setIsSubmitable(false);
@@ -74,9 +79,10 @@ export const CodeEditingProvider = ({ children, briefInfoProblem, contestId }) =
         latestData.current = {
             problemId: briefInfoProblem.problemId,
             codeText,
+            noteValue,
             programmingLanguage: languageId,
         };
-    }, [briefInfoProblem, codeText, languageId]);
+    }, [briefInfoProblem, codeText, noteValue, languageId]);
 
     useEffect(() => {
         const setSaveDraft = setInterval(() => {
@@ -108,6 +114,8 @@ export const CodeEditingProvider = ({ children, briefInfoProblem, contestId }) =
                 notifyContent,
                 setNotifyContent,
                 contestId,
+                noteValue,
+                setNoteValue,
             }}
         >
             {children}
