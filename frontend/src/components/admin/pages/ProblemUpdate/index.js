@@ -36,24 +36,25 @@ const ProblemUpdate = () => {
     const handleSubmit = async () => {
         setLoading(true);
         setError(null);
-
+        console.log(problem);
         const requestData = {
             problem: {
                 ...problem,
             },
             testcase: testCases,
         };
+        console.log(requestData);
 
         try {
-            const response = await axios.put(
+            const response = await axios.post(
                 `http://localhost:5180/api/problemManagement/update`,
                 problem,
             );
-
+            alert('Đã cập nhật thành công');
             navigate('/ProblemsManagement');
         } catch (error) {
             console.error('Error:', error);
-            setError('Có lỗi xảy ra khi cập nhật.');
+            setError('Không bỏ trống timelimit và memory limit.');
         } finally {
             setLoading(false);
         }
@@ -123,9 +124,9 @@ const ProblemUpdate = () => {
                     />
                     <input
                         type="number"
-                        name="totalPoint"
+                        name="score"
                         placeholder="Điểm tối đa"
-                        defaultValue={problem.score}
+                        value={problem.score}
                         onChange={handleChange}
                     />
                     <input

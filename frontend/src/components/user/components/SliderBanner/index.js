@@ -33,8 +33,8 @@ function SliderBanner({ sliders }) {
                         })}
                         src={slider.banner}
                         alt="slider"
-                        onClick={() => navigate(`/contest/detail?id=${slider.id}`)}
-                        style={{ cursor: 'pointer' }} // Biến con trỏ thành tay khi hover
+                        onClick={() => navigate(`/contest`)}
+                        style={{ cursor: 'pointer' }}
                     />
                 ))}
             </div>

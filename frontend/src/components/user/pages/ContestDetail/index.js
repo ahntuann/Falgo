@@ -23,6 +23,8 @@ function ContestDetail() {
 
     const { contestId, contestName, totalPoint, level, dueTime, contestStatus } = contest;
 
+    console.log(contestStatus);
+
     const [problems, setProblems] = useState([]);
     const { appUser } = useContext(AuthContext);
     const [isStart, setIsStart] = useState(false);

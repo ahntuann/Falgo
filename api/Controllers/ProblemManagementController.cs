@@ -40,6 +40,7 @@ namespace api.Controllers
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteProblem([FromQuery] string ProblemId)
         {
+        
             await _ProblemManagementService.DeleteProblemAsync(ProblemId);
             return Ok();
         }
@@ -52,7 +53,7 @@ namespace api.Controllers
             await _ProblemManagementService.AddProblemAsync(problemFormObject);
             return Ok();
         }
-        [HttpPut("update")]
+        [HttpPost("update")]
         public async Task<IActionResult>UpdateProblem([FromBody] ProblemDto problem)
         {
             await _ProblemManagementService.UpdateProblemAsync(problem);
