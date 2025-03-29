@@ -8,6 +8,8 @@ const cs = classNames.bind(style);
 const ProblemContestList = ({ contestId, problems, isStart, isEnd, contest }) => {
     const navigate = useNavigate();
 
+    console.log(problems);
+
     return (
         <div className={cs('problemList')}>
             <h2>Danh sách bài toán</h2>
@@ -45,7 +47,7 @@ const ProblemContestList = ({ contestId, problems, isStart, isEnd, contest }) =>
                             </td>
                             <td>{problem.score ?? '-'}</td>
                             <td className={cs(`status ${problem.status}`)}>
-                                {problem.status === 'solved' ? '✅' : '-'}
+                                {problem?.score === problem.totalPoint ? '✅' : '-'}
                             </td>
                         </tr>
                     ))}
