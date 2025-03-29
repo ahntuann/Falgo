@@ -6,7 +6,6 @@ import { useContext, useEffect, useState } from 'react';
 import { fetchCheckIfUserRegisContestAPI, registerUserForContest } from '~/apis';
 import AuthContext from '~/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import ReactQuill from 'react-quill';
 
 const cs = classNames.bind(style);
 
