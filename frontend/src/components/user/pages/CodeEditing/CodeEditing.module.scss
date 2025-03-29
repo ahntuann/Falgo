@@ -5,6 +5,7 @@
     padding: 0 10px;
     width: 100%;
     padding: 0;
+    position: relative;
 }
 
 .info {
@@ -35,4 +36,39 @@
     &:hover {
         opacity: 1;
     }
+}
+
+.typeOfTxt {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+}
+
+.code,
+.note {
+    padding: 3px 8px;
+    background-color: #2d2c2c;
+    font-size: 1.43rem;
+    cursor: pointer;
+    opacity: 0.6;
+    border-radius: 5px;
+}
+
+.note.active,
+.code.active {
+    opacity: 1;
+}
+
+.code {
+    margin-right: 5px;
+}
+
+.note {
+    margin-left: 5px;
+}
+
+.typeIcon {
+    margin-right: 4px;
+    font-size: 1.2rem;
 }
