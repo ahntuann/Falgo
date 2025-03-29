@@ -32,7 +32,7 @@ const AdminLogin = () => {
                 }
             } catch (error) {
                 console.error('Login failed:', error.response?.data || error.message);
-                alert(`Login failed! ${error.response?.data || error.message}`);
+                alert(`Đăng nhập thất bại! ${error.response?.data || error.message}`);
             }
         },
     });
