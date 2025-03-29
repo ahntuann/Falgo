@@ -25,7 +25,7 @@ namespace api.Controllers
         {
             if (loginAdminDto.Username != "admin"||loginAdminDto.Password!= "admin") 
 
-             return Unauthorized("Username not found or password incorrect");
+             return Unauthorized("Tài khoản mật khẩu không chính xác");
 
             else
             return  Ok(true);

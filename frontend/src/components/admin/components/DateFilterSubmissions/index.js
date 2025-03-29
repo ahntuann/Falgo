@@ -18,9 +18,11 @@ function DateFilterSubmissions({ onFilterSubmissions }) {
             );
 
             console.log('Filtered Data:', response.data);
+
             onFilterSubmissions(response.data);
         } catch (error) {
             console.error('Error:', error.response ? error.response.data : error.message);
+            alert(error.response.data);
         }
     };
 

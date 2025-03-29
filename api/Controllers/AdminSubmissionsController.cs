@@ -24,7 +24,7 @@ namespace api.Controllers
     {
         if (datetimeFilterDto.startDate > datetimeFilterDto.endDate)
     {
-        return BadRequest("Start date cannot be later than the end date.");
+        return BadRequest("Ngày bắt đầu phải nhỏ hơn ngày kết thúc");
     }
         int count = await _SubmissionsAdminRepository.CountNumberOfSubmissionsWithTime(datetimeFilterDto.startDate,datetimeFilterDto.endDate);
         return Ok(count);
