@@ -105,5 +105,14 @@ namespace api.Repository
 
             return problems;
         }
+
+        public async Task<List<AppUser>> GetAllUserOfContest(string contestId)
+        {
+            return await _context.ContestRegistions
+                .Where(cr => cr.ContestId == contestId && cr.IsStart == true)
+                .Include(cr => cr.AppUser)
+                .Select(cr => cr.AppUser)
+                .ToListAsync();
+        }
     }
 }

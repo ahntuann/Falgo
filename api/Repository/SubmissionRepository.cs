@@ -185,5 +185,16 @@ namespace api.Repository
                 return null;
             }
         }
+
+        public async Task<SubmissionContest> GetBestSubmisisonContest(string userId, string contestId, string problemId)
+        {
+            var submission = await _context.SubmissionContest
+                .Where(x => x.AppUserId == userId && x.ContestId == contestId && x.ProblemId == problemId)
+                .OrderByDescending(x => x.Point)
+                .ThenByDescending(x => x.SubmittedAt)
+                .FirstOrDefaultAsync();
+
+            return submission;
+        }
     }
 }

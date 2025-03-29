@@ -16,5 +16,6 @@ namespace api.Interface
         public Task addContest(Contest contest);
         public Task UpdateTotalPoint(int totalPoint, string contestId);
         public Task<List<Problem>> GetAllProblemOfContest(string contestId);
+        public Task<List<AppUser>> GetAllUserOfContest(string contestId);
     }
 }

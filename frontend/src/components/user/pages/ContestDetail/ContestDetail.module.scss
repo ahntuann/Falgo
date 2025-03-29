@@ -3,14 +3,18 @@
 }
 
 .backToContest {
+    width: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     color: var(--primary-text-color);
     margin-top: 30px;
-    opacity: 0.6;
     font-weight: 600;
+}
+
+.contestAction {
+    opacity: 0.6;
     cursor: pointer;
-    max-width: 200px;
 
     &:hover {
         opacity: 1;
@@ -19,6 +23,10 @@
 
 .backIcon {
     margin-right: 6px;
+}
+
+.goToRankingIcon {
+    margin-left: 6px;
 }
 
 .contestName {
