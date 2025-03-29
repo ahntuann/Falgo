@@ -22,7 +22,7 @@ const UserProfileBlog = () => {
         'Mẹo lập trình',
         'Hướng dẫn',
         'Xu hướng lập trình',
-        'Kinh Nghiệm',
+        'Kinh nghiệm',
         'Thử thách',
     ]);
     const StatusOptions = ['Chờ duyệt', 'Duyệt Lại', 'Thông qua', 'Từ chối', 'Báo cáo'];
