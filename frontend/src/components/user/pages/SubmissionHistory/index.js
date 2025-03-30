@@ -83,6 +83,10 @@ const SubmissionHistory = () => {
     };
 
     const handleChange = (e) => {
+        if (new Date(e.target.value) > Date.now()) {
+            alert('Vui lòng không chọn ngày vượt quá ngày hiện tại');
+            return;
+        }
         let { name, value } = e.target;
         if (name === 'SelectedDate') {
             value = value ? new Date(value).toISOString().split('T')[0] : '';

@@ -102,7 +102,7 @@ namespace api.Services
             int totalPoint=0;
             foreach (var item in result)
             {
-                totalPoint+=item.Score;
+                totalPoint+=item.TotalPoint;
             }
             _contestRepo.UpdateTotalPoint(totalPoint,query.ContestId);
                 return new PageResult<ViewProblemManagementDto>

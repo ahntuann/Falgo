@@ -206,12 +206,6 @@ const UserProfileBlog = () => {
             const token = localStorage.getItem('accessToken');
             const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: '*/*',
-                    Authorization: `Bearer ${token}`,
-                },
-                credentials: 'include',
             });
 
             if (response.status === 401) {

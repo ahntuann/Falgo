@@ -74,7 +74,7 @@ function ProblemsManagement() {
         console.log('Edit problem:', id);
     };
     const handleDelete = async (problemId) => {
-        const isConfirmed = window.confirm('Bạn có chắc muốn xóa cuộc thi này không?');
+        const isConfirmed = window.confirm('Bạn có chắc muốn xóa bài tập này không?');
 
         if (!isConfirmed) return;
         try {
@@ -126,7 +126,7 @@ function ProblemsManagement() {
                                 <td>{problem.category}</td>
                                 <td>{problem.acceptanceRate}%</td>
                                 <td>{problem.acceptedCount}</td>
-                                <td>{problem.score}</td>
+                                <td>{problem.totalPoint}</td>
                                 <td>
                                     <button
                                         className={cx('edit-btn')}

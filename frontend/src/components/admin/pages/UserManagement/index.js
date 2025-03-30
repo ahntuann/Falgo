@@ -65,8 +65,8 @@ function UserManagement() {
         });
     const filteredAndSortedUsers = sortedUsers.filter(
         (user) =>
-            user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchTerm.toLowerCase()),
+            user.fullName?.toLowerCase().includes(searchTerm?.toLowerCase()) ||
+            user.email?.toLowerCase().includes(searchTerm?.toLowerCase()),
     );
 
     return (

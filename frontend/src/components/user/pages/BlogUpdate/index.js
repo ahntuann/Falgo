@@ -134,7 +134,6 @@ const BlogUpdate = () => {
                 if (userRole === 'user') {
                     navigate('/UserBlog');
                 }
-                navigate('/Blog');
             } else {
                 alert('Cập nhật thất bại!');
             }
