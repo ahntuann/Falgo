@@ -45,6 +45,7 @@ function BlogManagement() {
     const paginatedBlogs = filteredBlogs.slice(startIndex, endIndex);
     const role = JSON.parse(sessionStorage.getItem('admin'));
     const [hoveredBlog, setHoveredBlog] = useState(null);
+    const [hoverTimeout, setHoverTimeout] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const formatDateUTC = (date) => {
         const d = new Date(date);
@@ -73,12 +74,18 @@ function BlogManagement() {
     }));
 
     const handleMouseEnter = (blogId) => {
-        setHoveredBlog(blogId);
+        const timeout = setTimeout(() => {
+            setHoveredBlog(blogId);
+        }, 500);
+
+        setHoverTimeout(timeout);
     };
 
     const handleMouseLeave = () => {
+        clearTimeout(hoverTimeout);
         setHoveredBlog(null);
     };
+
     useEffect(() => {
         if (!role) {
             navigate('/');
@@ -171,6 +178,7 @@ function BlogManagement() {
                 }
 
                 alert('Xóa bài viết thành công!');
+                fetchBlogs();
                 setFilteredBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== blogId));
             } catch (error) {
                 alert('Lỗi khi xóa bình luận:', error);
@@ -448,7 +456,6 @@ function BlogManagement() {
                                         </div>
                                     )}
                                 </h2>
-
                                 {blog.categoryBlog &&
                                     blog.categoryBlog.trim() !== '' &&
                                     blog.categoryBlog.trim() !== ',' && (
@@ -518,13 +525,7 @@ function BlogManagement() {
                                         >
                                             Xóa
                                         </button>
-                                        <Link
-                                            to={'/DetailBlog'}
-                                            state={{ blog }}
-                                            className={cs('btn-read-more')}
-                                        >
-                                            Đọc thêm
-                                        </Link>
+
                                         <p
                                             className={cs('status', {
                                                 approved: blog.status === 'Thông qua',

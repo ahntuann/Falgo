@@ -12,19 +12,29 @@
         gap: 20px;
         justify-content: center;
         margin: 10px;
+        align-items: flex-start;
         .comment_content {
-            min-width: 760px;
+            width: 760px;
             min-height: 96px;
             display: flex;
             align-items: flex-end;
             justify-content: space-between;
+
+            .comment_infor img {
+                max-width: 100%;
+            }
+        }
+
+        .comment_Note {
+            width: 300px;
+            min-height: 96px;
+            align-self: flex-start;
+            position: sticky;
+            top: 10px;
             .comment_action {
                 display: flex;
                 gap: 10px;
             }
-        }
-        .comment_Note {
-            width: 200px;
         }
         .comment_Note,
         .comment_content {
@@ -34,6 +44,7 @@
             padding: 10px;
         }
     }
+
     .pagination {
         display: flex;
         gap: 10px;

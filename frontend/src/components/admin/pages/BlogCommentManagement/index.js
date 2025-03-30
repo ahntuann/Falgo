@@ -351,9 +351,12 @@ function BlogCommentManagement() {
                                             {new Date(comment.createOn).toLocaleString('vi-VN')}
                                         </div>
                                     </div>
+                                </div>
+                                <div className={cs('comment_Note')}>
+                                    <div>Trạng thái: {comment.status}</div>
+                                    <div>{comment.note}</div>
                                     <div className={cs('comment_action')}>
                                         <button onClick={() => handleDeleteComment(comment.id)}>
-                                            {' '}
                                             Xóa
                                         </button>
                                         <button
@@ -365,7 +368,6 @@ function BlogCommentManagement() {
                                                 )
                                             }
                                         >
-                                            {' '}
                                             Chỉnh sửa
                                         </button>
                                         <button
@@ -377,7 +379,6 @@ function BlogCommentManagement() {
                                                 )
                                             }
                                         >
-                                            {' '}
                                             Từ chối
                                         </button>
                                         <button
@@ -389,14 +390,9 @@ function BlogCommentManagement() {
                                                 )
                                             }
                                         >
-                                            {' '}
                                             Thông qua
                                         </button>
                                     </div>
-                                </div>
-                                <div className={cs('comment_Note')}>
-                                    <div>Trạng thái: {comment.status}</div>
-                                    <div>{comment.note}</div>
                                 </div>
                             </div>
                         ))

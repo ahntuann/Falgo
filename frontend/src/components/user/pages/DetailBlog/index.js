@@ -29,7 +29,9 @@ const DetailBlog = () => {
     const [activeCommentId, setActiveCommentId] = useState(null);
 
     const [bookmarked, setBookmarked] = useState();
-
+    const [userAvatar, setUserAvatar] = useState(
+        'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg',
+    );
     const modules = {
         toolbar: [
             [{ header: [1, 2, false] }],
@@ -78,7 +80,34 @@ const DetailBlog = () => {
                 );
             }
         }
-    }, [blog, userObject]);
+        const fetchUserAvatar = async () => {
+            try {
+                const userString = localStorage.getItem('user');
+                if (userString) {
+                    const user = JSON.parse(userString);
+
+                    if (user.avatar) {
+                        const fullAvatarUrl = `http://localhost:5180${user.avatar}`;
+                        setUserAvatar(fullAvatarUrl);
+                        return;
+                    }
+
+                    const userId = user.id;
+                    const response = await axios.get(
+                        `http://localhost:5180/api/user/profile/${userId}`,
+                    );
+
+                    if (response.data.avatar) {
+                        const fullAvatarUrl = `http://localhost:5180${response.data.avatar}`;
+                        setUserAvatar(fullAvatarUrl);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching avatar:', error);
+            }
+        };
+        fetchUserAvatar();
+    }, [blog, userObject.id, userRole]);
 
     const handleCommentChange = (content) => {
         setComments(content);
@@ -193,7 +222,7 @@ const DetailBlog = () => {
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    avatar: userObject?.avatar ?? NoImage,
+                    avatar: userAvatar ?? NoImage,
                     guestName: userObject?.userName ?? 'Ẩn danh',
                     content: comments,
                     blogId: blog.id,
@@ -523,17 +552,7 @@ const DetailBlog = () => {
                             {liked ? '💙 Đã thích' : '🤍 Thích'}
                         </button>
                     </div>
-                    <div className={cs('cmt_Space')}>
-                        <ReactQuill
-                            value={comments}
-                            onChange={handleCommentChange}
-                            modules={modules}
-                            formats={formats}
-                        />
-                        <button className={cs('cmt_Action')} onClick={handleComment}>
-                            Lưu
-                        </button>
-                    </div>
+
                     <div className={cs('Share_space')}>
                         <div className={cs('Number_Share')}>{blog?.blogShare?.length || 0}</div>
 
@@ -589,7 +608,17 @@ const DetailBlog = () => {
                         </button>
                     </div>
                 </div>
-
+                <div className={cs('cmt_Space')}>
+                    <ReactQuill
+                        value={comments}
+                        onChange={handleCommentChange}
+                        modules={modules}
+                        formats={formats}
+                    />
+                    <button className={cs('cmt_Action')} onClick={handleComment}>
+                        Lưu
+                    </button>
+                </div>
                 <div className={cs('Cmt_space')}>
                     <div className={cs('Show_Cmt')}>
                         {blog?.commentBlog

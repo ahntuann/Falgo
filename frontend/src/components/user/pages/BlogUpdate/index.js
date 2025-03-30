@@ -28,7 +28,7 @@ const BlogUpdate = () => {
         createOn: '',
         imageBlog: '',
         categoryBlog: [],
-        status: 'Duyệt Lại',
+        status: 'Duyệt lại',
     });
 
     useEffect(() => {
