@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Dtos.ProblemHomePage;
 using api.Interface;
 using api.Mappers;
+using api.Model;
 
 namespace api.Services
 {
@@ -23,8 +24,18 @@ namespace api.Services
             if (submissions == null)
                 return null;
 
+            Dictionary<Problem, int> isAc = new Dictionary<Problem, int>();
+
+            foreach (var submission in submissions)
+            {
+                if (submission.Status.Equals("Accepted"))
+                    if (!isAc.ContainsKey(submission.Problem))
+                        isAc[submission.Problem] = 10;
+
+            }
+
             var problems = submissions
-                                .Where(x => x.AppUser.Id.Equals(userId) && !x.Status.Equals("Accepted"))
+                                .Where(x => x.AppUser.Id.Equals(userId) && (!isAc.ContainsKey(x.Problem) || isAc[x.Problem] != 10))
                                 .GroupBy(x => x.Problem.ToProblemHomePageNotDoneFromProblem((x.Point, x.Status)))
                                 .Take(pageSize)
                                 .Select(x => x.Key)

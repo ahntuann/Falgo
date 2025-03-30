@@ -48,6 +48,8 @@ namespace api.Controllers
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteContest([FromQuery] string contestId)
         {
+            var  contest= await _contestService.getContestById(contestId);
+            if(contest.CreatedAt>DateTime.Now)return BadRequest("Không được xóa contest đang diễn ra");
             await _contestService.deleteContest(contestId);
             return Ok();
         }

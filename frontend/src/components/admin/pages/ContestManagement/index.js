@@ -36,14 +36,18 @@ function ContestManagement() {
         navigate('/AddProblemToContest', { state: { contest } });
     };
 
-    const handleDelete = async (contestId) => {
+    const handleDelete = async (contest) => {
+        console.log(contest.endDate);
+        if (new Date(contest.endDate) > Date.now()) {
+            alert('Không thể xóa cuộc thi đang diễn ra');
+            return;
+        }
         const isConfirmed = window.confirm('Bạn có chắc muốn xóa cuộc thi này không?');
-
-        if (!isConfirmed) return; // If user cancels, stop execution
+        if (!isConfirmed) return;
 
         try {
             await axios.delete(
-                `http://localhost:5180/api/ContestManagement/delete?contestId=${contestId}`,
+                `http://localhost:5180/api/ContestManagement/delete?contestId=${contest.contestId}`,
             );
             fetchContests();
         } catch (error) {
@@ -147,7 +151,7 @@ function ContestManagement() {
                                 <td>
                                     <button
                                         className={cx('delete-btn')}
-                                        onClick={() => handleDelete(contest.contestId)}
+                                        onClick={() => handleDelete(contest)}
                                     >
                                         Delete
                                     </button>

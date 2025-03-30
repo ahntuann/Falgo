@@ -21,6 +21,7 @@ function DateFilterUser({ onFilterData }) {
             onFilterData(response.data);
         } catch (error) {
             console.error('Error:', error.response ? error.response.data : error.message);
+            alert(error.response.data);
         }
     };
 

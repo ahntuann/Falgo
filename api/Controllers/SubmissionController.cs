@@ -400,5 +400,28 @@ namespace api.Controllers
             var statuses = await _submissionService.GetAllSubmissionHistoryStatusesAsync(userId, problemId);
             return Ok(statuses);
         }
+
+        [HttpGet("bestSubmission")]
+        public async Task<IActionResult> GetBestSubmissionContest([FromQuery] BestSubmissionContestQueryObject query)
+        {
+            if (query.ContestId.IsNullOrEmpty() ||
+                query.ProblemId.IsNullOrEmpty() ||
+                (query.UserId.IsNullOrEmpty() && query.isAll == false))
+                return BadRequest("Missing required attributes");
+
+            if (!query.UserId.IsNullOrEmpty())
+            {
+                SubmissionContest submission = await _submissionService
+                    .GetBestSubmisisonContest(query.UserId, query.ContestId, query.ProblemId);
+
+                return Ok(submission);
+            }
+            else
+            {
+                List<SubmissionContest> submissions = new List<SubmissionContest>();
+
+                return Ok(submissions);
+            }
+        }
     }
 }

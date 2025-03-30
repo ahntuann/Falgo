@@ -32,6 +32,8 @@ const ProblemContestList = ({ contestId, problems, isStart, isEnd, contest }) =>
                                             alert('Đã hết giờ!');
                                         } else if (!isStart) {
                                             alert('Bạn phải ấn "Bắt đầu thi" để làm bài');
+                                        } else if (contest.contestStatus === 'over') {
+                                            navigate(`/problems/${problem.problemId}`);
                                         } else {
                                             navigate(
                                                 `/problems/${problem.problemId}?contestId=${contestId}`,
@@ -45,7 +47,7 @@ const ProblemContestList = ({ contestId, problems, isStart, isEnd, contest }) =>
                             </td>
                             <td>{problem.score ?? '-'}</td>
                             <td className={cs(`status ${problem.status}`)}>
-                                {problem.status === 'solved' ? '✅' : '-'}
+                                {problem?.score === problem.totalPoint ? '✅' : '-'}
                             </td>
                         </tr>
                     ))}

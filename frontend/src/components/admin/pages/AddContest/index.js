@@ -92,6 +92,7 @@ export default function AddContest() {
                 banner: '',
             });
             setBannerFile(null);
+            navigate('/ContestManagement');
         } catch (error) {
             console.error('Error adding contest:', error);
             alert(error.response.data);

@@ -20,9 +20,15 @@ import {
     Ranking,
     PublicProfile,
     BlogBookMark,
+    ContestRanking,
 } from '~/components/user/pages';
 import { AdminLogin } from '~/components/admin/pages';
-import { DefaultLayout, AdminLoginLayout, CodeEditingLayout } from '~/layouts';
+import {
+    DefaultLayout,
+    AdminLoginLayout,
+    CodeEditingLayout,
+    RankingContestLayout,
+} from '~/layouts';
 import ContestDetail from '~/components/user/pages/ContestDetail';
 import QA from '~/components/user/pages/Q&A';
 
@@ -171,6 +177,12 @@ const routes = [
         path: '/Q&A',
         layout: DefaultLayout,
         role: ['user', 'guest'],
+    },
+    {
+        component: ContestRanking,
+        path: '/contest/ranking/:contestId',
+        layout: RankingContestLayout,
+        role: ['user'],
     },
 ];
 

@@ -7,10 +7,11 @@ import CodeEditerSection from '~/components/user/components/CodeEditer/component
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import TestCaseSection from '~/components/user/components/CodeEditer/components/TestCaseSection';
+import TextEditor from '~/components/user/components/TextEditor';
 
 const cs = classNames.bind(style);
 
-const ResizablePanels = () => {
+const ResizablePanels = ({ typeOfTxt }) => {
     const [topHeight, setTopHeight] = useState(450);
     const containerRef = useRef(null);
     const isResizing = useRef(false);
@@ -57,7 +58,7 @@ const ResizablePanels = () => {
         <div className={cs('container')} ref={containerRef}>
             <div className={cs('topPanel')} style={{ height: `${topHeight}px` }}>
                 <div style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
-                    <CodeEditerSection />
+                    {typeOfTxt === 'code' ? <CodeEditerSection /> : <TextEditor />}
                 </div>
             </div>
             <div className={cs('resizeBar')} onMouseDown={handleMouseDown}>

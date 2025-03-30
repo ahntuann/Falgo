@@ -40,7 +40,6 @@ function Home() {
         };
 
         fetchProblemHomePageAPI(kindOfProblem).then((newProblems) => {
-            console.log(newProblems);
             setProblems(newProblems);
         });
     }, [userRole, problemDailyFocus]);
@@ -128,7 +127,17 @@ function Home() {
                 </div>
                 <div className={cs('contests')}>
                     {contests !== undefined &&
-                        contests.map((contest, i) => <ContestBrief key={i} contest={contest} />)}
+                        contests.map((contest, i) => (
+                            <ContestBrief
+                                key={i}
+                                contest={contest}
+                                contestStatus={
+                                    new Date(contest.endDate).getDate > Date.now
+                                        ? 'over'
+                                        : 'ongoing'
+                                }
+                            />
+                        ))}
                 </div>
             </div>
 

@@ -221,5 +221,10 @@ namespace api.Services
         {
             return await _subRepo.CreateASubmissionContestAsync(submission);
         }
+
+        public async Task<SubmissionContest> GetBestSubmisisonContest(string userId, string contestI, string problemId)
+        {
+            return await _subRepo.GetBestSubmisisonContest(userId, contestI, problemId);
+        }
     }
 }

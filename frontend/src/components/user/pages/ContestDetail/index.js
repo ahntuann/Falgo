@@ -2,10 +2,14 @@ import classNames from 'classnames/bind';
 import style from './ContestDetail.module.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
+import { faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import ProblemContestList from '~/components/user/components/ProblemContestList';
 import { useContext, useEffect, useState } from 'react';
-import { GetContestRegistionByUserIdAndContestIdAPI, fetchAllProblemOfContestAPI } from '~/apis';
+import {
+    GetContestRegistionByUserIdAndContestIdAPI,
+    fetchAllProblemOfContestAPI,
+    fetchBestSubmissionOfAUser,
+} from '~/apis';
 import FixedCountDown from '~/components/user/components/FixedCountDown';
 import AuthContext from '~/context/AuthContext';
 import AutoPopup from '~/ultils/AutoPopup';
@@ -18,8 +22,8 @@ function ContestDetail() {
     const navigate = useNavigate();
 
     const { contestId, contestName, totalPoint, level, dueTime, contestStatus } = contest;
-    console.log('contest detail');
-    console.log(contest);
+
+    console.log(contestStatus);
 
     const [problems, setProblems] = useState([]);
     const { appUser } = useContext(AuthContext);
@@ -35,7 +39,28 @@ function ContestDetail() {
     }, [appUser, contestId, isStart]);
 
     useEffect(() => {
-        fetchAllProblemOfContestAPI(contestId).then((problems) => setProblems(problems));
+        async function fetchData() {
+            const problems = await fetchAllProblemOfContestAPI(contestId);
+            setProblems(problems);
+
+            async function fetchBestSubmission() {
+                const updatedProblems = await Promise.all(
+                    problems.map(async (problem) => {
+                        const submission = await fetchBestSubmissionOfAUser(
+                            appUser.id,
+                            contestId,
+                            problem.problemId,
+                        );
+                        return { ...problem, score: submission?.point ?? '-' };
+                    }),
+                );
+                setProblems(updatedProblems);
+            }
+
+            fetchBestSubmission();
+        }
+
+        fetchData();
     }, [contestId]);
 
     useEffect(() => {
@@ -56,9 +81,21 @@ function ContestDetail() {
         <div className={cs('wrapper')}>
             {contestStatus === 'over' && <AutoPopup />}
 
-            <div className={cs('backToContest')} onClick={() => navigate(`/contest`)}>
-                <FontAwesomeIcon icon={faCaretLeft} className={cs('backIcon')} />
-                Trở lại danh sách kỳ thi
+            <div className={cs('backToContest')}>
+                <div className={cs('contestAction')} onClick={() => navigate(`/contest`)}>
+                    <FontAwesomeIcon icon={faCaretLeft} className={cs('backIcon')} />
+                    Trở lại danh sách kỳ thi
+                </div>
+
+                <div
+                    className={cs('contestAction')}
+                    onClick={() =>
+                        navigate(`/contest/ranking/${contestId}`, { state: { contest, problems } })
+                    }
+                >
+                    Đến bảng xếp hạng
+                    <FontAwesomeIcon icon={faCaretRight} className={cs('goToRankingIcon')} />
+                </div>
             </div>
 
             <div className={cs('info')}>
@@ -88,6 +125,7 @@ function ContestDetail() {
                 isStart={isStart}
                 isEnd={isEnd}
                 contest={contest}
+                setProblem={setProblems}
             />
 
             <FixedCountDown

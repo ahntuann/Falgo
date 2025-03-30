@@ -10,7 +10,7 @@ const cs = classNames.bind(style);
 
 const MemoizedCodeEditerAction = React.memo(CodeEditerAction);
 
-function CodeEditer({ briefInfoProblem, contestId }) {
+function CodeEditer({ briefInfoProblem, contestId, typeOfTxt }) {
     return (
         <CodeEditingProvider briefInfoProblem={briefInfoProblem} contestId={contestId}>
             <div className={cs('wrapper')}>
@@ -18,7 +18,7 @@ function CodeEditer({ briefInfoProblem, contestId }) {
                     <MemoizedCodeEditerAction />
                 </div>
 
-                <ResizablePanels />
+                <ResizablePanels typeOfTxt={typeOfTxt} />
             </div>
         </CodeEditingProvider>
     );

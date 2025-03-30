@@ -69,11 +69,11 @@ const Ranking = () => {
 
             // Nếu đang ở trang đầu tiên và không có tìm kiếm, cập nhật top3
             if (query.PageNumber === 1 && query.FullName.trim() === '') {
+                setTotalUser(response.data.totalItems);
                 setTop3(response.data.items.slice(0, 3)); // Giữ top 3 cố định
             }
 
             // Danh sách bảng chỉ lấy từ dữ liệu còn lại
-            setTotalUser(response.data.totalItems);
             setRankData(response.data.items);
             setTotalPages(response.data.totalPages);
         } catch (error) {

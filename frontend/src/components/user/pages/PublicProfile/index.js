@@ -73,29 +73,53 @@ const PublicProfile = () => {
                 accuracyPercentage: accuracyPercentage,
             });
 
-            const languagesResponse = await axios.get(
-                `http://localhost:5180/api/user/${userId}/top-languages`,
-            );
-            setTopLanguages(languagesResponse.data.data);
+            try {
+                const languagesResponse = await axios.get(
+                    `http://localhost:5180/api/user/${userId}/top-languages`,
+                );
+                setTopLanguages(languagesResponse.data.data || []);
+            } catch (langError) {
+                console.error('Lỗi khi lấy dữ liệu ngôn ngữ:', langError);
+                setTopLanguages([]);
+            }
 
-            const categoriesResponse = await axios.get(
-                `http://localhost:5180/api/user/${userId}/problem-categories`,
-            );
-            setProblemCategories(categoriesResponse.data.data);
+            try {
+                const categoriesResponse = await axios.get(
+                    `http://localhost:5180/api/user/${userId}/problem-categories`,
+                );
+                setProblemCategories(categoriesResponse.data.data || []);
+            } catch (catError) {
+                console.error('Lỗi khi lấy dữ liệu danh mục bài tập:', catError);
+                setProblemCategories([]);
+            }
 
-            const submissionsResponse = await axios.get(
-                `http://localhost:5180/api/user/${userId}/submissions?PageNumber=${page}&PageSize=10`,
-            );
-            setSubmissions({
-                items: submissionsResponse.data.items,
-                totalPages: submissionsResponse.data.totalPages,
-                currentPage: page,
-            });
+            try {
+                const submissionsResponse = await axios.get(
+                    `http://localhost:5180/api/user/${userId}/submissions?PageNumber=${page}&PageSize=10`,
+                );
+                setSubmissions({
+                    items: submissionsResponse.data.items || [],
+                    totalPages: submissionsResponse.data.totalPages || 1,
+                    currentPage: page,
+                });
+            } catch (subError) {
+                console.error('Lỗi khi lấy dữ liệu bài nộp:', subError);
+                setSubmissions({
+                    items: [],
+                    totalPages: 1,
+                    currentPage: 1,
+                });
+            }
 
-            const contestsResponse = await axios.get(
-                `http://localhost:5180/api/user/${userId}/contests`,
-            );
-            setContests(contestsResponse.data);
+            try {
+                const contestsResponse = await axios.get(
+                    `http://localhost:5180/api/user/${userId}/contests`,
+                );
+                setContests(contestsResponse.data || []);
+            } catch (contError) {
+                console.error('Lỗi khi lấy dữ liệu cuộc thi:', contError);
+                setContests([]);
+            }
         } catch (err) {
             const errorMessage =
                 err.response && err.response.data
@@ -115,6 +139,7 @@ const PublicProfile = () => {
     }, [userId]);
 
     const formatDate = (dateString) => {
+        if (!dateString) return 'Không có dữ liệu';
         return new Date(dateString).toLocaleDateString('vi-VN');
     };
 
@@ -166,7 +191,7 @@ const PublicProfile = () => {
                                             ? formatDate(user[key])
                                             : key === 'accuracy'
                                             ? `${accuracyData.accuracyPercentage}%`
-                                            : user[key]}
+                                            : user[key] || 'Không có dữ liệu'}
                                     </div>
                                 </div>
                             ))}
@@ -179,160 +204,201 @@ const PublicProfile = () => {
                         <div className={cs('user-statistics')}>
                             <div className={cs('statistics-section')}>
                                 <h2>Các Ngôn Ngữ Lập Trình Thường Sử Dụng</h2>
-                                <p>
-                                    {topLanguages.map(
-                                        (lang, index) =>
-                                            `${lang.language}: ${lang.count} bài ${
-                                                index < topLanguages.length - 1 ? '| ' : ''
-                                            }`,
-                                    )}
-                                </p>
+                                {topLanguages && topLanguages.length > 0 ? (
+                                    <p>
+                                        {topLanguages.map(
+                                            (lang, index) =>
+                                                `${lang.language}: ${lang.count} bài ${
+                                                    index < topLanguages.length - 1 ? '| ' : ''
+                                                }`,
+                                        )}
+                                    </p>
+                                ) : (
+                                    <p>Chưa có dữ liệu về ngôn ngữ lập trình</p>
+                                )}
                             </div>
 
                             <div className={cs('statistics-section')}>
                                 <h2>Các Loại Bài Tập Đã Làm</h2>
-                                <p>
-                                    {problemCategories.map(
-                                        (category, index) =>
-                                            `${category.category}: ${category.percentage.toFixed(
-                                                2,
-                                            )}% ${
-                                                index < problemCategories.length - 1 ? '| ' : ''
-                                            }`,
-                                    )}
-                                </p>
+                                {problemCategories && problemCategories.length > 0 ? (
+                                    <p>
+                                        {problemCategories.map(
+                                            (category, index) =>
+                                                `${
+                                                    category.category
+                                                }: ${category.percentage.toFixed(2)}% ${
+                                                    index < problemCategories.length - 1 ? '| ' : ''
+                                                }`,
+                                        )}
+                                    </p>
+                                ) : (
+                                    <p>Chưa có dữ liệu về loại bài tập</p>
+                                )}
                             </div>
                         </div>
 
                         {/* User Submissions */}
                         <div className={cs('user-submissions')}>
                             <h2>Các Bài Nộp Gần Đây</h2>
-                            <table className={cs('submissions-table')}>
-                                <thead>
-                                    <tr>
-                                        <th>Mã Bài</th>
-                                        <th>Tên Bài Tập</th>
-                                        <th>Ngôn Ngữ</th>
-                                        <th>Trạng Thái</th>
-                                        <th>Ngày Nộp</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {submissions.items.map((submission) => (
-                                        <tr key={submission.id}>
-                                            <td>{submission.problemId}</td>
-                                            <td>{submission.problemTitle}</td>
-                                            <td>{submission.programmingLanguage}</td>
-                                            <td>
-                                                <span
-                                                    className={cs('status-badge', {
-                                                        'status-accepted':
-                                                            submission.status === 'Accepted',
-                                                        'status-wrong':
-                                                            submission.status === 'Wrong Answer',
-                                                        'status-time-limit':
-                                                            submission.status ===
-                                                            'Time Limit Exceeded',
-                                                        'status-memory-limit':
-                                                            submission.status ===
-                                                            'Memory Limit Exceeded',
-                                                        'status-runtime-error':
-                                                            submission.status === 'Runtime Error',
-                                                        'status-other': ![
-                                                            'Accepted',
-                                                            'Wrong Answer',
-                                                            'Time Limit Exceeded',
-                                                            'Memory Limit Exceeded',
-                                                            'Runtime Error',
-                                                        ].includes(submission.status),
-                                                    })}
-                                                >
-                                                    {STATUS_TRANSLATIONS[submission.status] ||
-                                                        submission.status}
-                                                </span>
-                                            </td>
-                                            <td>{formatDate(submission.submittedAt)}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                            {submissions.items && submissions.items.length > 0 ? (
+                                <>
+                                    <table className={cs('submissions-table')}>
+                                        <thead>
+                                            <tr>
+                                                <th>Mã Bài</th>
+                                                <th>Tên Bài Tập</th>
+                                                <th>Ngôn Ngữ</th>
+                                                <th>Trạng Thái</th>
+                                                <th>Ngày Nộp</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {submissions.items.map((submission) => (
+                                                <tr key={submission.id}>
+                                                    <td>{submission.problemId}</td>
+                                                    <td>{submission.problemTitle}</td>
+                                                    <td>{submission.programmingLanguage}</td>
+                                                    <td>
+                                                        <span
+                                                            className={cs('status-badge', {
+                                                                'status-accepted':
+                                                                    submission.status ===
+                                                                    'Accepted',
+                                                                'status-wrong':
+                                                                    submission.status ===
+                                                                    'Wrong Answer',
+                                                                'status-time-limit':
+                                                                    submission.status ===
+                                                                    'Time Limit Exceeded',
+                                                                'status-memory-limit':
+                                                                    submission.status ===
+                                                                    'Memory Limit Exceeded',
+                                                                'status-runtime-error':
+                                                                    submission.status ===
+                                                                    'Runtime Error',
+                                                                'status-other': ![
+                                                                    'Accepted',
+                                                                    'Wrong Answer',
+                                                                    'Time Limit Exceeded',
+                                                                    'Memory Limit Exceeded',
+                                                                    'Runtime Error',
+                                                                ].includes(submission.status),
+                                                            })}
+                                                        >
+                                                            {STATUS_TRANSLATIONS[
+                                                                submission.status
+                                                            ] || submission.status}
+                                                        </span>
+                                                    </td>
+                                                    <td>{formatDate(submission.submittedAt)}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
 
-                            {/* Pagination */}
-                            <div className={cs('pagination')}>
-                                <button
-                                    disabled={submissions.currentPage === 1}
-                                    onClick={() =>
-                                        handleSubmissionPageChange(submissions.currentPage - 1)
-                                    }
-                                >
-                                    &lt;
-                                </button>
+                                    {/* Pagination */}
+                                    {submissions.totalPages > 1 && (
+                                        <div className={cs('pagination')}>
+                                            <button
+                                                disabled={submissions.currentPage === 1}
+                                                onClick={() =>
+                                                    handleSubmissionPageChange(
+                                                        submissions.currentPage - 1,
+                                                    )
+                                                }
+                                            >
+                                                &lt;
+                                            </button>
 
-                                {Array.from({ length: submissions.totalPages }, (_, i) => i + 1)
-                                    .filter(
-                                        (page) =>
-                                            page === 1 ||
-                                            page === submissions.totalPages ||
-                                            Math.abs(page - submissions.currentPage) <= 2,
-                                    )
-                                    .map((page) => (
-                                        <button
-                                            key={page}
-                                            className={
-                                                page === submissions.currentPage ? cs('active') : ''
-                                            }
-                                            onClick={() => handleSubmissionPageChange(page)}
-                                        >
-                                            {page}
-                                        </button>
-                                    ))}
+                                            {Array.from(
+                                                { length: submissions.totalPages },
+                                                (_, i) => i + 1,
+                                            )
+                                                .filter(
+                                                    (page) =>
+                                                        page === 1 ||
+                                                        page === submissions.totalPages ||
+                                                        Math.abs(page - submissions.currentPage) <=
+                                                            2,
+                                                )
+                                                .map((page) => (
+                                                    <button
+                                                        key={page}
+                                                        className={
+                                                            page === submissions.currentPage
+                                                                ? cs('active')
+                                                                : ''
+                                                        }
+                                                        onClick={() =>
+                                                            handleSubmissionPageChange(page)
+                                                        }
+                                                    >
+                                                        {page}
+                                                    </button>
+                                                ))}
 
-                                <button
-                                    disabled={submissions.currentPage === submissions.totalPages}
-                                    onClick={() =>
-                                        handleSubmissionPageChange(submissions.currentPage + 1)
-                                    }
-                                >
-                                    &gt;
-                                </button>
-                            </div>
+                                            <button
+                                                disabled={
+                                                    submissions.currentPage ===
+                                                    submissions.totalPages
+                                                }
+                                                onClick={() =>
+                                                    handleSubmissionPageChange(
+                                                        submissions.currentPage + 1,
+                                                    )
+                                                }
+                                            >
+                                                &gt;
+                                            </button>
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
+                                <p>Chưa có bài nộp nào</p>
+                            )}
                         </div>
 
                         {/* User Contests */}
                         <div className={cs('user-contests')}>
                             <h2>Các Cuộc Thi Đã Tham Gia</h2>
-                            <table className={cs('contests-table')}>
-                                <thead>
-                                    <tr>
-                                        <th>Tên Cuộc Thi</th>
-                                        <th>Ngày Bắt Đầu</th>
-                                        <th>Ngày Kết Thúc</th>
-                                        <th>Độ Khó</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {contests.map((contest) => (
-                                        <tr key={contest.id}>
-                                            <td>{contest.contestName}</td>
-                                            <td>{formatDate(contest.createdAt)}</td>
-                                            <td>{formatDate(contest.endDate)}</td>
-                                            <td>
-                                                <span
-                                                    className={cs('difficulty-badge', {
-                                                        'difficulty-easy': contest.level === 'easy',
-                                                        'difficulty-medium':
-                                                            contest.level === 'medium',
-                                                        'difficulty-hard': contest.level === 'hard',
-                                                    })}
-                                                >
-                                                    {DIFFICULTY_TRANSLATIONS[contest.level] ||
-                                                        contest.level}
-                                                </span>
-                                            </td>
+                            {contests && contests.length > 0 ? (
+                                <table className={cs('contests-table')}>
+                                    <thead>
+                                        <tr>
+                                            <th>Tên Cuộc Thi</th>
+                                            <th>Ngày Bắt Đầu</th>
+                                            <th>Ngày Kết Thúc</th>
+                                            <th>Độ Khó</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {contests.map((contest) => (
+                                            <tr key={contest.id}>
+                                                <td>{contest.contestName}</td>
+                                                <td>{formatDate(contest.createdAt)}</td>
+                                                <td>{formatDate(contest.endDate)}</td>
+                                                <td>
+                                                    <span
+                                                        className={cs('difficulty-badge', {
+                                                            'difficulty-easy':
+                                                                contest.level === 'easy',
+                                                            'difficulty-medium':
+                                                                contest.level === 'medium',
+                                                            'difficulty-hard':
+                                                                contest.level === 'hard',
+                                                        })}
+                                                    >
+                                                        {DIFFICULTY_TRANSLATIONS[contest.level] ||
+                                                            contest.level}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <p>Chưa tham gia cuộc thi nào</p>
+                            )}
                         </div>
                     </div>
                 </div>
