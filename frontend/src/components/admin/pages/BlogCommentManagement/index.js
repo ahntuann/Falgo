@@ -28,7 +28,7 @@ function BlogCommentManagement() {
     const [categories] = useState([
         'Vi phạm cộng đồng',
         'Phân biệt chủng tộc',
-        'Ngôn từ năng mạ',
+        'Ngôn từ lăng mạ',
         'Cổ xúy bạo lực',
         'Chống đối nhà nước',
     ]);

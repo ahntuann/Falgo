@@ -28,7 +28,7 @@ const Blog = () => {
         const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
         const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-        const validBlogs = filteredBlogs
+        const validBlogs = originalBlogs
             .map((blog) => ({
                 ...blog,
                 likes: blog.blogLike?.length || 0,

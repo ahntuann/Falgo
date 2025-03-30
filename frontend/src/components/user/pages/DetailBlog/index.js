@@ -19,7 +19,6 @@ const DetailBlog = () => {
     const userObject = userNow ? JSON.parse(userNow) : null;
     const location = useLocation();
     const [blog, setBlog] = useState(location.state?.blog);
-    console.log('sdfgdsfg', blog);
     const [allBlogs, setAllBlogs] = useState([]);
 
     const [liked, setLiked] = useState();
@@ -107,7 +106,7 @@ const DetailBlog = () => {
             }
         };
         fetchUserAvatar();
-    }, [blog, userObject.id, userRole]);
+    }, [blog]);
 
     const handleCommentChange = (content) => {
         setComments(content);
