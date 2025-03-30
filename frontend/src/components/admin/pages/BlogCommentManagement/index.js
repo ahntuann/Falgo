@@ -28,7 +28,7 @@ function BlogCommentManagement() {
     const [categories] = useState([
         'Vi phạm cộng đồng',
         'Phân biệt chủng tộc',
-        'Ngôn từ năng mạ',
+        'Ngôn từ lăng mạ',
         'Cổ xúy bạo lực',
         'Chống đối nhà nước',
     ]);
@@ -90,8 +90,8 @@ function BlogCommentManagement() {
             }
 
             if (query.dateFilter) {
-                fetchedComments = fetchedComments.filter(
-                    (comment) => comment.createOn.startsWith(query.dateFilter), // So khớp ngày
+                fetchedComments = fetchedComments.filter((comment) =>
+                    comment.createOn.startsWith(query.dateFilter),
                 );
             }
             fetchedComments = fetchedComments.sort((a, b) => {
@@ -340,14 +340,23 @@ function BlogCommentManagement() {
                                 <div className={cs('comment_content')}>
                                     <div className={cs('comment_infor')}>
                                         <div>{comment.guestName}</div>
-                                        <div>{comment.content}</div>
+                                        <div>
+                                            <div
+                                                dangerouslySetInnerHTML={{
+                                                    __html: comment.content,
+                                                }}
+                                            />
+                                        </div>
                                         <div>
                                             {new Date(comment.createOn).toLocaleString('vi-VN')}
                                         </div>
                                     </div>
+                                </div>
+                                <div className={cs('comment_Note')}>
+                                    <div>Trạng thái: {comment.status}</div>
+                                    <div>{comment.note}</div>
                                     <div className={cs('comment_action')}>
                                         <button onClick={() => handleDeleteComment(comment.id)}>
-                                            {' '}
                                             Xóa
                                         </button>
                                         <button
@@ -359,7 +368,6 @@ function BlogCommentManagement() {
                                                 )
                                             }
                                         >
-                                            {' '}
                                             Chỉnh sửa
                                         </button>
                                         <button
@@ -371,7 +379,6 @@ function BlogCommentManagement() {
                                                 )
                                             }
                                         >
-                                            {' '}
                                             Từ chối
                                         </button>
                                         <button
@@ -383,14 +390,9 @@ function BlogCommentManagement() {
                                                 )
                                             }
                                         >
-                                            {' '}
                                             Thông qua
                                         </button>
                                     </div>
-                                </div>
-                                <div className={cs('comment_Note')}>
-                                    <div>Trạng thái: {comment.status}</div>
-                                    <div>{comment.note}</div>
                                 </div>
                             </div>
                         ))

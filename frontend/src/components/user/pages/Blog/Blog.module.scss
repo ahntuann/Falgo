@@ -204,11 +204,13 @@
             border-radius: 4px;
             font-size: 14px;
         }
-        button {
-            color: white;
-        }
     }
-
+    button {
+        color: white;
+    }
+    button:disabled {
+        color: gray;
+    }
     .edit,
     .delete,
     .btn-read-more {
@@ -294,6 +296,7 @@
         margin-top: 20px;
 
         .paginationnumber button {
+            color: black;
             background: white;
             border: 1px solid #ccc;
             border-radius: 4px;

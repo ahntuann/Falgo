@@ -19,7 +19,6 @@ const DetailBlog = () => {
     const userObject = userNow ? JSON.parse(userNow) : null;
     const location = useLocation();
     const [blog, setBlog] = useState(location.state?.blog);
-    console.log('sdfgdsfg', blog);
     const [allBlogs, setAllBlogs] = useState([]);
 
     const [liked, setLiked] = useState();
@@ -29,7 +28,9 @@ const DetailBlog = () => {
     const [activeCommentId, setActiveCommentId] = useState(null);
 
     const [bookmarked, setBookmarked] = useState();
-
+    const [userAvatar, setUserAvatar] = useState(
+        'https://img.hoidap247.com/picture/question/20210904/large_1630765811060.jpg',
+    );
     const modules = {
         toolbar: [
             [{ header: [1, 2, false] }],
@@ -78,7 +79,34 @@ const DetailBlog = () => {
                 );
             }
         }
-    }, [blog, userObject]);
+        const fetchUserAvatar = async () => {
+            try {
+                const userString = localStorage.getItem('user');
+                if (userString) {
+                    const user = JSON.parse(userString);
+
+                    if (user.avatar) {
+                        const fullAvatarUrl = `http://localhost:5180${user.avatar}`;
+                        setUserAvatar(fullAvatarUrl);
+                        return;
+                    }
+
+                    const userId = user.id;
+                    const response = await axios.get(
+                        `http://localhost:5180/api/user/profile/${userId}`,
+                    );
+
+                    if (response.data.avatar) {
+                        const fullAvatarUrl = `http://localhost:5180${response.data.avatar}`;
+                        setUserAvatar(fullAvatarUrl);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching avatar:', error);
+            }
+        };
+        fetchUserAvatar();
+    }, [blog]);
 
     const handleCommentChange = (content) => {
         setComments(content);
@@ -112,35 +140,20 @@ const DetailBlog = () => {
     if (!blog) return <div className={cs('error-message')}>Không tìm thấy bài viết!</div>;
 
     const handleDelete = async (blogId) => {
-        if (!window.confirm('Bạn có chắc chắn muốn xóa bài viết này không?')) return;
+        if (window.confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
+            try {
+                const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
+                    method: 'DELETE',
+                });
 
-        try {
-            const token = localStorage.getItem('accessToken');
-            const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: '*/*',
-                    Authorization: `Bearer ${token}`,
-                },
-                credentials: 'include',
-            });
+                if (!response.ok) {
+                    alert('Xóa bình luận thất bại!');
+                }
 
-            if (response.status === 401) {
-                alert('Bạn cần đăng nhập để xóa bài viết!');
-                return;
-            }
-
-            const text = await response.text();
-            window.location.href = '/blog';
-            if (response.ok) {
                 alert('Xóa bài viết thành công!');
-                setAllBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== blogId));
-            } else {
-                alert(`Xóa thất bại! Server trả về: ${text}`);
+            } catch (error) {
+                alert('Lỗi khi xóa bình luận:', error);
             }
-        } catch (error) {
-            alert('Lỗi hệ thống! Vui lòng thử lại sau.');
         }
     };
 
@@ -208,8 +221,8 @@ const DetailBlog = () => {
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    avatar: userObject?.avatar ?? NoImage,
-                    guestName: userObject?.userName ?? 'Guest',
+                    avatar: userAvatar ?? NoImage,
+                    guestName: userObject?.userName ?? 'Ẩn danh',
                     content: comments,
                     blogId: blog.id,
                     userId: userObject?.id ?? null,
@@ -320,7 +333,14 @@ const DetailBlog = () => {
     };
 
     const handleEditComment = async (commentId, currentContent) => {
-        const newContent = prompt('Hãy nhập nội dung bình luận:', currentContent);
+        const newContent = prompt(
+            'Hãy nhập nội dung bình luận:',
+            <div
+                dangerouslySetInnerHTML={{
+                    __html: currentContent,
+                }}
+            />,
+        );
 
         if (newContent === null || newContent === currentContent) {
             return;
@@ -531,17 +551,7 @@ const DetailBlog = () => {
                             {liked ? '💙 Đã thích' : '🤍 Thích'}
                         </button>
                     </div>
-                    <div className={cs('cmt_Space')}>
-                        <ReactQuill
-                            value={comments}
-                            onChange={handleCommentChange}
-                            modules={modules}
-                            formats={formats}
-                        />
-                        <button className={cs('cmt_Action')} onClick={handleComment}>
-                            Lưu
-                        </button>
-                    </div>
+
                     <div className={cs('Share_space')}>
                         <div className={cs('Number_Share')}>{blog?.blogShare?.length || 0}</div>
 
@@ -597,7 +607,17 @@ const DetailBlog = () => {
                         </button>
                     </div>
                 </div>
-
+                <div className={cs('cmt_Space')}>
+                    <ReactQuill
+                        value={comments}
+                        onChange={handleCommentChange}
+                        modules={modules}
+                        formats={formats}
+                    />
+                    <button className={cs('cmt_Action')} onClick={handleComment}>
+                        Lưu
+                    </button>
+                </div>
                 <div className={cs('Cmt_space')}>
                     <div className={cs('Show_Cmt')}>
                         {blog?.commentBlog

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import NoImage from '~/assets/images/BlogThumbnail/unnamed.png';
+import AuthContext from '~/context/AuthContext';
+import { useContext } from 'react';
 
 import classNames from 'classnames/bind';
 import styles from './BlogUpdate.module.scss';
@@ -10,6 +12,7 @@ import 'react-quill/dist/quill.snow.css';
 const cs = classNames.bind(styles);
 
 const BlogUpdate = () => {
+    const { userRole } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const location = useLocation();
@@ -25,7 +28,7 @@ const BlogUpdate = () => {
         createOn: '',
         imageBlog: '',
         categoryBlog: [],
-        status: 'Duyệt Lại',
+        status: 'Duyệt lại',
     });
 
     useEffect(() => {
@@ -128,7 +131,10 @@ const BlogUpdate = () => {
 
             if (response.status === 200) {
                 alert('Cập nhật bài viết thành công!');
-                navigate('/UserBlog');
+                if (userRole === 'user') {
+                    navigate('/UserBlog');
+                }
+                navigate('/Blog');
             } else {
                 alert('Cập nhật thất bại!');
             }

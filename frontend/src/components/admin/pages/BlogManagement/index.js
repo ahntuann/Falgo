@@ -45,8 +45,8 @@ function BlogManagement() {
     const paginatedBlogs = filteredBlogs.slice(startIndex, endIndex);
     const role = JSON.parse(sessionStorage.getItem('admin'));
     const [hoveredBlog, setHoveredBlog] = useState(null);
+    const [hoverTimeout, setHoverTimeout] = useState(null);
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const formatDate = (date) => date.toISOString().split('T')[0];
     const formatDateUTC = (date) => {
         const d = new Date(date);
         return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
@@ -74,12 +74,18 @@ function BlogManagement() {
     }));
 
     const handleMouseEnter = (blogId) => {
-        setHoveredBlog(blogId);
+        const timeout = setTimeout(() => {
+            setHoveredBlog(blogId);
+        }, 500);
+
+        setHoverTimeout(timeout);
     };
 
     const handleMouseLeave = () => {
+        clearTimeout(hoverTimeout);
         setHoveredBlog(null);
     };
+
     useEffect(() => {
         if (!role) {
             navigate('/');
@@ -161,40 +167,24 @@ function BlogManagement() {
     };
 
     const handleDelete = async (blogId) => {
-        if (!window.confirm('Bạn có chắc chắn muốn xóa bài viết này không?')) return;
-        console.log('ID nhận được trong handleDelete:', blogId);
+        if (window.confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
+            try {
+                const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
+                    method: 'DELETE',
+                });
 
-        try {
-            const token = localStorage.getItem('accessToken');
-            const response = await fetch(`http://localhost:5180/api/BlogController/${blogId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: '*/*',
-                    Authorization: `Bearer ${token}`,
-                },
-                credentials: 'include',
-            });
+                if (!response.ok) {
+                    alert('Xóa bình luận thất bại!');
+                }
 
-            if (response.status === 401) {
-                alert('Bạn cần đăng nhập để xóa bài viết!');
-                return;
-            }
-
-            const text = await response.text();
-
-            if (response.ok) {
                 alert('Xóa bài viết thành công!');
+                fetchBlogs();
                 setFilteredBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== blogId));
-            } else {
-                alert(`Xóa thất bại! Server trả về: ${text}`);
+            } catch (error) {
+                alert('Lỗi khi xóa bình luận:', error);
             }
-        } catch (error) {
-            console.error('Lỗi khi xóa bài viết:', error);
-            alert('Có lỗi xảy ra!');
         }
     };
-
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setQuery((prev) => ({
@@ -244,6 +234,7 @@ function BlogManagement() {
                         blog.id === blogId ? { ...blog, status: newStatus, note: reason } : blog,
                     ),
                 );
+                fetchBlogs();
             } else {
                 const text = await response.text();
                 alert(`Cập nhật thất bại! Lỗi từ server: ${text}`);
@@ -300,7 +291,6 @@ function BlogManagement() {
                         </div>
                     </div>
 
-                    {/* 📌 Thống kê tổng bài viết */}
                     <div className={cs('Blog_number_char')}>
                         <div className={cs('BlogChar_detail')}>
                             <p>📊 Tổng số bài viết đã tạo: {originalBlogs.length}</p>
@@ -466,9 +456,6 @@ function BlogManagement() {
                                         </div>
                                     )}
                                 </h2>
-
-                                {/* <h2>{blog.title}</h2>
-                                <p>{blog.description}</p> */}
                                 {blog.categoryBlog &&
                                     blog.categoryBlog.trim() !== '' &&
                                     blog.categoryBlog.trim() !== ',' && (
@@ -538,13 +525,7 @@ function BlogManagement() {
                                         >
                                             Xóa
                                         </button>
-                                        <Link
-                                            to={'/DetailBlog'}
-                                            state={{ blog }}
-                                            className={cs('btn-read-more')}
-                                        >
-                                            Đọc thêm
-                                        </Link>
+
                                         <p
                                             className={cs('status', {
                                                 approved: blog.status === 'Thông qua',

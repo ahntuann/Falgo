@@ -43,9 +43,7 @@
         margin: 5px;
         padding: 15px;
         gap: 20px;
-        .Note {
-            width: 100px;
-        }
+        
         .category-tags {
             display: flex;
             gap: 10px;
@@ -93,7 +91,7 @@
                 padding: 10px;
                 border-top: 1px solid #ddd;
                 flex-wrap: nowrap;
-                align-items: flex-start;
+                align-items: flex-end;
                 flex-direction: column;
                 .Like_Share_cmt,
                 .Action_space {
