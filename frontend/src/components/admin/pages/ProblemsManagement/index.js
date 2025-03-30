@@ -126,7 +126,7 @@ function ProblemsManagement() {
                                 <td>{problem.category}</td>
                                 <td>{problem.acceptanceRate}%</td>
                                 <td>{problem.acceptedCount}</td>
-                                <td>{problem.score}</td>
+                                <td>{problem.totalPoint}</td>
                                 <td>
                                     <button
                                         className={cx('edit-btn')}

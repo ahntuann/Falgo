@@ -20,7 +20,7 @@ namespace api.Mappers
                 ProblemId = problem.ProblemId,
                 Title = problem.Title,
                 Category = problem.Category ?? "Không định dạng",
-                Score = problem.TotalPoint,
+                TotalPoint = problem.TotalPoint,
                 AcceptanceRate = totalSubmissions > 0
                 ? Math.Round((double)acceptedSubmissions / totalSubmissions * 100, 2)
             : 0,

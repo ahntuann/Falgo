@@ -124,9 +124,9 @@ const ProblemUpdate = () => {
                     />
                     <input
                         type="number"
-                        name="score"
+                        name="totalPoint"
                         placeholder="Điểm tối đa"
-                        value={problem.score}
+                        value={problem.totalPoint}
                         onChange={handleChange}
                     />
                     <input
