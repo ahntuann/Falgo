@@ -63,6 +63,11 @@ function UserManagement() {
             }
             return 0;
         });
+    const filteredAndSortedUsers = sortedUsers.filter(
+        (user) =>
+            user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
 
     return (
         <AdminLayout>
@@ -103,7 +108,7 @@ function UserManagement() {
                     <thead>
                         <tr>
                             <th>Số thứ tự</th>
-                            <th>Tên người dùng</th>
+                            <th>Họ và tên</th>
                             <th>Email</th>
                             <th>Bài đã nộp</th>
                             <th>Bài đã giải đúng</th>
@@ -111,10 +116,10 @@ function UserManagement() {
                         </tr>
                     </thead>
                     <tbody>
-                        {sortedUsers.map((user, index) => (
+                        {filteredAndSortedUsers.map((user, index) => (
                             <tr key={user.id}>
                                 <td>{index + 1}</td>
-                                <td>{user.userName}</td>
+                                <td>{user.fullName}</td>
                                 <td>{user.email}</td>
                                 <td>{user.totalSubmissions || 0}</td>
                                 <td>{user.totalSolved || 0}</td>
