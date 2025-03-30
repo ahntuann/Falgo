@@ -8,8 +8,6 @@ const cs = classNames.bind(style);
 const ProblemContestList = ({ contestId, problems, isStart, isEnd, contest }) => {
     const navigate = useNavigate();
 
-    console.log(problems);
-
     return (
         <div className={cs('problemList')}>
             <h2>Danh sách bài toán</h2>
@@ -34,6 +32,8 @@ const ProblemContestList = ({ contestId, problems, isStart, isEnd, contest }) =>
                                             alert('Đã hết giờ!');
                                         } else if (!isStart) {
                                             alert('Bạn phải ấn "Bắt đầu thi" để làm bài');
+                                        } else if (contest.contestStatus === 'over') {
+                                            navigate(`/problems/${problem.problemId}`);
                                         } else {
                                             navigate(
                                                 `/problems/${problem.problemId}?contestId=${contestId}`,

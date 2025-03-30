@@ -23,11 +23,16 @@ function NavBar({ classNames }) {
 
     const location = useLocation();
 
-    const [focusOn, setFocusOn] = useState(location.pathname);
+    const [focusOn, setFocusOn] = useState(location.pathname.split('/')[1]);
 
     useEffect(() => {
-        setFocusOn(location.pathname);
+        console.log(location.pathname);
+        setFocusOn(location.pathname.split('/')[1]);
     }, [location.pathname]);
+
+    useEffect(() => {
+        console.log(focusOn);
+    }, [focusOn]);
 
     const { userRole } = useContext(AuthContext);
 
@@ -42,11 +47,11 @@ function NavBar({ classNames }) {
                     <Link
                         className={cs('navBarItem', {
                             active:
-                                (item.title === 'Bài tập' && '/problems' === focusOn) ||
-                                (item.title === 'Cuộc thi' && '/contest' === focusOn) ||
-                                (item.title === 'Xếp hạng' && '/ranking' === focusOn) ||
-                                (item.title === 'Chia sẻ' && '/blog' === focusOn) ||
-                                (item.title === 'Trang cá nhân' && '/profile' === focusOn),
+                                (item.title === 'Bài tập' && 'problems' === focusOn) ||
+                                (item.title === 'Cuộc thi' && 'contest' === focusOn) ||
+                                (item.title === 'Xếp hạng' && 'ranking' === focusOn) ||
+                                (item.title === 'Chia sẻ' && 'blog' === focusOn) ||
+                                (item.title === 'Trang cá nhân' && 'profile' === focusOn),
                         })}
                         to={item.path}
                         key={index}
